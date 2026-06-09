@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Consulta el estado de tu servicio tùcnico en Megabyte MB con tu nùmero de ticket o celular registrado.">
+  <title>Seguimiento | Megabyte MB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/jpeg" href="assets/logo-megabyte.jpeg">
+</head>
+<body data-page="seguimiento">
+
+  <div id="site-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="section__tag">Rastrea tu equipo</span>
+        <h1 class="page-hero__title">Seguimiento de Servicio</h1>
+        <p class="page-hero__desc">Consulta el estado de tu servicio con tu nùmero de ticket o celular registrado. Tu informaciùn es privada y segura.</p>
+      </div>
+    </section>
+
+    <section class="section seguimiento">
+      <div class="container">
+        <div class="seguimiento__panel" data-animate>
+          <form class="seguimiento__form" id="ticketForm">
+            <div class="form-group">
+              <label for="ticketInput">Nùmero de ticket</label>
+              <input type="text" id="ticketInput" placeholder="Ej: MB-2026-0001" autocomplete="off">
+            </div>
+            <span class="seguimiento__divider">o</span>
+            <div class="form-group">
+              <label for="phoneInput">Nùmero celular registrado</label>
+              <input type="tel" id="phoneInput" placeholder="Ej: 320 429 3863" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn--primary">Consultar Estado</button>
+          </form>
+
+          <div class="seguimiento__result" id="ticketResult" hidden>
+            <div class="ticket-header">
+              <div>
+                <span class="ticket-header__label">Ticket</span>
+                <span class="ticket-header__id" id="resultTicket"></span>
+              </div>
+              <span class="ticket-status" id="resultStatus"></span>
+            </div>
+            <div class="ticket-details">
+              <div class="ticket-detail"><span>Cliente</span><strong id="resultCliente"></strong></div>
+              <div class="ticket-detail"><span>Fecha de ingreso</span><strong id="resultFecha"></strong></div>
+              <div class="ticket-detail"><span>Tùcnico asignado</span><strong id="resultTecnico"></strong></div>
+              <div class="ticket-detail"><span>Fecha estimada</span><strong id="resultEstimada"></strong></div>
+              <div class="ticket-detail ticket-detail--full"><span>Observaciones</span><strong id="resultObs"></strong></div>
+            </div>
+            <div class="ticket-history">
+              <h4>Historial</h4>
+              <ul class="ticket-history__list" id="resultHistorial"></ul>
+            </div>
+          </div>
+
+          <div class="seguimiento__error" id="ticketError" hidden>
+            <p>No se encontrù ningùn servicio con los datos ingresados. Verifica tu ticket o celular e intenta de nuevo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <div id="site-float"></div>
+
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

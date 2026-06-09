@@ -1,6 +1,6 @@
 /* =============================================
    Megabyte MB - Estilos Corporativos
-   Paleta: #00B4D8 ∑ #9D4EDD ∑ #111827 ∑ #81B8BF
+   Paleta: #00B4D8 ù #9D4EDD ù #111827 ù #81B8BF
    ============================================= */
 
 :root {
@@ -19,7 +19,9 @@
   --radius-lg: 20px;
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --header-h: 72px;
+  --header-top-h: 72px;
+  --header-nav-h: 48px;
+  --header-h: calc(var(--header-top-h) + var(--header-nav-h));
 }
 
 *, *::before, *::after {
@@ -108,24 +110,64 @@ ul { list-style: none; }
   left: 0;
   right: 0;
   z-index: 1000;
-  height: var(--header-h);
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(17, 24, 39, 0.97);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(129, 184, 191, 0.1);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(129, 184, 191, 0.15);
   transition: var(--transition);
 }
 
 .header--scrolled {
-  background: rgba(17, 24, 39, 0.97);
   box-shadow: var(--shadow);
+}
+
+.header__top {
+  height: var(--header-top-h);
+  border-bottom: 1px solid rgba(129, 184, 191, 0.08);
 }
 
 .header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100%;
+  height: var(--header-top-h);
   gap: 1rem;
+}
+
+.header__nav {
+  height: var(--header-nav-h);
+  background: rgba(17, 24, 39, 0.95);
+}
+
+.header__nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.header__nav-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.header__nav-link {
+  flex-shrink: 0;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.header__nav-link:hover,
+.header__nav-link.active {
+  color: var(--cyan);
+  background: var(--gradient-soft);
 }
 
 .header__logo {
@@ -159,62 +201,89 @@ ul { list-style: none; }
   display: block;
 }
 
-.nav__list {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav__link {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  transition: var(--transition);
-  position: relative;
-}
-
-.nav__link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--gradient);
-  transition: var(--transition);
-}
-
-.nav__link:hover,
-.nav__link.active {
-  color: var(--text-main);
-}
-
-.nav__link:hover::after,
-.nav__link.active::after {
-  width: 100%;
-}
-
 .header__actions {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  flex-shrink: 0;
 }
 
-.header__toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
+/* ---- Page Hero (subpùginas) ---- */
+.page-hero {
+  padding-top: calc(var(--header-h) + 3rem);
+  padding-bottom: 2rem;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(157, 78, 221, 0.15) 0%, transparent 60%),
+    var(--night);
 }
 
-.header__toggle span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--text-main);
+.page-hero__title {
+  font-family: var(--font-brand);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.page-hero__desc {
+  color: var(--text-secondary);
+  max-width: 560px;
+  margin-inline: auto;
+  font-size: 1.05rem;
+}
+
+/* ---- Accesos rùpidos (inicio) ---- */
+.accesos {
+  background: linear-gradient(180deg, var(--night) 0%, #0d1526 100%);
+}
+
+.accesos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.acceso-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(129, 184, 191, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
   transition: var(--transition);
-  border-radius: 2px;
+  display: block;
+}
+
+.acceso-card:hover {
+  border-color: rgba(0, 180, 216, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 180, 216, 0.1);
+}
+
+.acceso-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-soft);
+  border-radius: var(--radius);
+  color: var(--cyan);
+  margin-bottom: 1rem;
+}
+
+.acceso-card__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.acceso-card h3 {
+  font-family: var(--font-brand);
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.acceso-card p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
 }
 
 /* ---- Hero ---- */
@@ -222,8 +291,8 @@ ul { list-style: none; }
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  padding-top: var(--header-h);
+  align-items: flex-start;
+  padding-top: calc(var(--header-h) + 3rem);
   overflow: hidden;
 }
 
@@ -312,6 +381,10 @@ ul { list-style: none; }
 /* ---- Sections ---- */
 .section {
   padding: 5rem 0;
+}
+
+.page-hero + .section {
+  padding-top: 2rem;
 }
 
 .section__header {
@@ -706,9 +779,23 @@ ul { list-style: none; }
 }
 
 .nosotros-card__icon {
-  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-family: var(--font-brand);
+  font-weight: 700;
+  font-size: 1.25rem;
   margin-bottom: 1rem;
+  background: var(--gradient-soft);
+  color: var(--cyan);
 }
+
+.nosotros-card__icon--mision { color: var(--cyan); }
+.nosotros-card__icon--vision { color: var(--purple); }
+.nosotros-card__icon--valores { color: var(--accent); font-size: 1.5rem; }
 
 .nosotros-card h3 {
   font-family: var(--font-brand);
@@ -916,11 +1003,16 @@ a.contacto__item:hover {
   color: rgba(203, 213, 225, 0.5);
 }
 
-/* ---- WhatsApp Float ---- */
+/* ---- Menù flotante + WhatsApp ---- */
+#site-float {
+  position: relative;
+  z-index: 1001;
+}
+
 .whatsapp-float {
   position: fixed;
   bottom: 1.5rem;
-  right: 1.5rem;
+  right: 1.25rem;
   width: 56px;
   height: 56px;
   background: #25D366;
@@ -930,9 +1022,9 @@ a.contacto__item:hover {
   justify-content: center;
   color: #fff;
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-  z-index: 999;
   transition: var(--transition);
   animation: pulse-wa 2s infinite;
+  z-index: 1002;
 }
 
 .whatsapp-float:hover {
@@ -958,8 +1050,18 @@ a.contacto__item:hover {
 }
 
 /* ---- Responsive ---- */
+@media (min-width: 1025px) {
+  .whatsapp-float {
+    right: 1.5rem;
+  }
+}
+
 @media (max-width: 1024px) {
-  .header__actions .btn--sm:not(.header__toggle) {
+  .header__cta {
+    display: none;
+  }
+
+  .header__wa-text {
     display: none;
   }
 
@@ -986,51 +1088,13 @@ a.contacto__item:hover {
 }
 
 @media (max-width: 768px) {
-  .nav {
-    position: fixed;
-    top: var(--header-h);
-    left: 0;
-    right: 0;
-    background: rgba(17, 24, 39, 0.98);
-    border-bottom: 1px solid rgba(129, 184, 191, 0.1);
-    padding: 1.5rem;
-    transform: translateY(-120%);
-    opacity: 0;
-    transition: var(--transition);
-    pointer-events: none;
+  .header__nav-inner {
+    justify-content: flex-start;
   }
 
-  .nav--open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .nav__list {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .nav__link {
-    display: block;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid rgba(129, 184, 191, 0.08);
-  }
-
-  .header__toggle {
-    display: flex;
-  }
-
-  .header__toggle--active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-  }
-
-  .header__toggle--active span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .header__toggle--active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+  .header__nav-link {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
   }
 
   .ticket-details {
