@@ -3,9 +3,9 @@
 
   const STATUS_MAP = {
     'Recibido': 'recibido',
-    'En diagnùstico': 'diagnostico',
+    'En diagn√≥stico': 'diagnostico',
     'Esperando repuesto': 'repuesto',
-    'En reparaciùn': 'reparacion',
+    'En reparaci√≥n': 'reparacion',
     'En pruebas': 'pruebas',
     'Listo para entrega': 'listo',
     'Entregado': 'entregado'
@@ -14,34 +14,34 @@
   const DEMO_TICKETS = {
     'MB-2026-0001': {
       ticket: 'MB-2026-0001',
-      cliente: 'Carlos Mùndez',
+      cliente: 'Carlos M√©ndez',
       telefono: '3204293863',
-      estado: 'En reparaciùn',
+      estado: 'En reparaci√≥n',
       fechaIngreso: '2026-05-28',
-      tecnico: 'Andrùs Gùmez',
+      tecnico: 'Andr√©s G√≥mez',
       observaciones: 'Cambio de pantalla LCD 15.6" y limpieza interna. Repuesto en camino.',
       fechaEstimada: '2026-06-10',
       historial: [
         { fecha: '2026-05-28', texto: 'Equipo recibido en taller' },
-        { fecha: '2026-05-29', texto: 'Diagnùstico completado ù pantalla daùada' },
+        { fecha: '2026-05-29', texto: 'Diagn√≥stico completado - pantalla da√±ada' },
         { fecha: '2026-06-02', texto: 'Repuesto solicitado al proveedor' },
-        { fecha: '2026-06-07', texto: 'En reparaciùn ù instalaciùn de pantalla' }
+        { fecha: '2026-06-07', texto: 'En reparaci√≥n - instalaci√≥n de pantalla' }
       ]
     },
     'MB-2026-0002': {
       ticket: 'MB-2026-0002',
-      cliente: 'Ana Rodrùguez',
+      cliente: 'Ana Rodr√≠guez',
       telefono: '3105551234',
       estado: 'Listo para entrega',
       fechaIngreso: '2026-06-01',
       tecnico: 'Laura Vargas',
-      observaciones: 'Instalaciùn de 4 cùmaras IP y configuraciùn de DVR. Sistema operativo.',
+      observaciones: 'Instalaci√≥n de 4 c√°maras IP y configuraci√≥n de DVR. Sistema operativo.',
       fechaEstimada: '2026-06-08',
       historial: [
-        { fecha: '2026-06-01', texto: 'Servicio programado ù visita en sitio' },
-        { fecha: '2026-06-03', texto: 'Instalaciùn de cùmaras completada' },
-        { fecha: '2026-06-05', texto: 'Configuraciùn remota y pruebas OK' },
-        { fecha: '2026-06-07', texto: 'Listo para entrega ù pendiente retiro' }
+        { fecha: '2026-06-01', texto: 'Servicio programado - visita en sitio' },
+        { fecha: '2026-06-03', texto: 'Instalaci√≥n de c√°maras completada' },
+        { fecha: '2026-06-05', texto: 'Configuraci√≥n remota y pruebas OK' },
+        { fecha: '2026-06-07', texto: 'Listo para entrega - pendiente retiro' }
       ]
     }
   };
@@ -165,7 +165,7 @@
         `Hola, soy ${nombre}. Me interesa el servicio de ${servicioText}. ${mensaje}`
       );
 
-      window.open(`https://wa.me/573204293863?text=${waMessage}`, '_blank');
+      window.open(`https://wa.me/573133141701?text=${waMessage}`, '_blank');
 
       document.getElementById('formSuccess').hidden = false;
       contactForm.reset();

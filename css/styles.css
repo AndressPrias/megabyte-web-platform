@@ -1,6 +1,6 @@
 /* =============================================
-   Megabyte MB - Estilos Corporativos
-   Paleta: #00B4D8 ù #9D4EDD ù #111827 ù #81B8BF
+   Megabyte - Estilos Corporativos
+   Paleta: #00B4D8 - #9D4EDD - #111827 - #81B8BF
    ============================================= */
 
 :root {
@@ -181,7 +181,7 @@ ul { list-style: none; }
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .header__name {
@@ -208,7 +208,7 @@ ul { list-style: none; }
   flex-shrink: 0;
 }
 
-/* ---- Page Hero (subpùginas) ---- */
+/* ---- Page Hero (subp√°ginas) ---- */
 .page-hero {
   padding-top: calc(var(--header-h) + 3rem);
   padding-bottom: 2rem;
@@ -232,7 +232,7 @@ ul { list-style: none; }
   font-size: 1.05rem;
 }
 
-/* ---- Accesos rùpidos (inicio) ---- */
+/* ---- Accesos r√°pidos (inicio) ---- */
 .accesos {
   background: linear-gradient(180deg, var(--night) 0%, #0d1526 100%);
 }
@@ -967,6 +967,7 @@ a.contacto__item:hover {
   width: 40px;
   height: 40px;
   border-radius: 8px;
+  object-fit: contain;
 }
 
 .footer__brand strong {
@@ -1003,7 +1004,7 @@ a.contacto__item:hover {
   color: rgba(203, 213, 225, 0.5);
 }
 
-/* ---- Menù flotante + WhatsApp ---- */
+/* ---- Men√∫ flotante + WhatsApp ---- */
 #site-float {
   position: relative;
   z-index: 1001;
