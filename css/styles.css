@@ -1066,8 +1066,9 @@ a.contacto__item:hover {
 /* ---- Animations ---- */
 [data-animate] {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: opacity, transform;
 }
 
 [data-animate].visible {
@@ -1187,5 +1188,19 @@ a.contacto__item:hover {
 
   .hero__actions .btn {
     width: 100%;
+  }
+}
+
+body {
+  opacity: 0;
+  animation: pageFadeIn 0.45s ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

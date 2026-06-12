@@ -58,6 +58,8 @@
     });
   }
 
+  window.megabyteSetActivePage = setActivePage;
+
   function initHeaderMenu() {
     const header = document.getElementById('header');
     const menuButton = document.querySelector('.header__menu');

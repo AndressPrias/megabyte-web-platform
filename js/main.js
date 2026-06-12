@@ -48,27 +48,36 @@
 
   function initScrollEffects() {
     const header = document.getElementById('header');
-    if (!header) return;
+    if (!header || window.megabyteScrollEffectsReady) return;
 
+    window.megabyteScrollEffectsReady = true;
     window.addEventListener('scroll', () => {
       header.classList.toggle('header--scrolled', window.scrollY > 50);
     });
   }
 
   function initAnimations() {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-    );
+    const animatedElements = document.querySelectorAll('[data-animate]');
+    if (!animatedElements.length) return;
 
-    document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+    const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  {
+    threshold: 0.15,
+    rootMargin: "0px 0px -40px 0px"
+  }
+);
+
+animatedElements.forEach((element) => {
+  observer.observe(element);
+});
   }
 
   function normalizePhone(phone) {
@@ -182,6 +191,8 @@
     initTicketForm();
     initContactForm();
   }
+
+  window.megabyteInitPage = init;
 
   if (document.getElementById('site-header')) {
     window.addEventListener('layoutready', init);
