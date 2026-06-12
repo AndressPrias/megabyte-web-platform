@@ -19,8 +19,8 @@
   --radius-lg: 20px;
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --header-top-h: 72px;
-  --header-nav-h: 48px;
+  --header-top-h: 76px;
+  --header-nav-h: 0px;
   --header-h: calc(var(--header-top-h) + var(--header-nav-h));
 }
 
@@ -110,7 +110,7 @@ ul { list-style: none; }
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(17, 24, 39, 0.97);
+  background: rgba(17, 24, 39, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(129, 184, 191, 0.15);
@@ -121,44 +121,34 @@ ul { list-style: none; }
   box-shadow: var(--shadow);
 }
 
-.header__top {
-  height: var(--header-top-h);
-  border-bottom: 1px solid rgba(129, 184, 191, 0.08);
-}
-
 .header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: var(--header-top-h);
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .header__nav {
-  height: var(--header-nav-h);
-  background: rgba(17, 24, 39, 0.95);
-}
-
-.header__nav-inner {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
-  height: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.header__nav-inner::-webkit-scrollbar {
-  display: none;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.35rem;
+  border: 1px solid rgba(129, 184, 191, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .header__nav-link {
+  position: relative;
   flex-shrink: 0;
-  padding: 0.4rem 1rem;
-  border-radius: 50px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
   color: var(--text-secondary);
   transition: var(--transition);
   white-space: nowrap;
@@ -166,8 +156,12 @@ ul { list-style: none; }
 
 .header__nav-link:hover,
 .header__nav-link.active {
-  color: var(--cyan);
-  background: var(--gradient-soft);
+  color: var(--text-main);
+  background: rgba(0, 180, 216, 0.14);
+}
+
+.header__nav-link.active {
+  box-shadow: inset 0 0 0 1px rgba(0, 180, 216, 0.28);
 }
 
 .header__logo {
@@ -206,6 +200,37 @@ ul { list-style: none; }
   align-items: center;
   gap: 0.6rem;
   flex-shrink: 0;
+}
+
+.header__menu {
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(129, 184, 191, 0.22);
+  border-radius: 999px;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.header__menu:hover {
+  border-color: rgba(0, 180, 216, 0.45);
+  background: rgba(0, 180, 216, 0.12);
+}
+
+.header__menu-close {
+  display: none;
+}
+
+.header--open .header__menu-open {
+  display: none;
+}
+
+.header--open .header__menu-close {
+  display: block;
 }
 
 /* ---- Page Hero (subpáginas) ---- */
@@ -1058,10 +1083,6 @@ a.contacto__item:hover {
 }
 
 @media (max-width: 1024px) {
-  .header__cta {
-    display: none;
-  }
-
   .header__wa-text {
     display: none;
   }
@@ -1088,14 +1109,54 @@ a.contacto__item:hover {
   }
 }
 
-@media (max-width: 768px) {
-  .header__nav-inner {
-    justify-content: flex-start;
+@media (max-width: 900px) {
+  .header__inner {
+    position: relative;
+  }
+
+  .header__nav {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 4%;
+    right: 4%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem;
+    padding: 0.7rem;
+    border-radius: 18px;
+    background: rgba(17, 24, 39, 0.98);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: var(--transition);
+  }
+
+  .header--open .header__nav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .header__nav-link {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .header__cta {
+    display: none;
+  }
+
+  .header__menu {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__nav-link {
     font-size: 0.8rem;
-    padding: 0.35rem 0.75rem;
   }
 
   .ticket-details {
@@ -1114,6 +1175,10 @@ a.contacto__item:hover {
 @media (max-width: 480px) {
   .header__brand {
     display: none;
+  }
+
+  .header__nav {
+    grid-template-columns: 1fr;
   }
 
   .hero__actions {
