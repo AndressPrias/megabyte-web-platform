@@ -47,6 +47,16 @@ img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 
+.transition-main {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  will-change: opacity, transform;
+}
+
+html.is-animating .transition-main {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
 .container {
   width: min(1140px, 92%);
   margin-inline: auto;
@@ -1156,6 +1166,16 @@ a.contacto__item:hover {
 }
 
 @media (max-width: 768px) {
+  .header {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  [data-animate] {
+    transform: translateY(10px);
+    transition-duration: 0.38s;
+  }
+
   .header__nav-link {
     font-size: 0.8rem;
   }
