@@ -24,7 +24,7 @@
       <a href="index.html" class="header__nav-link" data-page="inicio">Inicio</a>
       <a href="servicios.html" class="header__nav-link" data-page="servicios">Servicios</a>
       <a href="seguimiento.html" class="header__nav-link" data-page="seguimiento">Seguimiento</a>
-      <a href="tienda.html" class="header__nav-link" data-page="tienda">Tienda</a>
+      <a href="tienda.html" class="header__nav-link header__nav-link--store" data-page="tienda">Tienda</a>
       <a href="nosotros.html" class="header__nav-link" data-page="nosotros">Nosotros</a>
       <a href="contacto.html" class="header__nav-link" data-page="contacto">Contacto</a>
     </nav>
