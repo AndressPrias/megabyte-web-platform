@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Carrito de compras Megabyte MB Store.">
+  <title>Carrito | Megabyte MB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="store-body" data-store-page="cart">
+  <header class="store-header">
+    <div class="container store-header__inner">
+      <a href="tienda.html" class="store-logo" aria-label="Ir a tienda Megabyte">
+        <img src="assets/Fav_icon.png" alt="Megabyte MB" width="44" height="44">
+        <span><strong>MEGABYTE</strong><small>Tienda tecnológica</small></span>
+      </a>
+      <nav class="store-nav store-nav--compact" aria-label="Navegación tienda">
+        <a href="tienda.html">Productos</a>
+        <a href="checkout.html">Checkout</a>
+      </nav>
+      <a class="store-cart" href="carrito.html"><span>Carrito</span><strong data-cart-count hidden>0</strong></a>
+    </div>
+  </header>
+
+  <main class="store-main cart-page">
+    <section class="store-section">
+      <div class="container cart-page__grid">
+        <div>
+          <span class="section__tag">Carrito</span>
+          <h1>Tu pedido</h1>
+          <div class="cart-list" id="cartItems"></div>
+        </div>
+        <aside class="cart-summary">
+          <h2>Resumen</h2>
+          <div><span>Subtotal</span><strong id="cartSubtotal">$0</strong></div>
+          <div><span>Total</span><strong id="cartTotal">$0</strong></div>
+          <a href="checkout.html" class="btn btn--primary btn--full">Finalizar compra</a>
+          <a href="tienda.html" class="btn btn--outline btn--full">Seguir comprando</a>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/store.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Checkout Megabyte MB Store por WhatsApp.">
+  <title>Checkout | Megabyte MB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="store-body" data-store-page="checkout">
+  <header class="store-header">
+    <div class="container store-header__inner">
+      <a href="tienda.html" class="store-logo" aria-label="Ir a tienda Megabyte">
+        <img src="assets/Fav_icon.png" alt="Megabyte MB" width="44" height="44">
+        <span><strong>MEGABYTE</strong><small>Tienda tecnológica</small></span>
+      </a>
+      <nav class="store-nav store-nav--compact" aria-label="Navegación tienda">
+        <a href="tienda.html">Productos</a>
+        <a href="carrito.html">Carrito</a>
+      </nav>
+      <a class="store-cart" href="carrito.html"><span>Carrito</span><strong data-cart-count hidden>0</strong></a>
+    </div>
+  </header>
+
+  <main class="store-main checkout-page">
+    <section class="store-section">
+      <div class="container checkout-page__grid">
+        <form class="checkout-form" id="checkoutForm">
+          <span class="section__tag">Datos del cliente</span>
+          <h1>Finalizar por WhatsApp</h1>
+          <div class="form-row">
+            <div class="form-group"><label for="nombre">Nombre</label><input id="nombre" name="nombre" required></div>
+            <div class="form-group"><label for="celular">Celular</label><input id="celular" name="celular" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="correo">Correo</label><input id="correo" name="correo" type="email" required></div>
+            <div class="form-group"><label for="ciudad">Ciudad</label><input id="ciudad" name="ciudad" required></div>
+          </div>
+          <div class="form-group"><label for="direccion">Dirección</label><input id="direccion" name="direccion" required></div>
+          <div class="form-group">
+            <label for="entrega">Método de entrega</label>
+            <select id="entrega" name="entrega" required>
+              <option value="Recoger en tienda">Recoger en tienda</option>
+              <option value="Domicilio coordinado">Domicilio coordinado</option>
+              <option value="Instalación en sitio">Instalación en sitio</option>
+            </select>
+          </div>
+          <div class="form-group"><label for="observaciones">Observaciones</label><textarea id="observaciones" name="observaciones" rows="4"></textarea></div>
+          <button class="btn btn--primary btn--full" type="submit">Enviar pedido por WhatsApp</button>
+        </form>
+        <aside class="checkout-summary">
+          <h2>Resumen del pedido</h2>
+          <div id="checkoutSummary"></div>
+          <div class="checkout-summary__total"><span>Total</span><strong id="checkoutTotal">$0</strong></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/store.js"></script>
+</body>
+</html>
