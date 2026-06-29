@@ -23,11 +23,10 @@
       <div class="hero__bg"></div>
       <div class="container hero__content">
         <div class="hero__text" data-animate>
-          <span class="hero__badge">Megabyte</span>
-          <h1 class="hero__title">Soluciones Tecnológicas Profesionales</h1>
+          <span class="hero__badge">Megabyte MB</span>
+          <h1 class="hero__title">Soluciones tecnológicas para un mundo que <span>no se detiene</span></h1>
           <p class="hero__subtitle">
-            Reparación de computadores, mantenimiento preventivo y correctivo, venta de equipos,
-            cámaras de seguridad, redes, diseño web y soporte remoto. Confianza y calidad en cada servicio.
+            Mantenimiento, reparación y venta de equipos, seguridad electrónica, redes y soporte remoto.
           </p>
           <div class="hero__actions">
             <a href="contacto.html" class="btn btn--primary btn--lg">Solicitar Servicio</a>
@@ -36,23 +35,7 @@
               WhatsApp
             </a>
           </div>
-        </div>
-        <div class="hero__visual" data-animate>
-          <div class="hero__card">
-            <div class="hero__card-icon">
-              <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                <path d="M8 52 L32 12 L56 52" stroke="url(#gradM)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <defs><linearGradient id="gradM" x1="8" y1="52" x2="56" y2="12"><stop stop-color="#9D4EDD"/><stop offset="1" stop-color="#00B4D8"/></linearGradient></defs>
-              </svg>
-            </div>
-            <p class="hero__card-title">+500 servicios atendidos</p>
-            <p class="hero__card-desc">Diagnóstico gratuito y garantía en reparaciones</p>
-            <div class="hero__metrics" aria-label="Indicadores de servicio">
-              <div class="hero__metric"><strong>24h</strong><span>respuesta</span></div>
-              <div class="hero__metric"><strong>90%</strong><span>casos resueltos</span></div>
-              <div class="hero__metric"><strong>MB</strong><span>garantía</span></div>
-            </div>
-          </div>
+          <a class="hero__store-link" href="tienda.html">Ver tienda <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -127,6 +110,46 @@
               <div><strong>Juan Pérez</strong><span>Cliente verificado</span></div>
             </div>
           </article>
+        </div>
+        <div class="opinion-box" data-animate>
+          <div class="opinion-box__copy">
+            <span class="section__tag">Tu experiencia</span>
+            <h3>Comparte tu opinión</h3>
+            <p>Cuéntanos cómo fue tu servicio con Megabyte. Tu reseña se mostrará en esta sección.</p>
+          </div>
+          <form class="opinion-form" id="opinionForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="opinionName">Nombre</label>
+                <input id="opinionName" type="text" name="nombre" placeholder="Tu nombre" maxlength="40" required>
+              </div>
+              <div class="form-group">
+                <label for="opinionService">Servicio</label>
+                <input id="opinionService" type="text" name="servicio" placeholder="Ej: Reparación de laptop" maxlength="45" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="opinionText">Opinión</label>
+              <textarea id="opinionText" name="opinion" rows="4" placeholder="Escribe tu experiencia..." maxlength="220" required></textarea>
+            </div>
+            <fieldset class="rating-field">
+              <legend>Calificación</legend>
+              <div class="rating-picker">
+                <input id="rating5" type="radio" name="rating" value="5" checked>
+                <label for="rating5" aria-label="5 estrellas">★</label>
+                <input id="rating4" type="radio" name="rating" value="4">
+                <label for="rating4" aria-label="4 estrellas">★</label>
+                <input id="rating3" type="radio" name="rating" value="3">
+                <label for="rating3" aria-label="3 estrellas">★</label>
+                <input id="rating2" type="radio" name="rating" value="2">
+                <label for="rating2" aria-label="2 estrellas">★</label>
+                <input id="rating1" type="radio" name="rating" value="1">
+                <label for="rating1" aria-label="1 estrella">★</label>
+              </div>
+            </fieldset>
+            <button class="btn btn--primary btn--lg" type="submit">Publicar opinión</button>
+            <p class="form-success" id="opinionSuccess" hidden>Gracias, tu opinión fue agregada.</p>
+          </form>
         </div>
       </div>
     </section>

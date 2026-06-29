@@ -186,9 +186,13 @@
 
   function updateCartCount() {
     const count = getCart().reduce((sum, item) => sum + item.quantity, 0);
+    const total = cartTotal();
     document.querySelectorAll('[data-cart-count]').forEach((node) => {
       node.textContent = String(count);
       node.hidden = count === 0;
+    });
+    document.querySelectorAll('[data-cart-total]').forEach((node) => {
+      node.textContent = formatPrice(total);
     });
   }
 
@@ -404,6 +408,23 @@
       if (category) {
         document.querySelectorAll('.store-category').forEach((node) => node.classList.remove('is-active'));
         category.classList.add('is-active');
+        const categorySelect = document.querySelector('.store-category-select select');
+        if (categorySelect && [...categorySelect.options].some((option) => option.value === category.dataset.category)) {
+          categorySelect.value = category.dataset.category;
+        }
+        renderProducts();
+      }
+
+      const categoryLink = event.target.closest('[data-category-link]');
+      if (categoryLink) {
+        const selectedCategory = categoryLink.dataset.categoryLink;
+        document.querySelectorAll('.store-category').forEach((node) => {
+          node.classList.toggle('is-active', node.dataset.category === selectedCategory);
+        });
+        const categorySelect = document.querySelector('.store-category-select select');
+        if (categorySelect && [...categorySelect.options].some((option) => option.value === selectedCategory)) {
+          categorySelect.value = selectedCategory;
+        }
         renderProducts();
       }
 
@@ -423,6 +444,16 @@
     document.addEventListener('input', (event) => {
       if (event.target.matches('#storeSearch, #storeSort')) renderProducts();
       if (event.target.matches('[data-cart-qty]')) updateQuantity(event.target.dataset.cartQty, event.target.value);
+    });
+
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches('.store-category-select select')) return;
+
+      const selectedCategory = event.target.value;
+      document.querySelectorAll('.store-category').forEach((node) => {
+        node.classList.toggle('is-active', node.dataset.category === selectedCategory);
+      });
+      renderProducts();
     });
 
     const checkoutForm = document.getElementById('checkoutForm');

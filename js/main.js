@@ -185,11 +185,113 @@ animatedElements.forEach((element) => {
     });
   }
 
+  function getInitials(name) {
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('') || 'MB';
+  }
+
+  function createOpinionCard(opinion) {
+    const article = document.createElement('article');
+    article.className = 'testimonio-card testimonio-card--user visible';
+
+    const stars = document.createElement('div');
+    stars.className = 'testimonio-card__stars';
+    const rating = Math.min(5, Math.max(1, Number(opinion.rating) || 5));
+    stars.setAttribute('aria-label', `${rating} de 5 estrellas`);
+    stars.textContent = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+
+    const text = document.createElement('p');
+    text.className = 'testimonio-card__text';
+    text.textContent = `"${opinion.text}"`;
+
+    const author = document.createElement('div');
+    author.className = 'testimonio-card__author';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'testimonio-card__avatar';
+    avatar.textContent = getInitials(opinion.name);
+
+    const meta = document.createElement('div');
+    const name = document.createElement('strong');
+    name.textContent = opinion.name;
+    const service = document.createElement('span');
+    service.textContent = opinion.service;
+
+    meta.append(name, service);
+    author.append(avatar, meta);
+    article.append(stars, text, author);
+
+    return article;
+  }
+
+  function loadOpinions() {
+    try {
+      return JSON.parse(localStorage.getItem('megabyteOpinions') || '[]');
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function saveOpinions(opinions) {
+    try {
+      localStorage.setItem('megabyteOpinions', JSON.stringify(opinions));
+    } catch (error) {
+      return false;
+    }
+    return true;
+  }
+
+  function initOpinionForm() {
+    const form = document.getElementById('opinionForm');
+    const grid = document.querySelector('.testimonios__grid');
+    if (!form || !grid || form.dataset.ready === 'true') return;
+
+    form.dataset.ready = 'true';
+    const success = document.getElementById('opinionSuccess');
+    const savedOpinions = loadOpinions();
+
+    savedOpinions.forEach((opinion) => {
+      grid.prepend(createOpinionCard(opinion));
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const opinion = {
+        name: document.getElementById('opinionName').value.trim(),
+        service: document.getElementById('opinionService').value.trim(),
+        text: document.getElementById('opinionText').value.trim(),
+        rating: Number(form.querySelector('input[name="rating"]:checked')?.value || 5)
+      };
+
+      if (!opinion.name || !opinion.service || !opinion.text) return;
+
+      const opinions = [opinion, ...savedOpinions].slice(0, 6);
+      saveOpinions(opinions);
+      grid.prepend(createOpinionCard(opinion));
+      savedOpinions.unshift(opinion);
+      savedOpinions.splice(6);
+      form.reset();
+
+      if (success) {
+        success.hidden = false;
+        setTimeout(() => {
+          success.hidden = true;
+        }, 4500);
+      }
+    });
+  }
+
   function init() {
     initScrollEffects();
     initAnimations();
     initTicketForm();
     initContactForm();
+    initOpinionForm();
   }
 
   window.megabyteInitPage = init;

@@ -20,13 +20,19 @@
       </div>
     </a>
 
+    <label class="header__search">
+      <span>Buscar</span>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Buscar servicios, productos o soporte...">
+      <kbd>Ctrl K</kbd>
+    </label>
+
     <nav class="header__nav" id="nav" aria-label="Navegacion principal">
-      <a href="index.html" class="header__nav-link" data-page="inicio">Inicio</a>
-      <a href="servicios.html" class="header__nav-link" data-page="servicios">Servicios</a>
-      <a href="seguimiento.html" class="header__nav-link" data-page="seguimiento">Seguimiento</a>
-      <a href="tienda.html" class="header__nav-link header__nav-link--store" data-page="tienda">Tienda</a>
-      <a href="nosotros.html" class="header__nav-link" data-page="nosotros">Nosotros</a>
-      <a href="contacto.html" class="header__nav-link" data-page="contacto">Contacto</a>
+      <a href="servicios.html" class="header__nav-link" data-page="servicios"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14.7 6.3 3 3M5 19l8.8-8.8M14 5l5 5-2 2-5-5 2-2Z"/><path d="m7 17-2 2"/></svg><span>Servicios</span></a>
+      <a href="seguimiento.html" class="header__nav-link" data-page="seguimiento"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 15h8M8 11h5M8 8h8"/></svg><span>Seguimiento</span></a>
+      <a href="tienda.html" class="header__nav-link header__nav-link--store" data-page="tienda"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6h15l-2 8H8L6 6Z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span>Tienda</span><em data-cart-count hidden>0</em></a>
+      <a href="nosotros.html" class="header__nav-link" data-page="nosotros"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-8 0v2"/><circle cx="12" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg><span>Nosotros</span></a>
+      <a href="contacto.html" class="header__nav-link" data-page="contacto"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0v4a3 3 0 0 1-3 3h-2"/><path d="M4 13v3a2 2 0 0 0 2 2h1v-7H6a2 2 0 0 0-2 2Zm16 0v3a2 2 0 0 1-2 2h-1v-7h1a2 2 0 0 1 2 2Z"/></svg><span>Contacto</span></a>
     </nav>
 
     <div class="header__actions">
@@ -38,10 +44,6 @@
         ${WHATSAPP_ICON}
         <span class="header__wa-text">313 314 1701</span>
       </a>
-      <button class="header__menu" type="button" aria-label="Abrir menu" aria-controls="nav" aria-expanded="false">
-        <svg class="header__menu-open" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <svg class="header__menu-close" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
     </div>
   </div>
 </header>`;
@@ -60,32 +62,6 @@
 
   window.megabyteSetActivePage = setActivePage;
 
-  function initHeaderMenu() {
-    const header = document.getElementById('header');
-    const menuButton = document.querySelector('.header__menu');
-    const nav = document.getElementById('nav');
-
-    if (!header || !menuButton || !nav) return;
-
-    const closeMenu = () => {
-      header.classList.remove('header--open');
-      menuButton.setAttribute('aria-expanded', 'false');
-    };
-
-    menuButton.addEventListener('click', () => {
-      const isOpen = header.classList.toggle('header--open');
-      menuButton.setAttribute('aria-expanded', String(isOpen));
-    });
-
-    nav.addEventListener('click', (event) => {
-      if (event.target.closest('.header__nav-link')) closeMenu();
-    });
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 900) closeMenu();
-    });
-  }
-
   function injectLayout() {
     const headerEl = document.getElementById('site-header');
     const floatEl = document.getElementById('site-float');
@@ -98,7 +74,6 @@
     }
 
     setActivePage();
-    initHeaderMenu();
     window.dispatchEvent(new Event('layoutready'));
   }
 
