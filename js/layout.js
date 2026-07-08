@@ -13,11 +13,7 @@
 <header class="header" id="header">
   <div class="container header__inner">
     <a href="index.html" class="header__logo" aria-label="Ir al inicio">
-      <img src="assets/Fav_icon.png" alt="Megabyte MB" width="48" height="48">
-      <div class="header__brand">
-        <span class="header__name">MEGABYTE</span>
-        <span class="header__slogan">Tu tecnologia, nuestro cuidado</span>
-      </div>
+      <img src="assets/logo-menu-megabyte.png" alt="Megabyte MB" width="190" height="64">
     </a>
 
     <label class="header__search">
