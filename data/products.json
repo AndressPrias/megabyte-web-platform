@@ -1,0 +1,142 @@
+[
+  {
+    "id": "portatil",
+    "name": "Portatil",
+    "brand": "Samsung",
+    "category": "computadores",
+    "price": 10000000,
+    "oldPrice": 10000000,
+    "discount": 0,
+    "stock": 1,
+    "rating": 4.8,
+    "badge": "Usado",
+    "imageType": "laptop",
+    "shortDescription": "Prueba",
+    "description": "Prueba",
+    "specs": [
+      "Prueba"
+    ],
+    "warranty": "30 días",
+    "availability": "Disponible"
+  },
+  {
+    "id": "laptop-hp-i5",
+    "name": "Laptop HP Core i5",
+    "brand": "HP",
+    "category": "computadores",
+    "price": 1450000,
+    "oldPrice": 1690000,
+    "discount": 14,
+    "stock": 3,
+    "rating": 4.8,
+    "badge": "Usado certificado",
+    "imageType": "laptop",
+    "shortDescription": "Equipo revisado, optimizado y listo para oficina, estudio o trabajo remoto.",
+    "description": "Laptop HP reacondicionada por Megabyte MB, con mantenimiento preventivo, limpieza interna, pruebas de rendimiento y sistema listo para usar.",
+    "specs": [
+      "Intel Core i5",
+      "8GB RAM",
+      "SSD 256GB",
+      "Windows 11",
+      "Pantalla 14-15.6 pulgadas"
+    ],
+    "warranty": "Garantia de 90 dias por funcionamiento.",
+    "availability": "Listo para entrega"
+  },
+  {
+    "id": "pc-gamer-ryzen",
+    "name": "PC Escritorio Gamer",
+    "brand": "Armado MB",
+    "category": "computadores",
+    "price": 2850000,
+    "oldPrice": 3190000,
+    "discount": 11,
+    "stock": 2,
+    "rating": 4.9,
+    "badge": "Nuevo",
+    "imageType": "desktop",
+    "shortDescription": "Torre armada para gaming, diseno, estudio y multitarea exigente.",
+    "description": "PC de escritorio configurado segun disponibilidad de componentes. Se entrega probado, optimizado y con asesoria para futuras mejoras.",
+    "specs": [
+      "Ryzen 5",
+      "16GB RAM",
+      "GTX 1660",
+      "SSD 512GB",
+      "Fuente certificada"
+    ],
+    "warranty": "Garantia segun componentes y ensamble.",
+    "availability": "Bajo pedido"
+  },
+  {
+    "id": "kit-perifericos",
+    "name": "Kit Perifericos",
+    "brand": "Accesorios",
+    "category": "accesorios",
+    "price": 185000,
+    "oldPrice": 230000,
+    "discount": 20,
+    "stock": 8,
+    "rating": 4.7,
+    "badge": "Combo",
+    "imageType": "audio",
+    "shortDescription": "Combo de teclado, mouse y audifonos para oficina o entretenimiento.",
+    "description": "Kit de perifericos recomendado para renovar el puesto de trabajo o completar un equipo nuevo.",
+    "specs": [
+      "Teclado USB",
+      "Mouse optico",
+      "Audifonos con microfono",
+      "Compatibilidad Windows",
+      "Opciones cableadas o inalambricas"
+    ],
+    "warranty": "Garantia de 30 dias por defectos de fabrica.",
+    "availability": "Disponibilidad variable"
+  },
+  {
+    "id": "camara-ip-wifi",
+    "name": "Camara IP Wi-Fi",
+    "brand": "CCTV / IP",
+    "category": "seguridad",
+    "price": 210000,
+    "oldPrice": 260000,
+    "discount": 19,
+    "stock": 5,
+    "rating": 4.6,
+    "badge": "Seguridad",
+    "imageType": "camera",
+    "shortDescription": "Camara Wi-Fi con vision nocturna, app movil y configuracion inicial.",
+    "description": "Solucion de vigilancia para hogares y negocios pequenos. Puede instalarse como producto individual o dentro de un sistema de seguridad.",
+    "specs": [
+      "Resolucion 1080p",
+      "Vision nocturna",
+      "Audio bidireccional",
+      "App movil",
+      "Instalacion opcional"
+    ],
+    "warranty": "Garantia de 60 dias por funcionamiento.",
+    "availability": "Instalable"
+  },
+  {
+    "id": "ssd-512gb",
+    "name": "SSD 512GB SATA",
+    "brand": "Upgrade",
+    "category": "componentes",
+    "price": 220000,
+    "oldPrice": 280000,
+    "discount": 21,
+    "stock": 6,
+    "rating": 4.8,
+    "badge": "Mejora",
+    "imageType": "drive",
+    "shortDescription": "Actualizacion recomendada para acelerar computadores lentos.",
+    "description": "Unidad SSD ideal para mejorar arranque, apertura de programas y fluidez general. Instalacion y clonacion disponibles.",
+    "specs": [
+      "512GB",
+      "Interfaz SATA",
+      "Instalacion opcional",
+      "Compatible con laptop y PC",
+      "Clonacion bajo solicitud"
+    ],
+    "warranty": "Garantia de 90 dias.",
+    "availability": "Disponible"
+  }
+]

@@ -3,8 +3,16 @@
 
   const WHATSAPP_NUMBER = '573133141701';
   const CART_KEY = 'megabyte_store_cart';
+  const ADMIN_TOKEN_KEY = 'megabyte_admin_token';
+  const API_PRODUCTS = '/api/products';
+  const API_ADMIN = '/api/admin';
+  let productsCache = [];
+  let productsLoaded = false;
+  let backendAvailable = true;
+  let adminToken = localStorage.getItem(ADMIN_TOKEN_KEY) || '';
+  let adminAuthenticated = false;
 
-  const PRODUCTS = [
+  const DEFAULT_PRODUCTS = [
     {
       id: 'laptop-hp-i5',
       name: 'Laptop HP Core i5',
@@ -115,6 +123,133 @@
     }
   ];
 
+  const PRODUCT_CATEGORIES = ['computadores', 'accesorios', 'componentes', 'redes', 'seguridad', 'software'];
+  const PRODUCT_IMAGE_TYPES = ['laptop', 'desktop', 'audio', 'camera', 'drive', 'router'];
+
+  function normalizeProduct(product) {
+    const price = Math.max(0, Number(product.price) || 0);
+    const oldPrice = Math.max(price, Number(product.oldPrice) || price);
+    const discount = oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : Math.max(0, Number(product.discount) || 0);
+
+    return {
+      id: String(product.id || slugify(product.name || `producto-${Date.now()}`)),
+      name: String(product.name || 'Producto sin nombre').trim(),
+      brand: String(product.brand || 'Megabyte').trim(),
+      category: PRODUCT_CATEGORIES.includes(product.category) ? product.category : 'computadores',
+      price,
+      oldPrice,
+      discount,
+      stock: Math.max(0, Number(product.stock) || 0),
+      rating: Math.min(5, Math.max(0, Number(product.rating) || 4.8)),
+      badge: String(product.badge || 'Disponible').trim(),
+      imageType: PRODUCT_IMAGE_TYPES.includes(product.imageType) ? product.imageType : 'laptop',
+      shortDescription: String(product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
+      description: String(product.description || product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
+      specs: Array.isArray(product.specs)
+        ? product.specs.map((spec) => String(spec).trim()).filter(Boolean)
+        : String(product.specs || '').split('\n').map((spec) => spec.trim()).filter(Boolean),
+      warranty: String(product.warranty || 'Garantía según disponibilidad y condiciones del producto.').trim(),
+      availability: String(product.availability || (Number(product.stock) > 0 ? 'Disponible' : 'Agotado')).trim()
+    };
+  }
+
+  function slugify(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') || `producto-${Date.now()}`;
+  }
+
+  function defaultProducts() {
+    return DEFAULT_PRODUCTS.map(normalizeProduct);
+  }
+
+  function getProducts() {
+    return productsLoaded ? productsCache : defaultProducts();
+  }
+
+  async function apiRequest(path, options = {}) {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    };
+
+    const response = await fetch(path, { ...options, headers });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || 'No se pudo completar la solicitud');
+    }
+
+    return payload;
+  }
+
+  function adminHeaders() {
+    return adminToken ? { Authorization: `Bearer ${adminToken}` } : {};
+  }
+
+  async function loadProducts() {
+    try {
+      const payload = await apiRequest(API_PRODUCTS);
+      productsCache = Array.isArray(payload.products) ? payload.products.map(normalizeProduct) : [];
+      productsLoaded = true;
+      backendAvailable = true;
+    } catch (err) {
+      console.warn('Backend de productos no disponible, usando datos de ejemplo:', err);
+      productsCache = defaultProducts();
+      productsLoaded = true;
+      backendAvailable = false;
+    }
+  }
+
+  async function refreshProducts() {
+    await loadProducts();
+    updateCartCount();
+    renderProducts();
+    renderProductDetail();
+    renderCartPage();
+    renderCheckoutSummary();
+    renderAdminProducts();
+  }
+
+  async function verifyAdminSession() {
+    if (!adminToken || !backendAvailable) {
+      adminAuthenticated = false;
+      renderAdminAccess();
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN}/me`, { headers: adminHeaders() });
+      adminAuthenticated = true;
+    } catch (err) {
+      adminToken = '';
+      localStorage.removeItem(ADMIN_TOKEN_KEY);
+      adminAuthenticated = false;
+    }
+
+    renderAdminAccess();
+  }
+
+  function renderAdminAccess() {
+    const adminSection = document.getElementById('admin-productos');
+    const loginPanel = document.getElementById('adminLoginPanel');
+    const workspace = document.getElementById('adminWorkspace');
+    const state = document.getElementById('adminAccessState');
+    if (!adminSection || !loginPanel || !workspace) return;
+
+    adminSection.classList.toggle('is-authenticated', adminAuthenticated);
+    loginPanel.hidden = adminAuthenticated;
+    workspace.hidden = !adminAuthenticated;
+    if (state) {
+      state.textContent = backendAvailable
+        ? (adminAuthenticated ? 'Sesión de administrador activa' : 'Ingresa la contraseña de administrador')
+        : 'Para administrar productos debes abrir la web desde el servidor backend';
+    }
+  }
+
   function formatPrice(value) {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -137,7 +272,7 @@
   }
 
   function getProduct(id) {
-    return PRODUCTS.find((product) => product.id === id);
+    return getProducts().find((product) => product.id === id);
   }
 
   function addToCart(productId, quantity) {
@@ -246,7 +381,7 @@
     const query = (search?.value || '').toLowerCase().trim();
     const sortValue = sort?.value || 'featured';
 
-    let products = PRODUCTS.filter((product) => {
+    let products = getProducts().filter((product) => {
       const matchesCategory = activeCategory === 'todos' || product.category === activeCategory;
       const haystack = `${product.name} ${product.brand} ${product.category} ${product.shortDescription}`.toLowerCase();
       return matchesCategory && haystack.includes(query);
@@ -266,7 +401,13 @@
     if (!detail) return;
 
     const params = new URLSearchParams(window.location.search);
-    const product = getProduct(params.get('id')) || PRODUCTS[0];
+    const products = getProducts();
+    const product = getProduct(params.get('id')) || products[0];
+
+    if (!product) {
+      detail.innerHTML = '<div class="store-empty">No hay productos disponibles en el catálogo.</div>';
+      return;
+    }
 
     document.title = `${product.name} | Megabyte`;
     detail.innerHTML = `
@@ -307,12 +448,170 @@
 
     const related = document.getElementById('relatedProducts');
     if (related) {
-      related.innerHTML = PRODUCTS
+      related.innerHTML = products
         .filter((item) => item.id !== product.id)
         .slice(0, 3)
         .map(productCard)
         .join('');
     }
+  }
+
+  function productAdminRow(product) {
+    return `
+      <article class="store-admin__item">
+        <div class="store-admin__icon">${productIcon(product.imageType)}</div>
+        <div>
+          <span>${product.category} · ${product.brand}</span>
+          <strong>${product.name}</strong>
+          <small>${formatPrice(product.price)} · Stock ${product.stock}</small>
+        </div>
+        <div class="store-admin__item-actions">
+          <button type="button" class="btn btn--outline btn--sm" data-edit-product="${product.id}">Editar</button>
+          <button type="button" class="btn btn--outline btn--sm" data-delete-product="${product.id}">Eliminar</button>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderAdminProducts() {
+    const list = document.getElementById('adminProductList');
+    const total = document.getElementById('adminProductTotal');
+    if (!list) return;
+
+    const products = getProducts();
+    list.innerHTML = products.length
+      ? products.map(productAdminRow).join('')
+      : '<div class="store-empty">No hay productos creados todavía.</div>';
+    if (total) total.textContent = `${products.length} productos`;
+  }
+
+  function productToForm(product) {
+    const form = document.getElementById('adminProductForm');
+    if (!form || !product) return;
+
+    form.elements.productId.value = product.id;
+    form.elements.name.value = product.name;
+    form.elements.brand.value = product.brand;
+    form.elements.category.value = product.category;
+    form.elements.price.value = product.price;
+    form.elements.oldPrice.value = product.oldPrice;
+    form.elements.stock.value = product.stock;
+    form.elements.rating.value = product.rating;
+    form.elements.badge.value = product.badge;
+    form.elements.imageType.value = product.imageType;
+    form.elements.availability.value = product.availability;
+    form.elements.warranty.value = product.warranty;
+    form.elements.shortDescription.value = product.shortDescription;
+    form.elements.description.value = product.description;
+    form.elements.specs.value = product.specs.join('\n');
+    form.querySelector('[data-admin-submit]').textContent = 'Guardar cambios';
+    document.getElementById('adminFormTitle').textContent = 'Editar producto';
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetAdminForm() {
+    const form = document.getElementById('adminProductForm');
+    if (!form) return;
+    form.reset();
+    form.elements.productId.value = '';
+    form.elements.rating.value = '4.8';
+    form.elements.stock.value = '1';
+    form.elements.category.value = 'computadores';
+    form.elements.imageType.value = 'laptop';
+    form.querySelector('[data-admin-submit]').textContent = 'Agregar producto';
+    document.getElementById('adminFormTitle').textContent = 'Nuevo producto';
+  }
+
+  function productFromForm(form) {
+    const data = new FormData(form);
+    const name = data.get('name');
+    const currentId = data.get('productId');
+
+    return normalizeProduct({
+      id: currentId || slugify(name),
+      name,
+      brand: data.get('brand'),
+      category: data.get('category'),
+      price: data.get('price'),
+      oldPrice: data.get('oldPrice'),
+      stock: data.get('stock'),
+      rating: data.get('rating'),
+      badge: data.get('badge'),
+      imageType: data.get('imageType'),
+      availability: data.get('availability'),
+      warranty: data.get('warranty'),
+      shortDescription: data.get('shortDescription'),
+      description: data.get('description'),
+      specs: data.get('specs')
+    });
+  }
+
+  async function saveProductFromAdmin(form) {
+    const product = productFromForm(form);
+    const isEditing = Boolean(form.elements.productId.value);
+
+    if (!product.name || !product.price) {
+      showStoreNotice('Completa nombre y precio del producto');
+      return;
+    }
+
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesión como administrador');
+      return;
+    }
+
+    try {
+      const endpoint = isEditing ? `${API_ADMIN}/products/${encodeURIComponent(product.id)}` : `${API_ADMIN}/products`;
+      await apiRequest(endpoint, {
+        method: isEditing ? 'PUT' : 'POST',
+        headers: adminHeaders(),
+        body: JSON.stringify(product)
+      });
+      resetAdminForm();
+      await refreshProducts();
+      showStoreNotice('Producto guardado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo guardar');
+    }
+  }
+
+  async function deleteProduct(productId) {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesión como administrador');
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN}/products/${encodeURIComponent(productId)}`, {
+        method: 'DELETE',
+        headers: adminHeaders()
+      });
+      saveCart(getCart().filter((item) => item.id !== productId));
+      await refreshProducts();
+      showStoreNotice('Producto eliminado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo eliminar');
+    }
+  }
+
+  async function resetProductsToDefaults() {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesión como administrador');
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN}/products/restore`, {
+        method: 'POST',
+        headers: adminHeaders()
+      });
+      resetAdminForm();
+      await refreshProducts();
+      showStoreNotice('Catálogo restaurado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo restaurar');
+    }
+    showStoreNotice('Catálogo restaurado');
   }
 
   function cartItemTemplate(item) {
@@ -403,7 +702,7 @@
   }
 
   function bindStoreEvents() {
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', async (event) => {
       const category = event.target.closest('.store-category');
       if (category) {
         document.querySelectorAll('.store-category').forEach((node) => node.classList.remove('is-active'));
@@ -439,6 +738,28 @@
 
       const removeButton = event.target.closest('[data-remove-cart]');
       if (removeButton) removeFromCart(removeButton.dataset.removeCart);
+
+      const editProductButton = event.target.closest('[data-edit-product]');
+      if (editProductButton) productToForm(getProduct(editProductButton.dataset.editProduct));
+
+      const deleteProductButton = event.target.closest('[data-delete-product]');
+      if (deleteProductButton) await deleteProduct(deleteProductButton.dataset.deleteProduct);
+
+      const resetAdminButton = event.target.closest('[data-admin-reset]');
+      if (resetAdminButton) resetAdminForm();
+
+      const restoreProductsButton = event.target.closest('[data-admin-restore]');
+      if (restoreProductsButton) await resetProductsToDefaults();
+
+      const logoutButton = event.target.closest('[data-admin-logout]');
+      if (logoutButton) {
+        adminToken = '';
+        adminAuthenticated = false;
+        localStorage.removeItem(ADMIN_TOKEN_KEY);
+        renderAdminAccess();
+        resetAdminForm();
+        showStoreNotice('Sesión cerrada');
+      }
     });
 
     document.addEventListener('input', (event) => {
@@ -468,24 +789,68 @@
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
       });
     }
+
+    const adminForm = document.getElementById('adminProductForm');
+    if (adminForm) {
+      adminForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await saveProductFromAdmin(adminForm);
+      });
+    }
+
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    if (adminLoginForm) {
+      adminLoginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!backendAvailable) {
+          showStoreNotice('Abre la tienda desde el servidor backend');
+          return;
+        }
+
+        const password = new FormData(adminLoginForm).get('password');
+        try {
+          const payload = await apiRequest(`${API_ADMIN}/login`, {
+            method: 'POST',
+            body: JSON.stringify({ password })
+          });
+          adminToken = payload.token;
+          adminAuthenticated = true;
+          localStorage.setItem(ADMIN_TOKEN_KEY, adminToken);
+          adminLoginForm.reset();
+          renderAdminAccess();
+          renderAdminProducts();
+          showStoreNotice('Administrador conectado');
+        } catch (err) {
+          showStoreNotice(err.message || 'Contraseña incorrecta');
+        }
+      });
+    }
   }
 
-  function initStore() {
+  async function initStore() {
+    await loadProducts();
     updateCartCount();
     renderProducts();
     renderProductDetail();
     renderCartPage();
     renderCheckoutSummary();
+    renderAdminProducts();
+    renderAdminAccess();
     bindStoreEvents();
+    await verifyAdminSession();
   }
 
   window.MegabyteStore = {
-    products: PRODUCTS,
+    products: getProducts,
     addToCart,
     getCart,
+    getProducts,
     removeFromCart,
-    updateQuantity
+    updateQuantity,
+    resetProductsToDefaults
   };
 
-  document.addEventListener('DOMContentLoaded', initStore);
+  document.addEventListener('DOMContentLoaded', () => {
+    initStore().catch((err) => console.warn('No se pudo iniciar la tienda:', err));
+  });
 })();
