@@ -4,13 +4,13 @@
   const WHATSAPP_NUMBER = '573133141701';
   const CART_KEY = 'megabyte_store_cart';
   const ADMIN_TOKEN_KEY = 'megabyte_admin_token';
-  const API_PRODUCTS = '/api/products';
-  const API_ADMIN = '/api/admin';
+  const API_PRODUCTS = '/api/products.php';
+  const API_ADMIN = '/admin/api.php';
   let productsCache = [];
   let productsLoaded = false;
   let backendAvailable = true;
   let adminToken = localStorage.getItem(ADMIN_TOKEN_KEY) || '';
-  let adminAuthenticated = false;
+  let adminAuthenticated = document.body?.dataset.adminAuthenticated === 'true';
 
   const DEFAULT_PRODUCTS = [
     {
@@ -176,7 +176,7 @@
       ...(options.headers || {})
     };
 
-    const response = await fetch(path, { ...options, headers });
+    const response = await fetch(path, { ...options, headers, credentials: 'same-origin' });
     const payload = await response.json().catch(() => ({}));
 
     if (!response.ok) {
@@ -187,7 +187,7 @@
   }
 
   function adminHeaders() {
-    return adminToken ? { Authorization: `Bearer ${adminToken}` } : {};
+    return {};
   }
 
   async function loadProducts() {
@@ -222,7 +222,7 @@
     }
 
     try {
-      await apiRequest(`${API_ADMIN}/me`, { headers: adminHeaders() });
+      await apiRequest(`${API_ADMIN}?action=me`, { headers: adminHeaders() });
       adminAuthenticated = true;
     } catch (err) {
       adminToken = '';
@@ -561,7 +561,9 @@
     }
 
     try {
-      const endpoint = isEditing ? `${API_ADMIN}/products/${encodeURIComponent(product.id)}` : `${API_ADMIN}/products`;
+      const endpoint = isEditing
+        ? `${API_ADMIN}?action=product&id=${encodeURIComponent(product.id)}`
+        : `${API_ADMIN}?action=products`;
       await apiRequest(endpoint, {
         method: isEditing ? 'PUT' : 'POST',
         headers: adminHeaders(),
@@ -582,7 +584,7 @@
     }
 
     try {
-      await apiRequest(`${API_ADMIN}/products/${encodeURIComponent(productId)}`, {
+      await apiRequest(`${API_ADMIN}?action=product&id=${encodeURIComponent(productId)}`, {
         method: 'DELETE',
         headers: adminHeaders()
       });
@@ -601,7 +603,7 @@
     }
 
     try {
-      await apiRequest(`${API_ADMIN}/products/restore`, {
+      await apiRequest(`${API_ADMIN}?action=restore`, {
         method: 'POST',
         headers: adminHeaders()
       });
@@ -756,6 +758,7 @@
         adminToken = '';
         adminAuthenticated = false;
         localStorage.removeItem(ADMIN_TOKEN_KEY);
+        apiRequest(`${API_ADMIN}?action=logout`, { method: 'POST' }).catch(() => {});
         renderAdminAccess();
         resetAdminForm();
         showStoreNotice('Sesión cerrada');
@@ -809,9 +812,13 @@
 
         const password = new FormData(adminLoginForm).get('password');
         try {
-          const payload = await apiRequest(`${API_ADMIN}/login`, {
+          const formData = new FormData(adminLoginForm);
+          const payload = await apiRequest(`${API_ADMIN}?action=login`, {
             method: 'POST',
-            body: JSON.stringify({ password })
+            body: JSON.stringify({
+              username: formData.get('username') || 'admin',
+              password
+            })
           });
           adminToken = payload.token;
           adminAuthenticated = true;

@@ -1,35 +1,38 @@
 # megabyte-web-platform
 
-## Backend de tienda
+Desarrollo de una plataforma web responsive para Megabyte MB con sistema de seguimiento de servicios tecnicos, gestion de clientes, catalogo tecnologico e integracion con herramientas digitales.
 
-La tienda usa un backend Node.js sin frameworks para proteger la administracion de productos.
+## Backend PHP de tienda
 
-```bash
-npm start
-```
-
-URL local:
+La tienda publica lee productos desde:
 
 ```text
-http://127.0.0.1:8130
+/api/products.php
 ```
 
-Panel administrador:
+El panel administrador esta en:
 
 ```text
-http://127.0.0.1:8130/tienda-admin.html
+https://www.megabytemb.com.co/admin/
 ```
 
-La contrasena por defecto del panel administrador es:
+En local o staging:
 
 ```text
-MegabyteAdmin2026!
+http://localhost/admin/
 ```
 
-En produccion se debe cambiar con una variable de entorno:
+Credenciales por defecto:
 
-```bash
-ADMIN_PASSWORD="una-contrasena-segura" npm start
+```text
+Usuario: admin
+Contrasena: MegabyteAdmin2026!
+```
+
+Para cambiar las credenciales edita:
+
+```text
+includes/store-config.php
 ```
 
 Los productos se guardan en:
@@ -37,4 +40,5 @@ Los productos se guardan en:
 ```text
 data/products.json
 ```
-Desarrollo de una plataforma web responsive para Megabyte MB con sistema de seguimiento de servicios técnicos, gestión de clientes, catálogo tecnológico e integración con herramientas digitales.
+
+El archivo `data/default-products.json` se usa para restaurar el catalogo de ejemplo.
