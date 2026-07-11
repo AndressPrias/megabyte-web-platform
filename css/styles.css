@@ -29,6 +29,226 @@
   --header-h: calc(var(--header-top-h) + var(--header-nav-h));
 }
 
+/* Admin login full-background layout */
+.store-admin-page {
+  background:
+    linear-gradient(180deg, rgba(1, 6, 17, 0.88), rgba(1, 6, 17, 0.96)),
+    #010611;
+}
+
+.store-admin-page .store-main {
+  position: relative;
+  min-height: calc(100vh - 96px);
+}
+
+.store-admin:not(.is-authenticated) {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.store-admin:not(.is-authenticated) .container {
+  width: 100%;
+  max-width: none;
+}
+
+.store-admin:not(.is-authenticated) .store-admin__shell {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.store-admin__login[data-rendered='true'] {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 560px);
+  align-items: center;
+  min-height: calc(100vh - 96px);
+  padding: clamp(2rem, 5vw, 5.6rem) clamp(1.2rem, 6vw, 7rem) clamp(8rem, 13vw, 11rem);
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.store-admin__login[data-rendered='true']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(1, 6, 17, 0.52) 0%, rgba(1, 6, 17, 0.38) 42%, rgba(1, 6, 17, 0.82) 72%, rgba(1, 6, 17, 0.96) 100%),
+    linear-gradient(180deg, rgba(1, 6, 17, 0.24) 0%, rgba(1, 6, 17, 0.2) 54%, rgba(1, 6, 17, 0.94) 100%);
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(1, 6, 17, 0.94));
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background:
+    url('../assets/store-hero-banner.png') center / cover no-repeat,
+    #010611;
+  transform: scale(1.02);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 68% 18%, rgba(92, 141, 255, 0.16), transparent 26%),
+    radial-gradient(circle at 26% 66%, rgba(0, 180, 216, 0.12), transparent 32%);
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-glow {
+  left: -8%;
+  right: -8%;
+  top: 22%;
+  z-index: 1;
+  height: 4px;
+  opacity: 0.74;
+  transform: rotate(-10deg);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-logo,
+.store-admin__login[data-rendered='true'] .admin-login__device,
+.store-admin__login[data-rendered='true'] .admin-login__badge-card {
+  display: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__panel {
+  grid-column: 2;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  gap: 1.45rem;
+  min-height: 0;
+  width: min(100%, 560px);
+  margin-left: auto;
+  padding: clamp(1.35rem, 3vw, 2.35rem);
+  border: 1px solid rgba(129, 184, 191, 0.18);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(4, 13, 31, 0.68), rgba(4, 13, 31, 0.42));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero {
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 1.05rem;
+  padding-bottom: 1.35rem;
+  border-bottom-color: rgba(129, 184, 191, 0.16);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__shield {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(2.2rem, 4vw, 3.55rem);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero p {
+  max-width: 460px;
+  color: rgba(226, 239, 255, 0.82);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__input,
+.store-admin__login[data-rendered='true'] .admin-login__secure {
+  background: rgba(3, 12, 30, 0.58);
+  border-color: rgba(129, 184, 191, 0.2);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features {
+  position: absolute;
+  left: clamp(1.2rem, 6vw, 7rem);
+  right: clamp(1.2rem, 6vw, 7rem);
+  bottom: clamp(1.2rem, 3vw, 2.4rem);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 1rem clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(129, 184, 191, 0.16);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(5, 15, 34, 0.64), rgba(5, 15, 34, 0.38));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features span {
+  padding-left: 3.35rem;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features span::before {
+  width: 42px;
+  height: 42px;
+}
+
+@media (max-width: 1100px) {
+  .store-admin__login[data-rendered='true'] {
+    grid-template-columns: 1fr;
+    align-items: start;
+    min-height: auto;
+    padding-top: 2.5rem;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__panel {
+    grid-column: 1;
+    margin-inline: auto;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__features {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 1.35rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .store-admin__login[data-rendered='true'] {
+    padding: 1.2rem 1rem 1.4rem;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__panel {
+    padding: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__features {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
+  }
+}
+
 button[hidden],
 .btn[hidden],
 [data-admin-logout][hidden] {
@@ -4732,5 +4952,224 @@ body {
   .cart-item > strong,
   .cart-item__remove {
     grid-column: 2;
+  }
+}
+
+/* Admin login final full-background override */
+.store-admin-page {
+  background: #010611;
+}
+
+.store-admin-page .store-main {
+  min-height: calc(100vh - 96px);
+}
+
+.store-admin:not(.is-authenticated) {
+  padding: 0;
+  overflow: hidden;
+}
+
+.store-admin:not(.is-authenticated) .container {
+  width: 100%;
+  max-width: none;
+}
+
+.store-admin:not(.is-authenticated) .store-admin__shell {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.store-admin__login[data-rendered='true'] {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 560px);
+  align-items: center;
+  min-height: calc(100vh - 96px);
+  padding: clamp(2rem, 5vw, 5.6rem) clamp(1.2rem, 6vw, 7rem) clamp(8rem, 13vw, 11rem);
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.store-admin__login[data-rendered='true']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(1, 6, 17, 0.5) 0%, rgba(1, 6, 17, 0.38) 42%, rgba(1, 6, 17, 0.8) 72%, rgba(1, 6, 17, 0.96) 100%),
+    linear-gradient(180deg, rgba(1, 6, 17, 0.24) 0%, rgba(1, 6, 17, 0.2) 54%, rgba(1, 6, 17, 0.94) 100%);
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(1, 6, 17, 0.94));
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background:
+    url('../assets/store-hero-banner.png') center / cover no-repeat,
+    #010611;
+  transform: scale(1.02);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 68% 18%, rgba(92, 141, 255, 0.16), transparent 26%),
+    radial-gradient(circle at 26% 66%, rgba(0, 180, 216, 0.12), transparent 32%);
+  pointer-events: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-glow {
+  left: -8%;
+  right: -8%;
+  top: 22%;
+  z-index: 1;
+  height: 4px;
+  opacity: 0.74;
+  transform: rotate(-10deg);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-logo,
+.store-admin__login[data-rendered='true'] .admin-login__device,
+.store-admin__login[data-rendered='true'] .admin-login__badge-card {
+  display: none;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__panel {
+  position: relative;
+  grid-column: 2;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  gap: 1.45rem;
+  min-height: 0;
+  width: min(100%, 560px);
+  margin-left: auto;
+  padding: clamp(1.35rem, 3vw, 2.35rem);
+  border: 1px solid rgba(129, 184, 191, 0.18);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(4, 13, 31, 0.68), rgba(4, 13, 31, 0.42));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero {
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 1.05rem;
+  padding-bottom: 1.35rem;
+  border-bottom-color: rgba(129, 184, 191, 0.16);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__shield {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(2.2rem, 4vw, 3.55rem);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero p {
+  max-width: 460px;
+  color: rgba(226, 239, 255, 0.82);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__input,
+.store-admin__login[data-rendered='true'] .admin-login__secure {
+  background: rgba(3, 12, 30, 0.58);
+  border-color: rgba(129, 184, 191, 0.2);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features {
+  position: absolute;
+  left: clamp(1.2rem, 6vw, 7rem);
+  right: clamp(1.2rem, 6vw, 7rem);
+  bottom: clamp(1.2rem, 3vw, 2.4rem);
+  z-index: 3;
+  display: grid;
+  grid-column: auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 1rem clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(129, 184, 191, 0.16);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(5, 15, 34, 0.64), rgba(5, 15, 34, 0.38));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features span {
+  padding-left: 3.35rem;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features span::before {
+  width: 42px;
+  height: 42px;
+}
+
+@media (max-width: 1100px) {
+  .store-admin__login[data-rendered='true'] {
+    grid-template-columns: 1fr;
+    align-items: start;
+    min-height: auto;
+    padding-top: 2.5rem;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__panel {
+    grid-column: 1;
+    margin-inline: auto;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__features {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 1.35rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .store-admin__login[data-rendered='true'] {
+    padding: 1.2rem 1rem 1.4rem;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__panel {
+    padding: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__features {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
   }
 }
