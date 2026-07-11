@@ -79,21 +79,38 @@ $isAdmin = mb_is_admin();
 
           <?php if (!$isAdmin): ?>
             <div class="store-admin__login">
-              <form method="post" action="/admin/">
-                <h2>Acceso administrador</h2>
-                <p>Solo el administrador del sitio puede crear, editar o eliminar productos.</p>
+              <div class="admin-login__intro">
+                <span class="section__tag">Megabyte Admin</span>
+                <h2>Controla tu catalogo con seguridad</h2>
+                <p>Gestiona productos, precios, stock y disponibilidad desde un panel privado preparado para el equipo administrador.</p>
+                <div class="admin-login__features" aria-label="Beneficios del panel">
+                  <span>Sesion protegida</span>
+                  <span>Catalogo editable</span>
+                  <span>Datos centralizados</span>
+                </div>
+              </div>
+
+              <form method="post" action="/admin/" class="admin-login__card">
+                <div class="admin-login__brand">
+                  <img src="/assets/logo-menu-mark.png" alt="Megabyte MB" width="92" height="62">
+                  <div>
+                    <strong>Acceso administrador</strong>
+                    <small>Megabyte Store</small>
+                  </div>
+                </div>
                 <?php if ($error): ?>
                   <p class="store-admin__error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
                 <?php endif; ?>
                 <label>
                   <span>Usuario</span>
-                  <input name="username" type="text" autocomplete="username" required>
+                  <input name="username" type="text" autocomplete="username" placeholder="admin" required>
                 </label>
                 <label>
                   <span>Contraseña</span>
-                  <input name="password" type="password" autocomplete="current-password" required>
+                  <input name="password" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required>
                 </label>
                 <button class="btn btn--primary" type="submit">Entrar al panel</button>
+                <p class="admin-login__hint">Ruta privada: /admin/</p>
               </form>
             </div>
           <?php else: ?>
