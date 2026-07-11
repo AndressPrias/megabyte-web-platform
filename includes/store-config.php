@@ -5,9 +5,9 @@ const MB_ADMIN_USER = 'admin';
 const MB_ADMIN_PASSWORD = 'MegabyteAdmin2026!';
 const MB_PRODUCTS_FILE = __DIR__ . '/../data/products.json';
 const MB_DEFAULT_PRODUCTS_FILE = __DIR__ . '/../data/default-products.json';
-const MB_DB_DSN = '';
-const MB_DB_USER = '';
-const MB_DB_PASSWORD = '';
+const MB_DB_DSN = 'mysql:host=localhost;dbname=u184620198_megastore;charset=utf8mb4';
+const MB_DB_USER = 'u184620198_storeadmin';
+const MB_DB_PASSWORD = 'MegaStore2026!';
 
 function mb_start_admin_session(): void
 {
