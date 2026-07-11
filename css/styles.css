@@ -3455,6 +3455,189 @@ body {
   line-height: 1.5;
 }
 
+.store-admin:not(.is-authenticated) .container {
+  max-width: 1120px;
+}
+
+.store-admin__login {
+  grid-template-columns: minmax(280px, 0.82fr) minmax(360px, 1fr);
+  min-height: 540px;
+  border-radius: 20px;
+  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.36);
+}
+
+.admin-login__visual {
+  min-height: 460px;
+  padding: 2rem;
+  background:
+    linear-gradient(180deg, rgba(2, 8, 20, 0.18), rgba(2, 8, 20, 0.74)),
+    url('../assets/store-hero-banner.png') 56% center / cover no-repeat;
+}
+
+.admin-login__visual-glow {
+  height: 3px;
+  top: 13%;
+  box-shadow: 0 0 18px rgba(0, 180, 216, 0.58), 0 0 26px rgba(157, 78, 221, 0.42);
+}
+
+.admin-login__visual-logo {
+  width: min(210px, 66%);
+  margin-top: 2.6rem;
+  filter: drop-shadow(0 16px 30px rgba(0, 180, 216, 0.34));
+}
+
+.admin-login__device {
+  display: none;
+}
+
+.admin-login__badge-card {
+  left: 2rem;
+  bottom: 2rem;
+  width: 152px;
+  padding: 0.8rem;
+}
+
+.admin-login__badge-card span {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.45rem;
+}
+
+.admin-login__badge-card strong {
+  font-size: 0.82rem;
+}
+
+.admin-login__badge-card small {
+  font-size: 0.66rem;
+}
+
+.admin-login__panel {
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3.3vw, 2.8rem);
+}
+
+.admin-login__hero {
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 0.95rem;
+  padding-bottom: 1.2rem;
+}
+
+.admin-login__shield {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+}
+
+.admin-login__shield svg {
+  width: 28px;
+  height: 28px;
+}
+
+.admin-login__eyebrow,
+.admin-login__form-title {
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+}
+
+.admin-login__hero h2 {
+  margin: 0.38rem 0 0.55rem;
+  font-size: clamp(1.9rem, 3vw, 2.75rem);
+  line-height: 1;
+}
+
+.admin-login__hero p {
+  max-width: 460px;
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.admin-login__card {
+  gap: 0.78rem;
+}
+
+.admin-login__form-title {
+  margin-bottom: 0.2rem;
+}
+
+.store-admin__login label {
+  gap: 0.38rem;
+}
+
+.store-admin__login label > span {
+  font-size: 0.72rem;
+}
+
+.store-admin__login input:not([type='checkbox']) {
+  min-height: 46px;
+  border-radius: 11px;
+  padding: 0.7rem 0.85rem;
+}
+
+.admin-login__remember {
+  margin: 0;
+}
+
+.admin-login__remember input {
+  width: 17px;
+  height: 17px;
+}
+
+.admin-login__remember span {
+  font-size: 0.82rem !important;
+}
+
+.store-admin__login .btn {
+  min-height: 48px;
+  border-radius: 11px;
+  font-size: 0.94rem;
+  box-shadow: 0 14px 30px rgba(0, 180, 216, 0.2), 0 12px 28px rgba(157, 78, 221, 0.2);
+}
+
+.admin-login__secure {
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+  padding: 0.78rem;
+  border-radius: 12px;
+}
+
+.admin-login__secure svg {
+  width: 28px;
+  height: 28px;
+}
+
+.admin-login__secure strong {
+  font-size: 0.9rem;
+}
+
+.admin-login__secure small {
+  font-size: 0.8rem;
+}
+
+.admin-login__features {
+  gap: 0.75rem;
+  padding: 0.95rem 1.45rem;
+}
+
+.admin-login__features span {
+  padding-left: 3rem;
+}
+
+.admin-login__features span::before {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.admin-login__features strong {
+  margin-bottom: 0.18rem;
+  font-size: 0.9rem;
+}
+
+.admin-login__features small {
+  font-size: 0.8rem;
+}
+
 .store-admin__grid {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
@@ -3990,18 +4173,18 @@ body {
   }
 
   .admin-login__visual {
-    min-height: 380px;
+    min-height: 300px;
     border-right: 0;
     border-bottom: 1px solid rgba(129, 184, 191, 0.16);
   }
 
   .admin-login__visual-logo {
-    width: min(260px, 58%);
-    margin-top: 2rem;
+    width: min(190px, 52%);
+    margin-top: 1.4rem;
   }
 
   .admin-login__panel {
-    padding: clamp(1.4rem, 6vw, 3rem);
+    padding: clamp(1.25rem, 5vw, 2.2rem);
   }
 
   .admin-login__features {
@@ -4115,7 +4298,7 @@ body {
   }
 
   .admin-login__panel {
-    padding: 1.25rem;
+    padding: 1rem;
     border-left: 0;
   }
 
@@ -4131,20 +4314,20 @@ body {
   }
 
   .admin-login__hero h2 {
-    font-size: clamp(2.05rem, 13vw, 3rem);
+    font-size: clamp(1.72rem, 10vw, 2.35rem);
   }
 
   .admin-login__features {
-    padding: 1rem;
+    padding: 0.9rem;
   }
 
   .admin-login__features span {
-    padding-left: 3.4rem;
+    padding-left: 2.85rem;
   }
 
   .admin-login__features span::before {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
   }
 
   .store-admin__status {
