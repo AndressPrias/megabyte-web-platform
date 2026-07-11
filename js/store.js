@@ -253,6 +253,120 @@
     }
   }
 
+  function renderAdminLoginPanel() {
+    const loginPanel = document.getElementById('adminLoginPanel');
+    if (!loginPanel || loginPanel.dataset.rendered === 'true') return;
+
+    loginPanel.dataset.rendered = 'true';
+    loginPanel.innerHTML = `
+      <div class="admin-login__visual" aria-hidden="true">
+        <div class="admin-login__visual-glow"></div>
+        <img class="admin-login__visual-logo" src="/assets/logo-menu-megabyte.png" alt="">
+        <div class="admin-login__device">
+          <span class="admin-login__device-screen">MB</span>
+        </div>
+        <div class="admin-login__badge-card">
+          <span>
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M6 8h12l-1 11H7L6 8Z"></path>
+              <path d="M9 8a3 3 0 0 1 6 0"></path>
+            </svg>
+          </span>
+          <strong>MEGABYTE</strong>
+          <small>Tu tienda tecnologica de confianza</small>
+        </div>
+      </div>
+
+      <div class="admin-login__panel">
+        <div class="admin-login__hero">
+          <span class="admin-login__shield">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M12 3 5 6v5c0 4.6 2.9 8.5 7 10 4.1-1.5 7-5.4 7-10V6l-7-3Z"></path>
+              <path d="M9.5 11V9.5a2.5 2.5 0 0 1 5 0V11"></path>
+              <path d="M9 11h6v5H9z"></path>
+            </svg>
+          </span>
+          <div>
+            <span class="admin-login__eyebrow">Panel privado</span>
+            <h2>Administracion<br><span>de productos</span></h2>
+            <p>Accede al panel privado para gestionar tu catalogo, productos, precios, stock y disponibilidad.</p>
+          </div>
+        </div>
+
+        <form class="admin-login__card" id="adminLoginForm">
+          <div class="admin-login__form-title">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+            </svg>
+            <span>Acceso administrador</span>
+          </div>
+          <p class="store-admin__error" id="adminLoginError" hidden></p>
+          <label class="admin-login__field">
+            <span>Usuario</span>
+            <div class="admin-login__input">
+              <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+              </svg>
+              <input name="username" type="text" autocomplete="username" placeholder="admin" required>
+            </div>
+          </label>
+          <label class="admin-login__field">
+            <span>Contrasena</span>
+            <div class="admin-login__input">
+              <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path d="M6 10V8a6 6 0 0 1 12 0v2"></path>
+                <path d="M5 10h14v11H5z"></path>
+              </svg>
+              <input name="password" type="password" autocomplete="current-password" placeholder="Ingresa tu contrasena" required>
+            </div>
+          </label>
+          <div class="admin-login__form-row">
+            <label class="admin-login__remember">
+              <input type="checkbox" checked>
+              <span>Recordarme en este dispositivo</span>
+            </label>
+            <button class="admin-login__forgot" type="button">Olvidaste tu contrasena?</button>
+          </div>
+          <button class="btn btn--primary admin-login__submit" type="submit">
+            <span>Iniciar sesion</span>
+            <span class="admin-login__submit-arrow" aria-hidden="true">-&gt;</span>
+          </button>
+          <div class="admin-login__secure">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M12 3 5 6v5c0 4.6 2.9 8.5 7 10 4.1-1.5 7-5.4 7-10V6l-7-3Z"></path>
+              <path d="m9 12 2 2 4-5"></path>
+            </svg>
+            <div>
+              <strong>Sesion segura y encriptada</strong>
+              <small>Acceso exclusivo para administradores autorizados.</small>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-login__features" aria-label="Beneficios del panel">
+        <span>
+          <strong>Catalogo centralizado</strong>
+          <small>Gestiona todos tus productos desde un solo lugar.</small>
+        </span>
+        <span>
+          <strong>Datos en tiempo real</strong>
+          <small>Controla stock, precios y disponibilidad al instante.</small>
+        </span>
+        <span>
+          <strong>Seguridad avanzada</strong>
+          <small>Proteccion de datos y acceso restringido.</small>
+        </span>
+        <span class="admin-login__copyright">
+          <strong>MEGABYTE STORE</strong>
+          <small>Panel privado 2026</small>
+        </span>
+      </div>
+    `;
+  }
+
   function formatPrice(value) {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -843,6 +957,7 @@
 
   async function initStore() {
     await loadProducts();
+    renderAdminLoginPanel();
     updateCartCount();
     renderProducts();
     renderProductDetail();
@@ -864,7 +979,13 @@
     resetProductsToDefaults
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function bootStore() {
     initStore().catch((err) => console.warn('No se pudo iniciar la tienda:', err));
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootStore, { once: true });
+  } else {
+    bootStore();
+  }
 })();

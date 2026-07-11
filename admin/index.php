@@ -53,91 +53,7 @@ mb_start_admin_session();
             </div>
           </div>
 
-          <div class="store-admin__login" id="adminLoginPanel">
-            <div class="admin-login__visual" aria-hidden="true">
-              <div class="admin-login__visual-glow"></div>
-              <img class="admin-login__visual-logo" src="/assets/logo-menu-megabyte.png" alt="">
-              <div class="admin-login__device">
-                <span class="admin-login__device-screen">MB</span>
-              </div>
-              <div class="admin-login__badge-card">
-                <span>
-                  <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-                    <path d="M6 8h12l-1 11H7L6 8Z"></path>
-                    <path d="M9 8a3 3 0 0 1 6 0"></path>
-                  </svg>
-                </span>
-                <strong>MEGABYTE</strong>
-                <small>Panel privado</small>
-              </div>
-            </div>
-
-            <div class="admin-login__panel">
-              <div class="admin-login__hero">
-                <span class="admin-login__shield">
-                  <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-                    <path d="M12 3 5 6v5c0 4.6 2.9 8.5 7 10 4.1-1.5 7-5.4 7-10V6l-7-3Z"></path>
-                    <path d="M9.5 11V9.5a2.5 2.5 0 0 1 5 0V11"></path>
-                    <path d="M9 11h6v5H9z"></path>
-                  </svg>
-                </span>
-                <div>
-                  <span class="admin-login__eyebrow">Panel privado</span>
-                  <h2>Administracion<br><span>de productos</span></h2>
-                  <p>Accede al panel privado para gestionar tu catalogo, productos, precios, stock y disponibilidad.</p>
-                </div>
-              </div>
-
-              <form class="admin-login__card" id="adminLoginForm">
-                <div class="admin-login__form-title">
-                  <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
-                  </svg>
-                  <span>Acceso administrador</span>
-                </div>
-                <p class="store-admin__error" id="adminLoginError" hidden></p>
-                <label>
-                  <span>Usuario</span>
-                  <input name="username" type="text" autocomplete="username" placeholder="admin" required>
-                </label>
-                <label>
-                  <span>Contrasena</span>
-                  <input name="password" type="password" autocomplete="current-password" placeholder="Ingresa tu contrasena" required>
-                </label>
-                <label class="admin-login__remember">
-                  <input type="checkbox" checked>
-                  <span>Recordarme en este dispositivo</span>
-                </label>
-                <button class="btn btn--primary" type="submit">Iniciar sesion</button>
-                <div class="admin-login__secure">
-                  <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-                    <path d="M12 3 5 6v5c0 4.6 2.9 8.5 7 10 4.1-1.5 7-5.4 7-10V6l-7-3Z"></path>
-                    <path d="m9 12 2 2 4-5"></path>
-                  </svg>
-                  <div>
-                    <strong>Sesion segura y privada</strong>
-                    <small>Acceso exclusivo para administradores autorizados.</small>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <div class="admin-login__features" aria-label="Beneficios del panel">
-              <span>
-                <strong>Catalogo centralizado</strong>
-                <small>Gestiona tus productos desde un solo lugar.</small>
-              </span>
-              <span>
-                <strong>Datos en tiempo real</strong>
-                <small>Actualiza stock, precios y disponibilidad.</small>
-              </span>
-              <span>
-                <strong>Seguridad avanzada</strong>
-                <small>Proteccion de datos y acceso restringido.</small>
-              </span>
-            </div>
-          </div>
+          <div class="store-admin__login" id="adminLoginPanel" data-admin-login-root></div>
 
           <div class="store-admin__grid" id="adminWorkspace" hidden>
             <form class="store-admin__form" id="adminProductForm">
@@ -236,6 +152,6 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js"></script>
+  <script src="/js/store.js?v=admin-20260711-2"></script>
 </body>
 </html>
