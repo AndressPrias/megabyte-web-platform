@@ -5,6 +5,9 @@ const MB_ADMIN_USER = 'admin';
 const MB_ADMIN_PASSWORD = 'MegabyteAdmin2026!';
 const MB_PRODUCTS_FILE = __DIR__ . '/../data/products.json';
 const MB_DEFAULT_PRODUCTS_FILE = __DIR__ . '/../data/default-products.json';
+const MB_DB_DSN = '';
+const MB_DB_USER = '';
+const MB_DB_PASSWORD = '';
 
 function mb_start_admin_session(): void
 {
@@ -135,8 +138,124 @@ function mb_ensure_products_file(): void
     }
 }
 
+function mb_db(): ?PDO
+{
+    static $pdo = null;
+    static $checked = false;
+
+    if ($checked) {
+        return $pdo;
+    }
+
+    $checked = true;
+    if (MB_DB_DSN === '' || !class_exists(PDO::class)) {
+        return null;
+    }
+
+    try {
+        $pdo = new PDO(MB_DB_DSN, MB_DB_USER, MB_DB_PASSWORD, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+        mb_ensure_products_table($pdo);
+    } catch (Throwable $error) {
+        error_log('Megabyte DB unavailable: ' . $error->getMessage());
+        $pdo = null;
+    }
+
+    return $pdo;
+}
+
+function mb_ensure_products_table(PDO $pdo): void
+{
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS products (
+            id VARCHAR(160) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            brand VARCHAR(160) NOT NULL,
+            category VARCHAR(80) NOT NULL,
+            price INT NOT NULL DEFAULT 0,
+            oldPrice INT NOT NULL DEFAULT 0,
+            discount INT NOT NULL DEFAULT 0,
+            stock INT NOT NULL DEFAULT 0,
+            rating DECIMAL(3,1) NOT NULL DEFAULT 4.8,
+            badge VARCHAR(120) NOT NULL DEFAULT 'Disponible',
+            imageType VARCHAR(80) NOT NULL DEFAULT 'laptop',
+            shortDescription TEXT,
+            description TEXT,
+            specs TEXT,
+            warranty TEXT,
+            availability VARCHAR(160) NOT NULL DEFAULT 'Disponible',
+            sortOrder INT NOT NULL DEFAULT 0,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )"
+    );
+}
+
+function mb_products_from_db(PDO $pdo): array
+{
+    $rows = $pdo->query('SELECT * FROM products ORDER BY sortOrder ASC, name ASC')->fetchAll();
+    return array_map(static function (array $row): array {
+        $row['oldPrice'] = $row['oldPrice'] ?? $row['oldprice'] ?? $row['price'];
+        $row['imageType'] = $row['imageType'] ?? $row['imagetype'] ?? 'laptop';
+        $row['shortDescription'] = $row['shortDescription'] ?? $row['shortdescription'] ?? '';
+        $row['specs'] = json_decode((string) ($row['specs'] ?? '[]'), true) ?: [];
+        return mb_normalize_product($row);
+    }, $rows);
+}
+
+function mb_save_products_to_db(PDO $pdo, array $products): void
+{
+    $normalized = array_map('mb_normalize_product', $products);
+    $pdo->beginTransaction();
+    try {
+        $pdo->exec('DELETE FROM products');
+        $statement = $pdo->prepare(
+            'INSERT INTO products (
+                id, name, brand, category, price, oldPrice, discount, stock, rating, badge,
+                imageType, shortDescription, description, specs, warranty, availability, sortOrder
+            ) VALUES (
+                :id, :name, :brand, :category, :price, :oldPrice, :discount, :stock, :rating, :badge,
+                :imageType, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
+            )'
+        );
+
+        foreach ($normalized as $index => $product) {
+            $statement->execute([
+                ':id' => $product['id'],
+                ':name' => $product['name'],
+                ':brand' => $product['brand'],
+                ':category' => $product['category'],
+                ':price' => $product['price'],
+                ':oldPrice' => $product['oldPrice'],
+                ':discount' => $product['discount'],
+                ':stock' => $product['stock'],
+                ':rating' => $product['rating'],
+                ':badge' => $product['badge'],
+                ':imageType' => $product['imageType'],
+                ':shortDescription' => $product['shortDescription'],
+                ':description' => $product['description'],
+                ':specs' => json_encode($product['specs'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                ':warranty' => $product['warranty'],
+                ':availability' => $product['availability'],
+                ':sortOrder' => $index,
+            ]);
+        }
+
+        $pdo->commit();
+    } catch (Throwable $error) {
+        $pdo->rollBack();
+        throw $error;
+    }
+}
+
 function mb_get_products(): array
 {
+    $pdo = mb_db();
+    if ($pdo instanceof PDO) {
+        return mb_products_from_db($pdo);
+    }
+
     mb_ensure_products_file();
     $json = file_get_contents(MB_PRODUCTS_FILE);
     $products = json_decode($json ?: '[]', true);
@@ -148,6 +267,12 @@ function mb_get_products(): array
 
 function mb_save_products(array $products): void
 {
+    $pdo = mb_db();
+    if ($pdo instanceof PDO) {
+        mb_save_products_to_db($pdo, $products);
+        return;
+    }
+
     mb_ensure_products_file();
     $normalized = array_map('mb_normalize_product', $products);
     file_put_contents(MB_PRODUCTS_FILE, json_encode($normalized, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL, LOCK_EX);

@@ -3,13 +3,11 @@
 
   const WHATSAPP_NUMBER = '573133141701';
   const CART_KEY = 'megabyte_store_cart';
-  const ADMIN_TOKEN_KEY = 'megabyte_admin_token';
   const API_PRODUCTS = '/api/products.php';
   const API_ADMIN = '/admin/api.php';
   let productsCache = [];
   let productsLoaded = false;
   let backendAvailable = true;
-  let adminToken = localStorage.getItem(ADMIN_TOKEN_KEY) || '';
   let adminAuthenticated = document.body?.dataset.adminAuthenticated === 'true';
 
   const DEFAULT_PRODUCTS = [
@@ -215,7 +213,10 @@
   }
 
   async function verifyAdminSession() {
-    if (!adminToken || !backendAvailable) {
+    const adminSection = document.getElementById('admin-productos');
+    if (!adminSection) return;
+
+    if (!backendAvailable) {
       adminAuthenticated = false;
       renderAdminAccess();
       return;
@@ -225,8 +226,6 @@
       await apiRequest(`${API_ADMIN}?action=me`, { headers: adminHeaders() });
       adminAuthenticated = true;
     } catch (err) {
-      adminToken = '';
-      localStorage.removeItem(ADMIN_TOKEN_KEY);
       adminAuthenticated = false;
     }
 
@@ -238,11 +237,15 @@
     const loginPanel = document.getElementById('adminLoginPanel');
     const workspace = document.getElementById('adminWorkspace');
     const state = document.getElementById('adminAccessState');
+    const logoutButtons = document.querySelectorAll('[data-admin-logout]');
     if (!adminSection || !loginPanel || !workspace) return;
 
     adminSection.classList.toggle('is-authenticated', adminAuthenticated);
     loginPanel.hidden = adminAuthenticated;
     workspace.hidden = !adminAuthenticated;
+    logoutButtons.forEach((button) => {
+      button.hidden = !adminAuthenticated;
+    });
     if (state) {
       state.textContent = backendAvailable
         ? (adminAuthenticated ? 'Sesión de administrador activa' : 'Ingresa la contraseña de administrador')
@@ -755,10 +758,8 @@
 
       const logoutButton = event.target.closest('[data-admin-logout]');
       if (logoutButton) {
-        adminToken = '';
         adminAuthenticated = false;
-        localStorage.removeItem(ADMIN_TOKEN_KEY);
-        apiRequest(`${API_ADMIN}?action=logout`, { method: 'POST' }).catch(() => {});
+        await apiRequest(`${API_ADMIN}?action=logout`, { method: 'POST' }).catch(() => {});
         renderAdminAccess();
         resetAdminForm();
         showStoreNotice('Sesión cerrada');
@@ -805,29 +806,35 @@
     if (adminLoginForm) {
       adminLoginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
+        const loginError = document.getElementById('adminLoginError');
+        if (loginError) {
+          loginError.hidden = true;
+          loginError.textContent = '';
+        }
         if (!backendAvailable) {
           showStoreNotice('Abre la tienda desde el servidor backend');
           return;
         }
 
-        const password = new FormData(adminLoginForm).get('password');
         try {
           const formData = new FormData(adminLoginForm);
-          const payload = await apiRequest(`${API_ADMIN}?action=login`, {
+          await apiRequest(`${API_ADMIN}?action=login`, {
             method: 'POST',
             body: JSON.stringify({
               username: formData.get('username') || 'admin',
-              password
+              password: formData.get('password') || ''
             })
           });
-          adminToken = payload.token;
           adminAuthenticated = true;
-          localStorage.setItem(ADMIN_TOKEN_KEY, adminToken);
           adminLoginForm.reset();
           renderAdminAccess();
           renderAdminProducts();
           showStoreNotice('Administrador conectado');
         } catch (err) {
+          if (loginError) {
+            loginError.textContent = err.message || 'Usuario o contrasena incorrectos';
+            loginError.hidden = false;
+          }
           showStoreNotice(err.message || 'Contraseña incorrecta');
         }
       });

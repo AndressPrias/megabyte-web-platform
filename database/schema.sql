@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS products (
+  id VARCHAR(160) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  brand VARCHAR(160) NOT NULL,
+  category VARCHAR(80) NOT NULL,
+  price INT NOT NULL DEFAULT 0,
+  oldPrice INT NOT NULL DEFAULT 0,
+  discount INT NOT NULL DEFAULT 0,
+  stock INT NOT NULL DEFAULT 0,
+  rating DECIMAL(3,1) NOT NULL DEFAULT 4.8,
+  badge VARCHAR(120) NOT NULL DEFAULT 'Disponible',
+  imageType VARCHAR(80) NOT NULL DEFAULT 'laptop',
+  shortDescription TEXT,
+  description TEXT,
+  specs TEXT,
+  warranty TEXT,
+  availability VARCHAR(160) NOT NULL DEFAULT 'Disponible',
+  sortOrder INT NOT NULL DEFAULT 0,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -35,10 +35,24 @@ Para cambiar las credenciales edita:
 includes/store-config.php
 ```
 
-Los productos se guardan en:
+Por defecto, si no configuras base de datos, los productos se guardan en:
 
 ```text
 data/products.json
 ```
 
 El archivo `data/default-products.json` se usa para restaurar el catalogo de ejemplo.
+
+Para conectar MySQL, activa `pdo_mysql` en PHP y edita estos valores en `includes/store-config.php`:
+
+```php
+const MB_DB_DSN = 'mysql:host=localhost;dbname=megabyte_store;charset=utf8mb4';
+const MB_DB_USER = 'usuario_mysql';
+const MB_DB_PASSWORD = 'clave_mysql';
+```
+
+La tabla de productos esta documentada en:
+
+```text
+database/schema.sql
+```
