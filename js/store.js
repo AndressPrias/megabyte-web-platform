@@ -365,6 +365,37 @@
         </span>
       </div>
     `;
+
+    if (!document.getElementById('adminLoginCenterStyle')) {
+      const style = document.createElement('style');
+      style.id = 'adminLoginCenterStyle';
+      style.textContent = `
+        .store-admin__login[data-rendered='true'] {
+          display: block !important;
+        }
+        .store-admin__login[data-rendered='true'] .admin-login__panel {
+          position: relative !important;
+          left: 50% !important;
+          grid-column: auto !important;
+          width: min(560px, calc(100vw - 2rem)) !important;
+          margin: 0 !important;
+          transform: translateX(-50%) !important;
+        }
+        .store-admin__login[data-rendered='true'] .admin-login__features {
+          left: 50% !important;
+          right: auto !important;
+          width: min(1320px, calc(100vw - 2.4rem)) !important;
+          transform: translateX(-50%) !important;
+        }
+        @media (max-width: 680px) {
+          .store-admin__login[data-rendered='true'] .admin-login__panel,
+          .store-admin__login[data-rendered='true'] .admin-login__features {
+            width: calc(100vw - 2rem) !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }
 
   function formatPrice(value) {
