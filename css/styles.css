@@ -5304,3 +5304,15 @@ body {
   }
 }
 
+
+/* Hide admin login benefits banner */
+.store-admin__login[data-rendered='true'] .admin-login__features {
+  display: none !important;
+}
+
+/* Never show admin login while authenticated */
+.store-admin__login[hidden],
+.store-admin__login[data-rendered='true'][hidden],
+.store-admin.is-authenticated .store-admin__login {
+  display: none !important;
+}

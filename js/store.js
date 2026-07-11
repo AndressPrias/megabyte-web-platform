@@ -242,6 +242,11 @@
 
     adminSection.classList.toggle('is-authenticated', adminAuthenticated);
     loginPanel.hidden = adminAuthenticated;
+    if (adminAuthenticated) {
+      loginPanel.style.setProperty('display', 'none', 'important');
+    } else {
+      loginPanel.style.removeProperty('display');
+    }
     workspace.hidden = !adminAuthenticated;
     logoutButtons.forEach((button) => {
       button.hidden = !adminAuthenticated;
@@ -346,24 +351,6 @@
         </form>
       </div>
 
-      <div class="admin-login__features" aria-label="Beneficios del panel">
-        <span>
-          <strong>Catalogo centralizado</strong>
-          <small>Gestiona todos tus productos desde un solo lugar.</small>
-        </span>
-        <span>
-          <strong>Datos en tiempo real</strong>
-          <small>Controla stock, precios y disponibilidad al instante.</small>
-        </span>
-        <span>
-          <strong>Seguridad avanzada</strong>
-          <small>Proteccion de datos y acceso restringido.</small>
-        </span>
-        <span class="admin-login__copyright">
-          <strong>MEGABYTE STORE</strong>
-          <small>Panel privado 2026</small>
-        </span>
-      </div>
     `;
 
     if (!document.getElementById('adminLoginCenterStyle')) {

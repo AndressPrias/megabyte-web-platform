@@ -15,7 +15,81 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=admin-20260711-5">
+  <link rel="stylesheet" href="/css/styles.css?v=admin-20260711-6">
+  <style>
+    .store-admin:not(.is-authenticated) .container,
+    .store-admin:not(.is-authenticated) .store-admin__shell {
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    .store-admin__login[data-rendered='true'] {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: calc(100vh - 96px) !important;
+      padding: clamp(1.5rem, 5vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(7rem, 12vw, 10rem) !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__panel {
+      position: relative !important;
+      left: auto !important;
+      grid-column: auto !important;
+      width: min(560px, calc(100vw - 2rem)) !important;
+      max-width: 560px !important;
+      margin: 0 auto !important;
+      transform: none !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__hero {
+      grid-template-columns: 72px minmax(0, 1fr) !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+      font-size: clamp(2rem, 3.2vw, 3.15rem) !important;
+      line-height: 1.02 !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__hero p,
+    .store-admin__login[data-rendered='true'] .admin-login__secure small {
+      overflow-wrap: anywhere !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__input input {
+      background: transparent !important;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill,
+    .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:hover,
+    .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:focus {
+      box-shadow: 0 0 0 1000px rgba(3, 12, 30, 0.96) inset !important;
+      -webkit-text-fill-color: #ffffff !important;
+      caret-color: #ffffff !important;
+    }
+
+    .store-admin__login[data-rendered='true'] .admin-login__features {
+      display: none !important;
+    }
+
+    .store-admin__login[hidden],
+    .store-admin__login[data-rendered='true'][hidden],
+    .store-admin.is-authenticated .store-admin__login {
+      display: none !important;
+    }
+
+    @media (max-width: 680px) {
+      .store-admin__login[data-rendered='true'] .admin-login__hero {
+        grid-template-columns: 1fr !important;
+      }
+
+      .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+        font-size: clamp(1.85rem, 9vw, 2.55rem) !important;
+      }
+    }
+  </style>
 </head>
 <body class="store-body store-admin-page" data-store-page="admin" data-admin-authenticated="false">
   <header class="store-header">
