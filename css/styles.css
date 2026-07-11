@@ -29,6 +29,12 @@
   --header-h: calc(var(--header-top-h) + var(--header-nav-h));
 }
 
+button[hidden],
+.btn[hidden],
+[data-admin-logout][hidden] {
+  display: none !important;
+}
+
 /* Admin login rendered from JS */
 .store-admin-page .store-main {
   min-height: calc(100vh - 92px);

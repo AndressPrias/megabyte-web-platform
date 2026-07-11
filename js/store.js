@@ -956,8 +956,8 @@
   }
 
   async function initStore() {
-    await loadProducts();
     renderAdminLoginPanel();
+    await loadProducts();
     updateCartCount();
     renderProducts();
     renderProductDetail();
