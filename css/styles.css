@@ -249,6 +249,25 @@
   }
 }
 
+/* Admin login centered panel */
+.store-admin__login[data-rendered='true'] {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: center;
+  padding-inline: clamp(1.2rem, 6vw, 7rem);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__panel {
+  grid-column: 1;
+  margin-inline: auto;
+}
+
+.store-admin__login[data-rendered='true']::before {
+  background:
+    linear-gradient(90deg, rgba(1, 6, 17, 0.72) 0%, rgba(1, 6, 17, 0.48) 28%, rgba(1, 6, 17, 0.48) 72%, rgba(1, 6, 17, 0.72) 100%),
+    linear-gradient(180deg, rgba(1, 6, 17, 0.2) 0%, rgba(1, 6, 17, 0.26) 54%, rgba(1, 6, 17, 0.94) 100%);
+}
+
 button[hidden],
 .btn[hidden],
 [data-admin-logout][hidden] {
