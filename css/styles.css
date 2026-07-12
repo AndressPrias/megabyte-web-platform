@@ -4746,28 +4746,32 @@ body {
   .store-searchbar {
     grid-column: 1 / -1;
     grid-row: 2;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(104px, 34%);
     border-radius: 16px;
   }
 
   .store-searchbar .store-search input,
   .store-searchbar .store-category-select select {
-    min-height: 40px;
+    min-height: 42px;
   }
 
   .store-searchbar .store-search input {
-    padding-left: 2.65rem;
+    padding: 0 0.7rem 0 2.55rem;
     font-size: 0.78rem;
+    text-overflow: ellipsis;
   }
 
   .store-category-select {
-    border-top: 1px solid rgba(129, 184, 191, 0.14);
-    border-left: 0;
+    min-width: 0;
+    border-top: 0;
+    border-left: 1px solid rgba(129, 184, 191, 0.14);
   }
 
   .store-category-select select {
-    padding-left: 0.95rem;
-    font-size: 0.76rem;
+    padding: 0 1.65rem 0 0.72rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
   }
 
   .store-header__actions {
