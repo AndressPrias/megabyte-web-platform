@@ -2246,14 +2246,24 @@ a.contacto__item:hover {
     grid-column: 1 / -1;
     grid-row: 2;
     grid-template-columns: none;
+    justify-content: center;
     gap: 0.32rem;
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
     padding-bottom: 0.08rem;
+    scrollbar-width: none;
+  }
+
+  .header__nav::-webkit-scrollbar {
+    display: none;
   }
 
   .header__nav-link {
-    min-width: 54px;
+    min-width: 52px;
+    flex: 0 0 auto;
     gap: 0.16rem;
-    padding: 0.22rem 0.34rem;
+    padding: 0.2rem 0.32rem;
     border-radius: 10px;
     font-size: 0.64rem;
   }
@@ -2317,12 +2327,45 @@ a.contacto__item:hover {
     height: 54px;
   }
 
+  .footer__top {
+    gap: 0.55rem;
+  }
+
   .footer__nav {
     width: auto;
+    justify-content: center;
+    gap: 0.18rem;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.36rem;
+    text-align: center;
+  }
+
+  .footer__copy {
+    font-size: 0.68rem;
   }
 
   .footer__credit {
-    width: auto;
+    width: 100%;
+    justify-content: center;
+    gap: 0.28rem;
+    white-space: nowrap;
+  }
+
+  .footer__credit span {
+    font-size: 0.68rem;
+  }
+
+  .footer__credit img {
+    width: 26px;
+    height: 20px;
+  }
+
+  .footer__credit strong {
+    font-size: 0.68rem;
   }
 }
 
