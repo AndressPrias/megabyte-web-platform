@@ -1,25 +1,57 @@
-# megabyte-web-platform
+# Megabyte MB Web Platform
 
-Desarrollo de una plataforma web responsive para Megabyte MB con sistema de seguimiento de servicios tecnicos, gestion de clientes, catalogo tecnologico e integracion con herramientas digitales.
+Landing, tienda tecnologica, carrito, checkout por WhatsApp y panel administrativo para Megabyte MB.
+
+## Arquitectura
+
+La arquitectura completa esta documentada en:
+
+```text
+docs/ARCHITECTURE.md
+```
+
+Resumen rapido:
+
+```text
+admin/       Panel administrativo y API privada
+api/         API publica
+assets/      Imagenes, logos, iconos y recursos
+components/  Referencia de componentes compartidos
+config/      Configuracion de base de datos
+css/         Estilos globales
+data/        Catalogo JSON de respaldo
+database/    Esquema SQL
+docs/        Documentacion tecnica
+includes/    Funciones PHP compartidas
+js/          JavaScript vanilla
+pages/       Mapa documental de paginas
+partials/    Header/footer compartidos actuales
+```
+
+Los HTML publicos se mantienen en la raiz para conservar URLs existentes:
+
+- `index.html`
+- `servicios.html`
+- `seguimiento.html`
+- `nosotros.html`
+- `contacto.html`
+- `tienda.html`
+- `producto.html`
+- `carrito.html`
+- `checkout.html`
 
 ## Backend PHP de tienda
 
-La tienda publica lee productos desde:
+Catalogo publico:
 
 ```text
 /api/products.php
 ```
 
-El panel administrador esta en:
+Panel administrador:
 
 ```text
-https://www.megabytemb.com.co/admin/
-```
-
-En local o staging:
-
-```text
-http://localhost/admin/
+/admin/
 ```
 
 Credenciales por defecto:
@@ -29,30 +61,37 @@ Usuario: admin
 Contrasena: MegabyteAdmin2026!
 ```
 
-Para cambiar las credenciales edita:
+## Configuracion de base de datos
+
+La conexion MySQL vive en:
 
 ```text
-includes/store-config.php
+config/database.php
 ```
 
-Por defecto, si no configuras base de datos, los productos se guardan en:
+Si MySQL no esta disponible, el sistema usa:
 
 ```text
 data/products.json
 ```
 
-El archivo `data/default-products.json` se usa para restaurar el catalogo de ejemplo.
-
-Para conectar MySQL, activa `pdo_mysql` en PHP y edita estos valores en `includes/store-config.php`:
-
-```php
-const MB_DB_DSN = 'mysql:host=localhost;dbname=megabyte_store;charset=utf8mb4';
-const MB_DB_USER = 'usuario_mysql';
-const MB_DB_PASSWORD = 'clave_mysql';
-```
-
-La tabla de productos esta documentada en:
+El catalogo base para restaurar ejemplos esta en:
 
 ```text
-database/schema.sql
+data/default-products.json
 ```
+
+## Imagenes de productos
+
+Las imagenes subidas desde el panel admin se guardan en:
+
+```text
+assets/productos/
+```
+
+## Reglas del proyecto
+
+- Mantener HTML, CSS, JavaScript vanilla y PHP.
+- No mover paginas de raiz sin actualizar enlaces, sitemap y hosting.
+- No eliminar funcionalidades existentes.
+- Mantener componentes compartidos documentados.
