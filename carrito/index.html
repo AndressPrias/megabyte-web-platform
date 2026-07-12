@@ -8,21 +8,44 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260712-11">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260712-12">
 </head>
 <body class="store-body" data-store-page="cart">
-  <header class="store-header">
+  <header class="store-header store-header--shop">
     <div class="container store-header__inner">
-      <a href="/" class="store-logo" aria-label="Salir de la tienda y volver a la landing">
-        <img src="/assets/logo-menu-mark.png" alt="Megabyte" width="92" height="62">
-      </a>
-      <nav class="store-nav store-nav--compact" aria-label="Navegación tienda">
-        <a href="/tienda">Productos</a>
-        <a href="/checkout">Checkout</a>
-      </nav>
-      <div class="store-header__actions">
-        <a class="store-exit" href="/">Salir de la tienda</a>
-        <a class="store-cart" href="/carrito"><span>Carrito</span><strong data-cart-count hidden>0</strong></a>
+      <div class="store-header__top">
+        <a href="/" class="store-logo" aria-label="Salir de la tienda y volver a la landing">
+          <img src="/assets/logo-menu-mark.png" alt="Megabyte" width="92" height="62">
+        </a>
+        <div class="store-searchbar">
+          <label class="store-search">
+            <span>Buscar</span>
+            <input id="storeSearch" type="search" placeholder="¿Qué estás buscando hoy?">
+          </label>
+          <label class="store-category-select">
+            <span>Todas las categorías</span>
+            <select aria-label="Seleccionar categoría">
+              <option value="todos">Todas las categorías</option>
+              <option value="computadores">Computadores</option>
+              <option value="accesorios">Accesorios</option>
+              <option value="componentes">Componentes</option>
+              <option value="redes">Redes</option>
+              <option value="seguridad">Seguridad</option>
+            </select>
+          </label>
+        </div>
+        <div class="store-header__actions">
+          <a class="store-icon-action" href="/tienda#catalogo" aria-label="Favoritos">
+            <span class="store-action-icon">♡</span>
+            <span>Favoritos</span>
+          </a>
+          <a class="store-cart store-cart--featured" href="/carrito" aria-label="Ver carrito">
+            <span class="store-action-icon">🛒</span>
+            <span>Mi carrito</span>
+            <small data-cart-total>$0</small>
+            <strong data-cart-count hidden>0</strong>
+          </a>
+        </div>
       </div>
     </div>
   </header>
