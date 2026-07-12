@@ -322,15 +322,26 @@ animatedElements.forEach((element) => {
     const ticketInput = document.getElementById('ticketInput');
     if (!ticketInput) return;
 
-    const ticket = new URLSearchParams(window.location.search).get('ticket');
+    const params = new URLSearchParams(window.location.search);
+    const ticket = params.get('ticket');
+    const phone = params.get('phone') || params.get('telefono');
+    const phoneInput = document.getElementById('phoneInput');
+
     if (ticket) ticketInput.value = ticket;
+    if (phone && phoneInput) phoneInput.value = phone;
+
+    if (ticket || phone) {
+      window.setTimeout(() => {
+        document.getElementById('ticketForm')?.requestSubmit();
+      }, 80);
+    }
   }
 
   function init() {
     initScrollEffects();
     initAnimations();
-    initTrackingQuery();
     initTicketForm();
+    initTrackingQuery();
     initContactForm();
     initOpinionForm();
   }

@@ -11,6 +11,29 @@ function mb_normalize_phone(string $phone): string
     return preg_replace('/\D+/', '', $phone) ?: '';
 }
 
+function mb_phone_matches(string $storedPhone, string $queryPhone): bool
+{
+    $stored = mb_normalize_phone($storedPhone);
+    $query = mb_normalize_phone($queryPhone);
+
+    if ($stored === '' || $query === '') {
+        return false;
+    }
+
+    if ($stored === $query) {
+        return true;
+    }
+
+    $storedLocal = strlen($stored) > 10 ? substr($stored, -10) : $stored;
+    $queryLocal = strlen($query) > 10 ? substr($query, -10) : $query;
+
+    if (strlen($storedLocal) >= 7 && strlen($queryLocal) >= 7 && $storedLocal === $queryLocal) {
+        return true;
+    }
+
+    return strlen($query) >= 7 && str_ends_with($stored, $query);
+}
+
 function mb_tracking_statuses(): array
 {
     return [
@@ -267,18 +290,19 @@ function mb_save_tickets_to_db(PDO $pdo, array $tickets): void
 
 function mb_find_ticket(?string $ticketId, ?string $phone): ?array
 {
-    $ticketId = strtoupper(trim((string) $ticketId));
+    $ticketId = strtoupper(preg_replace('/\s+/', '', trim((string) $ticketId)) ?: '');
     $phone = mb_normalize_phone((string) $phone);
     if ($ticketId === '' && $phone === '') {
         return null;
     }
 
     foreach (mb_get_tickets() as $ticket) {
-        if ($ticketId !== '' && strtoupper($ticket['ticket']) === $ticketId) {
+        $storedTicket = strtoupper(preg_replace('/\s+/', '', (string) $ticket['ticket']) ?: '');
+        if ($ticketId !== '' && $storedTicket === $ticketId) {
             return $ticket;
         }
 
-        if ($phone !== '' && mb_normalize_phone($ticket['telefono']) === $phone) {
+        if ($phone !== '' && mb_phone_matches((string) $ticket['telefono'], $phone)) {
             return $ticket;
         }
     }
