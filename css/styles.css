@@ -1,7 +1,29 @@
 /* =============================================
    Megabyte - Estilos Corporativos
    Paleta: #00B4D8 - #9D4EDD - #111827 - #81B8BF
+
+   MAPA DEL ARCHIVO
+   01. Variables y reset base
+   02. Componentes globales
+   03. Header principal
+   04. Heroes y secciones publicas
+   05. Servicios
+   06. Seguimiento
+   07. Opiniones
+   08. Tienda landing
+   09. Nosotros
+   10. Contacto y formularios
+   11. Footer y WhatsApp flotante
+   12. Animaciones
+   13. Responsive landing
+   14. Store / e-commerce
+   15. Admin tienda y tickets
+   16. Responsive store/admin
    ============================================= */
+
+/* ==========================================================================
+   01. Variables y reset base
+   ========================================================================== */
 
 :root {
   --cyan: #00B4D8;
@@ -72,7 +94,9 @@ html.is-animating .transition-main {
   margin-inline: auto;
 }
 
-/* ---- Buttons ---- */
+/* ==========================================================================
+   02. Componentes globales: botones
+   ========================================================================== */
 .btn {
   position: relative;
   isolation: isolate;
@@ -146,7 +170,9 @@ html.is-animating .transition-main {
   box-shadow: 0 12px 26px rgba(0, 180, 216, 0.15);
 }
 
-/* ---- Header ---- */
+/* ==========================================================================
+   03. Header principal
+   ========================================================================== */
 .header {
   position: fixed;
   top: 0;
@@ -387,7 +413,9 @@ html.is-animating .transition-main {
   min-height: 44px;
 }
 
-/* ---- Page Hero (subpÃ¡ginas) ---- */
+/* ==========================================================================
+   04. Heroes y secciones publicas
+   ========================================================================== */
 .page-hero {
   position: relative;
   isolation: isolate;
@@ -432,7 +460,7 @@ html.is-animating .transition-main {
   font-size: 1.05rem;
 }
 
-/* ---- Accesos rÃ¡pidos (inicio) ---- */
+/* ---- 04.1 Accesos rapidos del inicio ---- */
 .accesos {
   position: relative;
   background:
@@ -509,7 +537,7 @@ html.is-animating .transition-main {
   font-size: 0.85rem;
 }
 
-/* ---- Hero ---- */
+/* ---- 04.2 Hero principal ---- */
 .hero {
   position: relative;
   min-height: 88svh;
@@ -655,7 +683,7 @@ html.is-animating .transition-main {
   transform: translateX(3px);
 }
 
-/* ---- Sections ---- */
+/* ---- 04.3 Estructura general de secciones ---- */
 .section {
   position: relative;
   padding: 5.5rem 0;
@@ -692,7 +720,9 @@ html.is-animating .transition-main {
   font-size: 1rem;
 }
 
-/* ---- Servicios ---- */
+/* ==========================================================================
+   05. Servicios
+   ========================================================================== */
 .servicios {
   background:
     radial-gradient(circle at 88% 12%, rgba(157, 78, 221, 0.06), transparent 24rem),
@@ -793,7 +823,9 @@ html.is-animating .transition-main {
   transform: translateX(4px);
 }
 
-/* ---- Seguimiento ---- */
+/* ==========================================================================
+   06. Seguimiento
+   ========================================================================== */
 .seguimiento {
   background:
     radial-gradient(circle at 50% 0%, rgba(0, 180, 216, 0.06), transparent 24rem),
@@ -1016,7 +1048,9 @@ html.is-animating .transition-main {
   font-weight: 700;
 }
 
-/* ---- Testimonios ---- */
+/* ==========================================================================
+   07. Opiniones y testimonios
+   ========================================================================== */
 .testimonios {
   background:
     radial-gradient(circle at 18% 0%, rgba(0, 180, 216, 0.04), transparent 22rem),
@@ -1175,7 +1209,9 @@ html.is-animating .transition-main {
   border-radius: 6px;
 }
 
-/* ---- Tienda ---- */
+/* ==========================================================================
+   08. Bloque de tienda en landing
+   ========================================================================== */
 .tienda {
   background:
     radial-gradient(circle at 76% 8%, rgba(0, 180, 216, 0.055), transparent 23rem),
@@ -1494,7 +1530,9 @@ html.is-animating .transition-main {
   line-height: 1.25;
 }
 
-/* ---- Nosotros ---- */
+/* ==========================================================================
+   09. Nosotros
+   ========================================================================== */
 .nosotros {
   background:
     radial-gradient(circle at 82% 12%, rgba(157, 78, 221, 0.055), transparent 22rem),
@@ -1571,7 +1609,9 @@ html.is-animating .transition-main {
   left: 0;
 }
 
-/* ---- Contacto ---- */
+/* ==========================================================================
+   10. Contacto
+   ========================================================================== */
 .contacto__grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -1632,7 +1672,7 @@ a.contacto__item:hover {
   box-shadow: var(--shadow-soft);
 }
 
-/* ---- Forms ---- */
+/* ---- 10.1 Formularios compartidos ---- */
 .form-group {
   margin-bottom: 1.25rem;
 }
@@ -1723,7 +1763,9 @@ a.contacto__item:hover {
   margin: 0;
 }
 
-/* ---- Footer ---- */
+/* ==========================================================================
+   11. Footer
+   ========================================================================== */
 .footer {
   position: relative;
   overflow: hidden;
@@ -1836,7 +1878,7 @@ a.contacto__item:hover {
   font-weight: 800;
 }
 
-/* ---- MenÃº flotante + WhatsApp ---- */
+/* ---- 11.1 Menu flotante y WhatsApp ---- */
 #site-float {
   position: relative;
   z-index: 1001;
@@ -1870,7 +1912,9 @@ a.contacto__item:hover {
   50% { box-shadow: 0 4px 30px rgba(37, 211, 102, 0.7); }
 }
 
-/* ---- Animations ---- */
+/* ==========================================================================
+   12. Animaciones
+   ========================================================================== */
 [data-animate] {
   opacity: 0;
   transform: translateY(16px);
@@ -1894,7 +1938,9 @@ a.contacto__item:hover {
   }
 }
 
-/* ---- Responsive ---- */
+/* ==========================================================================
+   13. Responsive landing
+   ========================================================================== */
 @media (min-width: 1025px) {
   .whatsapp-float {
     right: 1.5rem;
@@ -2239,7 +2285,10 @@ body {
   }
 }
 
-/* ---- Store Module ---- */
+/* ==========================================================================
+   14. Store / e-commerce
+   ========================================================================== */
+/* ---- 14.1 Base visual de tienda ---- */
 .store-body {
   background:
     linear-gradient(140deg, rgba(0, 180, 216, 0.08), transparent 28%),
@@ -2248,6 +2297,7 @@ body {
   min-height: 100vh;
 }
 
+/* ---- 14.2 Header e-commerce ---- */
 .store-header {
   position: sticky;
   top: 0;
@@ -2316,6 +2366,7 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 14px 34px rgba(0, 0, 0, 0.2);
 }
 
+/* ---- 14.3 Buscador y acciones de tienda ---- */
 .store-search {
   position: relative;
   display: flex;
@@ -2608,6 +2659,7 @@ body {
   font-size: 0.72rem;
 }
 
+/* ---- 14.4 Categorias del header de tienda ---- */
 .store-header__navline {
   display: flex;
   align-items: center;
@@ -2684,6 +2736,7 @@ body {
   min-height: 70vh;
 }
 
+/* ---- 14.5 Hero comercial de tienda ---- */
 .store-hero {
   position: relative;
   overflow: hidden;
@@ -2915,6 +2968,7 @@ body {
   font-size: 0.82rem;
 }
 
+/* ---- 14.6 Secciones, filtros y grillas de tienda ---- */
 .store-section {
   padding: 4rem 0;
 }
@@ -2954,6 +3008,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+/* ---- 14.7 Cards de producto ---- */
 .product-card {
   display: flex;
   min-height: 100%;
@@ -3107,6 +3162,7 @@ body {
   padding-inline: 0.85rem;
 }
 
+/* ---- 14.8 Admin compartido: productos y tickets ---- */
 .store-admin {
   display: none;
   padding-top: 1rem;
@@ -4006,6 +4062,7 @@ body {
   background: rgba(251, 191, 36, 0.14);
 }
 
+/* ---- 14.9 Detalle de producto ---- */
 .product-detail {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
@@ -4203,6 +4260,7 @@ body {
   background: rgba(255, 255, 255, 0.028);
 }
 
+/* ---- 14.10 Carrito y checkout ---- */
 .cart-page__grid,
 .checkout-page__grid {
   display: grid;
@@ -4361,6 +4419,7 @@ body {
   transform: translateY(0);
 }
 
+/* ---- 14.11 Footer de tienda ---- */
 .store-footer {
   padding: 2rem 0;
   border-top: 1px solid rgba(129, 184, 191, 0.12);
@@ -4380,6 +4439,9 @@ body {
   font-weight: 700;
 }
 
+/* ==========================================================================
+   16. Responsive store/admin
+   ========================================================================== */
 @media (max-width: 1100px) {
   .store-header__top {
     grid-template-columns: 1fr;
@@ -4626,7 +4688,9 @@ body {
   }
 }
 
-/* Admin login final full-background override */
+/* ==========================================================================
+   15. Admin tienda y tickets
+   ========================================================================== */
 .store-admin-page {
   background: #010611;
 }
@@ -4845,7 +4909,7 @@ body {
   }
 }
 
-/* Admin login real EOF center override */
+/* ---- 15.1 Ajuste final del login admin centrado ---- */
 .store-admin__login[data-rendered='true'] {
   display: block !important;
 }
@@ -4874,19 +4938,19 @@ body {
 }
 
 
-/* Hide admin login benefits banner */
+/* ---- 15.2 Ocultar banner de beneficios del login admin ---- */
 .store-admin__login[data-rendered='true'] .admin-login__features {
   display: none !important;
 }
 
-/* Never show admin login while authenticated */
+/* ---- 15.3 Ocultar login cuando la sesion esta activa ---- */
 .store-admin__login[hidden],
 .store-admin__login[data-rendered='true'][hidden],
 .store-admin.is-authenticated .store-admin__login {
   display: none !important;
 }
 
-/* Admin login compact centered final */
+/* ---- 15.4 Login admin compacto centrado ---- */
 .store-admin__login[data-rendered='true'] {
   display: flex !important;
   align-items: center !important;
