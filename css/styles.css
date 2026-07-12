@@ -5316,3 +5316,34 @@ body {
 .store-admin.is-authenticated .store-admin__login {
   display: none !important;
 }
+
+/* Admin login compact centered final */
+.store-admin__login[data-rendered='true'] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  padding: clamp(1.25rem, 4vw, 4rem) 1rem !important;
+  box-sizing: border-box !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__panel {
+  left: auto !important;
+  grid-column: auto !important;
+  width: min(480px, calc(100vw - 2rem)) !important;
+  max-width: 480px !important;
+  margin: 0 auto !important;
+  transform: none !important;
+  box-sizing: border-box !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+  font-size: clamp(2rem, 2.45vw, 2.45rem) !important;
+  line-height: 1.05 !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  white-space: normal !important;
+  hyphens: none !important;
+}

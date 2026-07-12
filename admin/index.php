@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=admin-20260711-6">
+  <link rel="stylesheet" href="/css/styles.css?v=admin-20260711-8">
   <style>
     .store-admin:not(.is-authenticated) .container,
     .store-admin:not(.is-authenticated) .store-admin__shell {
@@ -24,21 +24,27 @@ mb_start_admin_session();
     }
 
     .store-admin__login[data-rendered='true'] {
+      position: relative !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
+      width: 100vw !important;
       min-height: calc(100vh - 96px) !important;
-      padding: clamp(1.5rem, 5vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(7rem, 12vw, 10rem) !important;
+      margin-left: calc(50% - 50vw) !important;
+      margin-right: calc(50% - 50vw) !important;
+      padding: clamp(1.25rem, 4vw, 4rem) 1rem !important;
+      box-sizing: border-box !important;
     }
 
     .store-admin__login[data-rendered='true'] .admin-login__panel {
       position: relative !important;
       left: auto !important;
       grid-column: auto !important;
-      width: min(560px, calc(100vw - 2rem)) !important;
-      max-width: 560px !important;
+      width: min(480px, calc(100vw - 2rem)) !important;
+      max-width: 480px !important;
       margin: 0 auto !important;
       transform: none !important;
+      box-sizing: border-box !important;
     }
 
     .store-admin__login[data-rendered='true'] .admin-login__hero {
@@ -46,9 +52,13 @@ mb_start_admin_session();
     }
 
     .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
-      font-size: clamp(2rem, 3.2vw, 3.15rem) !important;
-      line-height: 1.02 !important;
-      overflow-wrap: anywhere !important;
+      max-width: 100% !important;
+      font-size: clamp(2rem, 2.45vw, 2.45rem) !important;
+      line-height: 1.05 !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+      white-space: normal !important;
+      hyphens: none !important;
     }
 
     .store-admin__login[data-rendered='true'] .admin-login__hero p,
@@ -86,7 +96,7 @@ mb_start_admin_session();
       }
 
       .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
-        font-size: clamp(1.85rem, 9vw, 2.55rem) !important;
+        font-size: clamp(1.85rem, 8vw, 2.4rem) !important;
       }
     }
   </style>
@@ -226,6 +236,6 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=admin-20260711-2"></script>
+  <script src="/js/store.js?v=admin-20260711-8"></script>
 </body>
 </html>
