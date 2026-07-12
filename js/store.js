@@ -586,7 +586,11 @@
 
     const search = document.getElementById('storeSearch');
     const sort = document.getElementById('storeSort');
-    const activeCategory = document.querySelector('.store-category.is-active')?.dataset.category || 'todos';
+    const selectedCategory = document.querySelector('.store-category-select select')?.value;
+    const activeCategory = document.querySelector('[data-category-link].is-active')?.dataset.categoryLink
+      || document.querySelector('.store-category.is-active')?.dataset.category
+      || selectedCategory
+      || 'todos';
     const query = (search?.value || '').toLowerCase().trim();
     const sortValue = sort?.value || 'featured';
 
@@ -1189,6 +1193,9 @@
       const categoryLink = event.target.closest('[data-category-link]');
       if (categoryLink) {
         const selectedCategory = categoryLink.dataset.categoryLink;
+        document.querySelectorAll('[data-category-link]').forEach((node) => {
+          node.classList.toggle('is-active', node.dataset.categoryLink === selectedCategory);
+        });
         document.querySelectorAll('.store-category').forEach((node) => {
           node.classList.toggle('is-active', node.dataset.category === selectedCategory);
         });
@@ -1294,6 +1301,9 @@
       if (!event.target.matches('.store-category-select select')) return;
 
       const selectedCategory = event.target.value;
+      document.querySelectorAll('[data-category-link]').forEach((node) => {
+        node.classList.toggle('is-active', node.dataset.categoryLink === selectedCategory);
+      });
       document.querySelectorAll('.store-category').forEach((node) => {
         node.classList.toggle('is-active', node.dataset.category === selectedCategory);
       });
