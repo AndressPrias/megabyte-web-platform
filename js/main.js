@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  const WHATSAPP_NUMBER = '573133141701';
+
   const STATUS_MAP = {
     'Recibido': 'recibido',
     'En diagnostico': 'diagnostico',
@@ -77,6 +79,64 @@ animatedElements.forEach((element) => {
     }
 
     return data.ticket;
+  }
+
+  function buildServiceWhatsAppUrl(ticket, request) {
+    const trackingUrl = `${window.location.origin}/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
+    const message = [
+      'Hola Megabyte, acabo de solicitar un servicio desde la web.',
+      '',
+      `Ticket: ${ticket.ticket}`,
+      `Cliente: ${request.nombre}`,
+      `Celular: ${request.telefono}`,
+      `Servicio: ${request.servicio}`,
+      request.email ? `Correo: ${request.email}` : '',
+      request.mensaje ? `Mensaje: ${request.mensaje}` : '',
+      '',
+      `Seguimiento: ${trackingUrl}`
+    ].filter(Boolean).join('\n');
+
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }
+
+  function showTicketCreatedModal(ticket, whatsappUrl) {
+    const trackingUrl = `/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
+    let modal = document.getElementById('ticketCreatedModal');
+
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'ticketCreatedModal';
+      modal.className = 'ticket-created-modal';
+      modal.innerHTML = `
+        <div class="ticket-created-modal__overlay" data-ticket-modal-close></div>
+        <section class="ticket-created-modal__card" role="dialog" aria-modal="true" aria-labelledby="ticketCreatedTitle">
+          <button class="ticket-created-modal__close" type="button" data-ticket-modal-close aria-label="Cerrar">×</button>
+          <span class="ticket-created-modal__icon">✓</span>
+          <p class="ticket-created-modal__eyebrow">Ticket creado exitosamente</p>
+          <h2 id="ticketCreatedTitle">Tu solicitud fue registrada</h2>
+          <strong data-ticket-created-id>MB-0000-0000</strong>
+          <p>Guarda este número para consultar el estado de tu servicio cuando lo necesites.</p>
+          <div class="ticket-created-modal__actions">
+            <a class="btn btn--primary" data-ticket-created-wa target="_blank" rel="noopener noreferrer">Enviar por WhatsApp</a>
+            <a class="btn btn--outline" data-ticket-created-track>Realizar seguimiento</a>
+          </div>
+        </section>
+      `;
+      document.body.appendChild(modal);
+
+      modal.addEventListener('click', (event) => {
+        if (event.target.closest('[data-ticket-modal-close]')) {
+          modal.classList.remove('is-visible');
+          document.body.classList.remove('has-ticket-modal');
+        }
+      });
+    }
+
+    modal.querySelector('[data-ticket-created-id]').textContent = ticket.ticket;
+    modal.querySelector('[data-ticket-created-wa]').href = whatsappUrl;
+    modal.querySelector('[data-ticket-created-track]').href = trackingUrl;
+    modal.classList.add('is-visible');
+    document.body.classList.add('has-ticket-modal');
   }
 
   function formatDate(dateStr) {
@@ -183,17 +243,21 @@ animatedElements.forEach((element) => {
       }
 
       try {
-        const ticket = await createServiceTicket({
+        const request = {
           nombre,
           email,
           telefono,
           servicio: servicioText,
           mensaje,
           website: honeypot?.value || ''
+        };
+        const ticket = await createServiceTicket({
+          ...request
         });
+        const whatsappUrl = buildServiceWhatsAppUrl(ticket, request);
 
         if (success) {
-          success.textContent = 'Solicitud registrada. Te contactaremos pronto.';
+          success.textContent = `Ticket ${ticket.ticket} creado exitosamente. Te contactaremos pronto.`;
           success.hidden = false;
         }
         if (ticketBox && ticketId && ticketLink) {
@@ -201,6 +265,8 @@ animatedElements.forEach((element) => {
           ticketLink.href = `/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
           ticketBox.hidden = false;
         }
+        showTicketCreatedModal(ticket, whatsappUrl);
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         contactForm.reset();
         if (serviceSelect && selectedService) serviceSelect.value = selectedService;
       } catch (err) {

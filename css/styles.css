@@ -1770,6 +1770,144 @@ a.contacto__item:hover {
   margin: 0;
 }
 
+.has-ticket-modal {
+  overflow: hidden;
+}
+
+.ticket-created-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease;
+}
+
+.ticket-created-modal.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ticket-created-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(0, 180, 216, 0.18), transparent 24rem),
+    rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ticket-created-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(460px, 100%);
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid rgba(0, 180, 216, 0.32);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(8, 22, 44, 0.96), rgba(16, 14, 36, 0.96)),
+    var(--night);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.44), 0 0 40px rgba(0, 180, 216, 0.16);
+  text-align: center;
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.24s ease;
+}
+
+.ticket-created-modal.is-visible .ticket-created-modal__card {
+  transform: translateY(0) scale(1);
+}
+
+.ticket-created-modal__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(129, 184, 191, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.ticket-created-modal__close:hover {
+  color: #ffffff;
+  border-color: rgba(0, 180, 216, 0.36);
+  background: rgba(0, 180, 216, 0.12);
+}
+
+.ticket-created-modal__icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-inline: auto;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #22c55e, var(--cyan));
+  color: #ffffff;
+  font-size: 1.65rem;
+  font-weight: 900;
+  box-shadow: 0 18px 38px rgba(0, 180, 216, 0.22);
+}
+
+.ticket-created-modal__eyebrow {
+  margin: 0;
+  color: var(--cyan);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ticket-created-modal__card h2 {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(1.6rem, 6vw, 2.25rem);
+}
+
+.ticket-created-modal__card strong {
+  display: inline-flex;
+  justify-content: center;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(0, 180, 216, 0.28);
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgba(0, 180, 216, 0.12);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+}
+
+.ticket-created-modal__card p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.ticket-created-modal__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 520px) {
+  .ticket-created-modal__actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ==========================================================================
    11. Footer
    ========================================================================== */
