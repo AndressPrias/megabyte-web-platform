@@ -2,21 +2,22 @@ import Swup from 'https://unpkg.com/swup@4?module';
 
 const PAGE_BY_FILE = {
   '': 'inicio',
-  'index.html': 'inicio',
-  'servicios.html': 'servicios',
-  'seguimiento.html': 'seguimiento',
-  'tienda.html': 'tienda',
-  'nosotros.html': 'nosotros',
-  'contacto.html': 'contacto'
+  'index': 'inicio',
+  'servicios': 'servicios',
+  'seguimiento': 'seguimiento',
+  'tienda': 'tienda',
+  'nosotros': 'nosotros',
+  'contacto': 'contacto'
 };
 
 const INTERNAL_PAGES = [
-  'index.html',
-  'servicios.html',
-  'seguimiento.html',
-  'tienda.html',
-  'nosotros.html',
-  'contacto.html'
+  '',
+  'index',
+  'servicios',
+  'seguimiento',
+  'tienda',
+  'nosotros',
+  'contacto'
 ];
 
 const prefetchedPages = new Set();
@@ -32,7 +33,7 @@ function normalizeInternalHref(href) {
   if (url.origin !== window.location.origin) return '';
   if (url.hash || url.search) return '';
 
-  const fileName = url.pathname.split('/').pop() || 'index.html';
+  const fileName = url.pathname.replace(/^\/+|\/+$/g, '').split('/').pop() || '';
   if (!INTERNAL_PAGES.includes(fileName)) return '';
 
   return url.href;
@@ -54,8 +55,8 @@ function prefetchPage(href) {
 function prefetchImportantPages() {
   const currentPage = getCurrentPage();
   const priorityPages = currentPage === 'inicio'
-    ? ['servicios.html', 'seguimiento.html', 'contacto.html']
-    : ['index.html', 'contacto.html'];
+    ? ['/servicios', '/seguimiento', '/contacto']
+    : ['/', '/contacto'];
 
   const run = () => priorityPages.forEach(prefetchPage);
 

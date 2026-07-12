@@ -547,7 +547,7 @@
   function productCard(product) {
     return `
       <article class="product-card" data-category="${product.category}">
-        <a href="producto.html?id=${product.id}" class="product-card__media" aria-label="Ver ${product.name}">
+        <a href="/producto?id=${product.id}" class="product-card__media" aria-label="Ver ${product.name}">
           <span class="product-card__badge">${product.discount}% OFF</span>
           <span class="product-card__stock">${product.stock > 0 ? 'En stock' : 'Agotado'}</span>
           ${productVisual(product, 'product-card__image')}
@@ -566,7 +566,7 @@
         </div>
         <div class="product-card__actions">
           <button class="btn btn--primary btn--sm" type="button" data-add-cart="${product.id}">Agregar al carrito</button>
-          <a class="btn btn--outline btn--sm" href="producto.html?id=${product.id}">Ver detalle</a>
+          <a class="btn btn--outline btn--sm" href="/producto?id=${product.id}">Ver detalle</a>
         </div>
       </article>
     `;

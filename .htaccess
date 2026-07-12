@@ -1,0 +1,14 @@
+DirectoryIndex index.html index.php
+RewriteEngine On
+
+# /index.html -> /
+RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+RewriteRule ^index\.html$ / [R=301,L]
+
+# /pagina.html -> /pagina
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+
+# /pagina -> /pagina.html internally, without changing the URL.
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]

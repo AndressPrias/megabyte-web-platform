@@ -105,13 +105,13 @@ mb_start_admin_session();
   <header class="store-header">
     <div class="container store-header__inner">
       <div class="store-header__top">
-        <a href="/index.html" class="store-logo" aria-label="Volver a la landing">
+        <a href="/" class="store-logo" aria-label="Volver a la landing">
           <img src="/assets/logo-menu-mark.png" alt="Megabyte MB" width="92" height="62">
         </a>
         <nav class="store-nav store-nav--compact" aria-label="Navegacion administracion">
-          <a href="/tienda.html">Ver tienda</a>
-          <a href="/carrito.html">Carrito</a>
-          <a href="/index.html">Salir</a>
+          <a href="/tienda">Ver tienda</a>
+          <a href="/carrito">Carrito</a>
+          <a href="/">Salir</a>
         </nav>
         <div class="store-header__actions">
           <button class="btn btn--outline btn--sm" type="button" data-admin-logout hidden>Cerrar sesion</button>
