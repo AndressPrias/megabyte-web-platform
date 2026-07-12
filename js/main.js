@@ -84,16 +84,22 @@ animatedElements.forEach((element) => {
   function buildServiceWhatsAppUrl(ticket, request) {
     const trackingUrl = `${window.location.origin}/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
     const message = [
-      'Hola Megabyte, acabo de solicitar un servicio desde la web.',
+      'Hola Megabyte.',
       '',
-      `Ticket: ${ticket.ticket}`,
+      'Acabo de registrar una solicitud de servicio desde la web y quiero continuar la atención por este medio.',
+      '',
+      'Resumen de la solicitud',
+      `Ticket asignado: ${ticket.ticket}`,
       `Cliente: ${request.nombre}`,
-      `Celular: ${request.telefono}`,
-      `Servicio: ${request.servicio}`,
+      `Celular de contacto: ${request.telefono}`,
+      `Servicio solicitado: ${request.servicio}`,
       request.email ? `Correo: ${request.email}` : '',
-      request.mensaje ? `Mensaje: ${request.mensaje}` : '',
+      request.mensaje ? `Detalle del cliente: ${request.mensaje}` : '',
       '',
-      `Seguimiento: ${trackingUrl}`
+      'Puedo hacer seguimiento del caso aquí:',
+      trackingUrl,
+      '',
+      'Quedo atento a la confirmación y próximos pasos. Gracias.'
     ].filter(Boolean).join('\n');
 
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
