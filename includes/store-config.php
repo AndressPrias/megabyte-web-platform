@@ -5,6 +5,8 @@ const MB_ADMIN_USER = 'admin';
 const MB_ADMIN_PASSWORD = 'MegabyteAdmin2026!';
 const MB_PRODUCTS_FILE = __DIR__ . '/../data/products.json';
 const MB_DEFAULT_PRODUCTS_FILE = __DIR__ . '/../data/default-products.json';
+const MB_PRODUCT_UPLOAD_DIR = __DIR__ . '/../assets/productos';
+const MB_PRODUCT_UPLOAD_URL = '/assets/productos';
 const MB_DB_DSN = 'mysql:host=localhost;dbname=u184620198_megastore;charset=utf8mb4';
 const MB_DB_USER = 'u184620198_storeadmin';
 const MB_DB_PASSWORD = 'MegaStore2026!';
@@ -106,6 +108,7 @@ function mb_normalize_product(array $product): array
     $name = trim((string) ($product['name'] ?? 'Producto sin nombre'));
     $category = (string) ($product['category'] ?? 'computadores');
     $imageType = (string) ($product['imageType'] ?? 'laptop');
+    $imageUrl = trim((string) ($product['imageUrl'] ?? ''));
 
     return [
         'id' => (string) ($product['id'] ?? mb_slugify($name)),
@@ -119,12 +122,26 @@ function mb_normalize_product(array $product): array
         'rating' => min(5, max(0, (float) ($product['rating'] ?? 4.8))),
         'badge' => trim((string) ($product['badge'] ?? 'Disponible')),
         'imageType' => in_array($imageType, $imageTypes, true) ? $imageType : 'laptop',
+        'imageUrl' => mb_sanitize_product_image_url($imageUrl),
         'shortDescription' => trim((string) ($product['shortDescription'] ?? 'Producto disponible en Megabyte Store.')),
         'description' => trim((string) ($product['description'] ?? ($product['shortDescription'] ?? 'Producto disponible en Megabyte Store.'))),
         'specs' => array_values(array_map('strval', $specs)),
         'warranty' => trim((string) ($product['warranty'] ?? 'Garantia segun disponibilidad y condiciones del producto.')),
         'availability' => trim((string) ($product['availability'] ?? (((int) ($product['stock'] ?? 0)) > 0 ? 'Disponible' : 'Agotado'))),
     ];
+}
+
+function mb_sanitize_product_image_url(string $url): string
+{
+    if ($url === '') {
+        return '';
+    }
+
+    if (preg_match('#^https?://#i', $url) === 1 || str_starts_with($url, MB_PRODUCT_UPLOAD_URL . '/')) {
+        return $url;
+    }
+
+    return '';
 }
 
 function mb_ensure_products_file(): void
@@ -181,6 +198,7 @@ function mb_ensure_products_table(PDO $pdo): void
             rating DECIMAL(3,1) NOT NULL DEFAULT 4.8,
             badge VARCHAR(120) NOT NULL DEFAULT 'Disponible',
             imageType VARCHAR(80) NOT NULL DEFAULT 'laptop',
+            imageUrl VARCHAR(500) NOT NULL DEFAULT '',
             shortDescription TEXT,
             description TEXT,
             specs TEXT,
@@ -190,6 +208,22 @@ function mb_ensure_products_table(PDO $pdo): void
             updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )"
     );
+    mb_ensure_products_column($pdo, 'imageUrl', "VARCHAR(500) NOT NULL DEFAULT ''");
+}
+
+function mb_ensure_products_column(PDO $pdo, string $column, string $definition): void
+{
+    try {
+        $statement = $pdo->prepare(
+            'SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table AND COLUMN_NAME = :column'
+        );
+        $statement->execute([':table' => 'products', ':column' => $column]);
+        if ((int) $statement->fetchColumn() === 0) {
+            $pdo->exec("ALTER TABLE products ADD COLUMN {$column} {$definition}");
+        }
+    } catch (Throwable $error) {
+        error_log('Megabyte DB column check failed: ' . $error->getMessage());
+    }
 }
 
 function mb_products_from_db(PDO $pdo): array
@@ -198,6 +232,7 @@ function mb_products_from_db(PDO $pdo): array
     return array_map(static function (array $row): array {
         $row['oldPrice'] = $row['oldPrice'] ?? $row['oldprice'] ?? $row['price'];
         $row['imageType'] = $row['imageType'] ?? $row['imagetype'] ?? 'laptop';
+        $row['imageUrl'] = $row['imageUrl'] ?? $row['imageurl'] ?? '';
         $row['shortDescription'] = $row['shortDescription'] ?? $row['shortdescription'] ?? '';
         $row['specs'] = json_decode((string) ($row['specs'] ?? '[]'), true) ?: [];
         return mb_normalize_product($row);
@@ -213,10 +248,10 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
         $statement = $pdo->prepare(
             'INSERT INTO products (
                 id, name, brand, category, price, oldPrice, discount, stock, rating, badge,
-                imageType, shortDescription, description, specs, warranty, availability, sortOrder
+                imageType, imageUrl, shortDescription, description, specs, warranty, availability, sortOrder
             ) VALUES (
                 :id, :name, :brand, :category, :price, :oldPrice, :discount, :stock, :rating, :badge,
-                :imageType, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
+                :imageType, :imageUrl, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
             )'
         );
 
@@ -233,6 +268,7 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
                 ':rating' => $product['rating'],
                 ':badge' => $product['badge'],
                 ':imageType' => $product['imageType'],
+                ':imageUrl' => $product['imageUrl'],
                 ':shortDescription' => $product['shortDescription'],
                 ':description' => $product['description'],
                 ':specs' => json_encode($product['specs'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),

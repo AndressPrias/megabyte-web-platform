@@ -3571,9 +3571,38 @@ body {
   filter: drop-shadow(0 14px 24px rgba(0, 180, 216, 0.22));
 }
 
+.product-card__image,
+.product-detail__photo,
+.product-detail__thumb-photo,
+.store-admin__thumb,
+.cart-item__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card__image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.product-card__media:has(.product-card__image)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(1, 6, 17, 0.08), rgba(1, 6, 17, 0.48)),
+    radial-gradient(circle at 70% 20%, rgba(0, 180, 216, 0.18), transparent 34%);
+  pointer-events: none;
+}
+
 .product-card__badge,
 .product-card__stock {
   position: absolute;
+  z-index: 2;
   top: 1rem;
   border-radius: 999px;
   padding: 0.28rem 0.65rem;
@@ -4385,6 +4414,50 @@ body {
   grid-column: 1 / -1;
 }
 
+.store-admin__image-upload {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid rgba(129, 184, 191, 0.14);
+  border-radius: 14px;
+  background: rgba(5, 13, 27, 0.5);
+}
+
+.store-admin__image-preview {
+  display: grid;
+  width: 132px;
+  aspect-ratio: 1.2 / 1;
+  place-items: center;
+  overflow: hidden;
+  border: 1px dashed rgba(0, 180, 216, 0.32);
+  border-radius: 12px;
+  color: rgba(203, 213, 225, 0.64);
+  background:
+    linear-gradient(135deg, rgba(157, 78, 221, 0.12), rgba(0, 180, 216, 0.08)),
+    rgba(3, 12, 30, 0.72);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.store-admin__image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.store-admin__image-upload small {
+  display: block;
+  margin: 0.4rem 0 0.65rem;
+  color: rgba(203, 213, 225, 0.68);
+  font-size: 0.74rem;
+}
+
+.store-admin__image-upload input[type='file'] {
+  padding: 0.65rem;
+}
+
 .store-admin__actions {
   display: flex;
   gap: 0.75rem;
@@ -4442,6 +4515,11 @@ body {
   height: 30px;
 }
 
+.store-admin__icon:has(img) {
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.045);
+}
+
 .store-admin__item span,
 .store-admin__item small {
   display: block;
@@ -4496,6 +4574,10 @@ body {
   height: 150px;
 }
 
+.product-detail__photo {
+  border-radius: 14px;
+}
+
 .product-detail__thumbs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4517,6 +4599,11 @@ body {
 .product-detail__thumbs svg {
   width: 38px;
   height: 38px;
+}
+
+.product-detail__thumbs span:has(img) {
+  overflow: hidden;
+  padding: 0;
 }
 
 .product-detail__info {
@@ -5017,6 +5104,14 @@ body {
 
   .store-admin__fields {
     grid-template-columns: 1fr;
+  }
+
+  .store-admin__image-upload {
+    grid-template-columns: 1fr;
+  }
+
+  .store-admin__image-preview {
+    width: 100%;
   }
 
   .store-admin__item {

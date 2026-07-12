@@ -141,6 +141,7 @@
       rating: Math.min(5, Math.max(0, Number(product.rating) || 4.8)),
       badge: String(product.badge || 'Disponible').trim(),
       imageType: PRODUCT_IMAGE_TYPES.includes(product.imageType) ? product.imageType : 'laptop',
+      imageUrl: String(product.imageUrl || '').trim(),
       shortDescription: String(product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       description: String(product.description || product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       specs: Array.isArray(product.specs)
@@ -520,13 +521,36 @@
     return icons[type] || icons.laptop;
   }
 
+  function productVisual(product, className = 'product-image') {
+    if (product.imageUrl) {
+      return `<img class="${className}" src="${product.imageUrl}" alt="${product.name}" loading="lazy">`;
+    }
+
+    return productIcon(product.imageType);
+  }
+
+  function updateAdminImagePreview(form) {
+    const preview = form?.querySelector('[data-product-image-preview]');
+    if (!preview) return;
+
+    const imageUrl = form.elements.imageUrl?.value || '';
+    if (imageUrl) {
+      preview.innerHTML = `<img src="${imageUrl}" alt="Vista previa del producto">`;
+      preview.classList.add('has-image');
+      return;
+    }
+
+    preview.innerHTML = '<span>Sin imagen</span>';
+    preview.classList.remove('has-image');
+  }
+
   function productCard(product) {
     return `
       <article class="product-card" data-category="${product.category}">
         <a href="producto.html?id=${product.id}" class="product-card__media" aria-label="Ver ${product.name}">
           <span class="product-card__badge">${product.discount}% OFF</span>
           <span class="product-card__stock">${product.stock > 0 ? 'En stock' : 'Agotado'}</span>
-          ${productIcon(product.imageType)}
+          ${productVisual(product, 'product-card__image')}
         </a>
         <div class="product-card__body">
           <div class="product-card__eyebrow">
@@ -589,9 +613,9 @@
     document.title = `${product.name} | Megabyte`;
     detail.innerHTML = `
       <div class="product-detail__gallery">
-        <div class="product-detail__image">${productIcon(product.imageType)}</div>
+        <div class="product-detail__image">${productVisual(product, 'product-detail__photo')}</div>
         <div class="product-detail__thumbs">
-          <span>${productIcon(product.imageType)}</span>
+          <span>${productVisual(product, 'product-detail__thumb-photo')}</span>
           <span>${productIcon(product.imageType)}</span>
           <span>${productIcon(product.imageType)}</span>
         </div>
@@ -636,7 +660,7 @@
   function productAdminRow(product) {
     return `
       <article class="store-admin__item">
-        <div class="store-admin__icon">${productIcon(product.imageType)}</div>
+        <div class="store-admin__icon">${productVisual(product, 'store-admin__thumb')}</div>
         <div>
           <span>${product.category} · ${product.brand}</span>
           <strong>${product.name}</strong>
@@ -676,6 +700,8 @@
     form.elements.rating.value = product.rating;
     form.elements.badge.value = product.badge;
     form.elements.imageType.value = product.imageType;
+    form.elements.imageUrl.value = product.imageUrl || '';
+    if (form.elements.productImage) form.elements.productImage.value = '';
     form.elements.availability.value = product.availability;
     form.elements.warranty.value = product.warranty;
     form.elements.shortDescription.value = product.shortDescription;
@@ -683,6 +709,7 @@
     form.elements.specs.value = product.specs.join('\n');
     form.querySelector('[data-admin-submit]').textContent = 'Guardar cambios';
     document.getElementById('adminFormTitle').textContent = 'Editar producto';
+    updateAdminImagePreview(form);
     form.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
@@ -695,6 +722,9 @@
     form.elements.stock.value = '1';
     form.elements.category.value = 'computadores';
     form.elements.imageType.value = 'laptop';
+    form.elements.imageUrl.value = '';
+    if (form.elements.productImage) form.elements.productImage.value = '';
+    updateAdminImagePreview(form);
     form.querySelector('[data-admin-submit]').textContent = 'Agregar producto';
     document.getElementById('adminFormTitle').textContent = 'Nuevo producto';
   }
@@ -715,6 +745,7 @@
       rating: data.get('rating'),
       badge: data.get('badge'),
       imageType: data.get('imageType'),
+      imageUrl: data.get('imageUrl'),
       availability: data.get('availability'),
       warranty: data.get('warranty'),
       shortDescription: data.get('shortDescription'),
@@ -738,6 +769,12 @@
     }
 
     try {
+      const uploadedImageUrl = await uploadProductImage(form);
+      if (uploadedImageUrl) {
+        product.imageUrl = uploadedImageUrl;
+        form.elements.imageUrl.value = uploadedImageUrl;
+      }
+
       const endpoint = isEditing
         ? `${API_ADMIN}?action=product&id=${encodeURIComponent(product.id)}`
         : `${API_ADMIN}?action=products`;
@@ -752,6 +789,32 @@
     } catch (err) {
       showStoreNotice(err.message || 'No se pudo guardar');
     }
+  }
+
+  async function uploadProductImage(form) {
+    const input = form.elements.productImage;
+    const file = input?.files?.[0];
+    if (!file) return '';
+
+    if (file.size > 4 * 1024 * 1024) {
+      throw new Error('La imagen no debe superar 4 MB');
+    }
+
+    const data = new FormData();
+    data.append('image', file);
+
+    const response = await fetch(`${API_ADMIN}?action=upload-image`, {
+      method: 'POST',
+      body: data,
+      credentials: 'same-origin'
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || 'No se pudo subir la imagen');
+    }
+
+    return payload.imageUrl || '';
   }
 
   async function deleteProduct(productId) {
@@ -797,7 +860,7 @@
     const { product, quantity } = item;
     return `
       <article class="cart-item">
-        <div class="cart-item__image">${productIcon(product.imageType)}</div>
+        <div class="cart-item__image">${productVisual(product, 'cart-item__photo')}</div>
         <div class="cart-item__info">
           <span>${product.brand}</span>
           <h3>${product.name}</h3>
@@ -930,6 +993,17 @@
       const restoreProductsButton = event.target.closest('[data-admin-restore]');
       if (restoreProductsButton) await resetProductsToDefaults();
 
+      const removeProductImageButton = event.target.closest('[data-remove-product-image]');
+      if (removeProductImageButton) {
+        const form = document.getElementById('adminProductForm');
+        if (form) {
+          form.elements.imageUrl.value = '';
+          if (form.elements.productImage) form.elements.productImage.value = '';
+          updateAdminImagePreview(form);
+          showStoreNotice('Imagen retirada del producto');
+        }
+      }
+
       const logoutButton = event.target.closest('[data-admin-logout]');
       if (logoutButton) {
         adminAuthenticated = false;
@@ -946,6 +1020,32 @@
     });
 
     document.addEventListener('change', (event) => {
+      if (event.target.matches('input[name="productImage"]')) {
+        const form = event.target.closest('form');
+        const file = event.target.files?.[0];
+        const preview = form?.querySelector('[data-product-image-preview]');
+
+        if (!file || !preview) {
+          updateAdminImagePreview(form);
+          return;
+        }
+
+        if (file.size > 4 * 1024 * 1024) {
+          event.target.value = '';
+          showStoreNotice('La imagen no debe superar 4 MB');
+          updateAdminImagePreview(form);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.innerHTML = `<img src="${reader.result}" alt="Vista previa del producto">`;
+          preview.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
       if (!event.target.matches('.store-category-select select')) return;
 
       const selectedCategory = event.target.value;

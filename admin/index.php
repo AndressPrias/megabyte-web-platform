@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=admin-20260711-8">
+  <link rel="stylesheet" href="/css/styles.css?v=admin-20260712-1">
   <style>
     .store-admin:not(.is-authenticated) .container,
     .store-admin:not(.is-authenticated) .store-admin__shell {
@@ -142,6 +142,7 @@ mb_start_admin_session();
           <div class="store-admin__grid" id="adminWorkspace" hidden>
             <form class="store-admin__form" id="adminProductForm">
               <input type="hidden" name="productId">
+              <input type="hidden" name="imageUrl">
               <h2 id="adminFormTitle">Nuevo producto</h2>
 
               <div class="store-admin__fields">
@@ -174,6 +175,19 @@ mb_start_admin_session();
                     <option value="drive">Disco / SSD</option>
                     <option value="router">Router</option>
                   </select>
+                </label>
+                <label class="store-admin__wide store-admin__image-field">
+                  <span>Foto del producto</span>
+                  <div class="store-admin__image-upload">
+                    <div class="store-admin__image-preview" data-product-image-preview>
+                      <span>Sin imagen</span>
+                    </div>
+                    <div>
+                      <input name="productImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                      <small>JPG, PNG, WEBP o GIF. Maximo 4 MB.</small>
+                      <button class="btn btn--outline btn--sm" type="button" data-remove-product-image>Quitar imagen</button>
+                    </div>
+                  </div>
                 </label>
                 <label>
                   <span>Precio actual</span>
@@ -236,6 +250,31 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=admin-20260711-8"></script>
+  <script src="/js/store.js?v=admin-20260712-1"></script>
+  <script>
+    (() => {
+      const polishAdminLogin = () => {
+        const loginPanel = document.getElementById('adminLoginPanel');
+        const workspace = document.getElementById('adminWorkspace');
+        const title = loginPanel?.querySelector('.admin-login__hero h2');
+
+        if (title) {
+          title.textContent = 'Panel administrador';
+        }
+
+        if (loginPanel && workspace && !workspace.hidden) {
+          loginPanel.hidden = true;
+          loginPanel.style.setProperty('display', 'none', 'important');
+          loginPanel.closest('.store-admin')?.classList.add('is-authenticated');
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        polishAdminLogin();
+        window.setTimeout(polishAdminLogin, 250);
+        window.setTimeout(polishAdminLogin, 900);
+      });
+    })();
+  </script>
 </body>
 </html>
