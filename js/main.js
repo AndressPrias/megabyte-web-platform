@@ -3,8 +3,10 @@
 
   const STATUS_MAP = {
     'Recibido': 'recibido',
+    'En diagnostico': 'diagnostico',
     'En diagnóstico': 'diagnostico',
     'Esperando repuesto': 'repuesto',
+    'En reparacion': 'reparacion',
     'En reparación': 'reparacion',
     'En pruebas': 'pruebas',
     'Listo para entrega': 'listo',
@@ -100,6 +102,38 @@ animatedElements.forEach((element) => {
     return null;
   }
 
+  async function fetchTicket(ticketId, phone) {
+    const response = await fetch('/api/tracking.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ ticket: ticketId, phone })
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || 'Servicio no encontrado');
+    }
+
+    return payload.ticket;
+  }
+
+  async function createServiceTicket(payload) {
+    const response = await fetch('/api/service-request.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.error || 'No se pudo crear el ticket');
+    }
+
+    return data.ticket;
+  }
+
   function formatDate(dateStr) {
     const [y, m, d] = dateStr.split('-');
     const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -118,6 +152,8 @@ animatedElements.forEach((element) => {
     statusEl.className = `ticket-status ticket-status--${statusClass}`;
 
     document.getElementById('resultCliente').textContent = data.cliente;
+    const serviceResult = document.getElementById('resultServicio');
+    if (serviceResult) serviceResult.textContent = data.servicio || 'Servicio tecnico';
     document.getElementById('resultFecha').textContent = formatDate(data.fechaIngreso);
     document.getElementById('resultTecnico').textContent = data.tecnico;
     document.getElementById('resultEstimada').textContent = formatDate(data.fechaEstimada);
@@ -135,22 +171,39 @@ animatedElements.forEach((element) => {
     const ticketForm = document.getElementById('ticketForm');
     if (!ticketForm) return;
 
-    ticketForm.addEventListener('submit', (e) => {
+    ticketForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const ticketId = document.getElementById('ticketInput').value.trim();
       const phone = document.getElementById('phoneInput').value.trim();
       if (!ticketId && !phone) return;
 
-      const data = findTicket(ticketId, phone);
       const result = document.getElementById('ticketResult');
       const error = document.getElementById('ticketError');
+      const button = ticketForm.querySelector('button[type="submit"]');
+      const originalText = button?.textContent || 'Consultar Estado';
 
-      if (data) {
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Consultando...';
+      }
+
+      try {
+        const data = await fetchTicket(ticketId, phone);
         renderTicket(data);
-      } else {
-        result.hidden = true;
-        error.hidden = false;
+      } catch (err) {
+        const demoData = findTicket(ticketId, phone);
+        if (demoData && window.location.hostname === '127.0.0.1') {
+          renderTicket(demoData);
+        } else {
+          result.hidden = true;
+          error.hidden = false;
+        }
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalText;
+        }
       }
     });
   }
@@ -159,29 +212,68 @@ animatedElements.forEach((element) => {
     const contactForm = document.getElementById('contactForm');
     if (!contactForm) return;
 
-    contactForm.addEventListener('submit', (e) => {
+    const serviceSelect = document.getElementById('servicio');
+    const selectedService = new URLSearchParams(window.location.search).get('servicio');
+    if (serviceSelect && selectedService && [...serviceSelect.options].some((option) => option.value === selectedService)) {
+      serviceSelect.value = selectedService;
+    }
+
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const honeypot = contactForm.querySelector('.honeypot');
       if (honeypot && honeypot.value) return;
 
-      const nombre = document.getElementById('nombre').value;
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
       const servicio = document.getElementById('servicio');
       const servicioText = servicio.options[servicio.selectedIndex].text;
-      const mensaje = document.getElementById('mensaje').value;
+      const mensaje = document.getElementById('mensaje').value.trim();
+      const success = document.getElementById('formSuccess');
+      const ticketBox = document.getElementById('serviceTicketSuccess');
+      const ticketId = document.getElementById('createdTicketId');
+      const ticketLink = document.getElementById('createdTicketLink');
+      const submitButton = contactForm.querySelector('button[type="submit"]');
+      const originalText = submitButton?.textContent || 'Enviar Solicitud';
 
-      const waMessage = encodeURIComponent(
-        `Hola, soy ${nombre}. Me interesa el servicio de ${servicioText}. ${mensaje}`
-      );
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Creando ticket...';
+      }
 
-      window.open(`https://wa.me/573133141701?text=${waMessage}`, '_blank');
+      try {
+        const ticket = await createServiceTicket({
+          nombre,
+          email,
+          telefono,
+          servicio: servicioText,
+          mensaje,
+          website: honeypot?.value || ''
+        });
 
-      document.getElementById('formSuccess').hidden = false;
-      contactForm.reset();
-
-      setTimeout(() => {
-        document.getElementById('formSuccess').hidden = true;
-      }, 5000);
+        if (success) {
+          success.textContent = 'Solicitud registrada. Te contactaremos pronto.';
+          success.hidden = false;
+        }
+        if (ticketBox && ticketId && ticketLink) {
+          ticketId.textContent = ticket.ticket;
+          ticketLink.href = `/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
+          ticketBox.hidden = false;
+        }
+        contactForm.reset();
+        if (serviceSelect && selectedService) serviceSelect.value = selectedService;
+      } catch (err) {
+        if (success) {
+          success.textContent = err.message || 'No se pudo crear el ticket. Intenta nuevamente.';
+          success.hidden = false;
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalText;
+        }
+      }
     });
   }
 
@@ -286,9 +378,18 @@ animatedElements.forEach((element) => {
     });
   }
 
+  function initTrackingQuery() {
+    const ticketInput = document.getElementById('ticketInput');
+    if (!ticketInput) return;
+
+    const ticket = new URLSearchParams(window.location.search).get('ticket');
+    if (ticket) ticketInput.value = ticket;
+  }
+
   function init() {
     initScrollEffects();
     initAnimations();
+    initTrackingQuery();
     initTicketForm();
     initContactForm();
     initOpinionForm();

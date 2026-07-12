@@ -5,7 +5,9 @@
   const CART_KEY = 'megabyte_store_cart';
   const API_PRODUCTS = '/api/products.php';
   const API_ADMIN = '/admin/api.php';
+  const API_ADMIN_TRACKING = '/admin/tracking-api.php';
   let productsCache = [];
+  let ticketsCache = [];
   let productsLoaded = false;
   let backendAvailable = true;
   let adminAuthenticated = document.body?.dataset.adminAuthenticated === 'true';
@@ -231,12 +233,17 @@
     }
 
     renderAdminAccess();
+    if (adminAuthenticated) {
+      await loadAdminTickets();
+      resetTicketForm();
+    }
   }
 
   function renderAdminAccess() {
     const adminSection = document.getElementById('admin-productos');
     const loginPanel = document.getElementById('adminLoginPanel');
     const workspace = document.getElementById('adminWorkspace');
+    const trackingWorkspace = document.getElementById('adminTrackingWorkspace');
     const state = document.getElementById('adminAccessState');
     const logoutButtons = document.querySelectorAll('[data-admin-logout]');
     if (!adminSection || !loginPanel || !workspace) return;
@@ -249,6 +256,7 @@
       loginPanel.style.removeProperty('display');
     }
     workspace.hidden = !adminAuthenticated;
+    if (trackingWorkspace) trackingWorkspace.hidden = !adminAuthenticated;
     logoutButtons.forEach((button) => {
       button.hidden = !adminAuthenticated;
     });
@@ -856,6 +864,228 @@
     showStoreNotice('Catálogo restaurado');
   }
 
+  function normalizeTicket(ticket) {
+    return {
+      ticket: String(ticket.ticket || '').trim().toUpperCase(),
+      cliente: String(ticket.cliente || 'Cliente').trim(),
+      telefono: String(ticket.telefono || '').trim(),
+      servicio: String(ticket.servicio || 'Servicio tecnico').trim(),
+      estado: String(ticket.estado || 'Recibido').trim(),
+      fechaIngreso: String(ticket.fechaIngreso || today()).trim(),
+      tecnico: String(ticket.tecnico || 'Equipo Megabyte').trim(),
+      observaciones: String(ticket.observaciones || '').trim(),
+      fechaEstimada: String(ticket.fechaEstimada || today()).trim(),
+      historial: Array.isArray(ticket.historial)
+        ? ticket.historial.map((item) => ({
+          fecha: String(item.fecha || today()).trim(),
+          texto: String(item.texto || '').trim()
+        })).filter((item) => item.texto)
+        : []
+    };
+  }
+
+  function today() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  async function loadAdminTickets() {
+    if (!adminAuthenticated || !document.getElementById('adminTicketList')) return;
+
+    try {
+      const payload = await apiRequest(`${API_ADMIN_TRACKING}?action=tickets`, { headers: adminHeaders() });
+      ticketsCache = Array.isArray(payload.tickets) ? payload.tickets.map(normalizeTicket) : [];
+      renderAdminTickets();
+    } catch (err) {
+      ticketsCache = [];
+      renderAdminTickets();
+      showStoreNotice(err.message || 'No se pudieron cargar los tickets');
+    }
+  }
+
+  function ticketStatusClass(status) {
+    return String(status || 'recibido')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') || 'recibido';
+  }
+
+  function ticketAdminRow(ticket) {
+    return `
+      <article class="store-admin__item store-admin__item--ticket">
+        <div class="store-admin__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6V7Z"/><path d="M9 9h6M9 13h6"/></svg>
+        </div>
+        <div>
+          <span>${ticket.ticket} · ${ticket.servicio}</span>
+          <strong>${ticket.cliente}</strong>
+          <small>${ticket.telefono} · ${ticket.fechaIngreso}</small>
+        </div>
+        <div class="store-admin__ticket-meta">
+          <span class="store-admin__ticket-status store-admin__ticket-status--${ticketStatusClass(ticket.estado)}">${ticket.estado}</span>
+          <small>${ticket.tecnico}</small>
+        </div>
+        <div class="store-admin__item-actions">
+          <button type="button" class="btn btn--outline btn--sm" data-edit-ticket="${ticket.ticket}">Editar</button>
+          <button type="button" class="btn btn--outline btn--sm" data-delete-ticket="${ticket.ticket}">Eliminar</button>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderAdminTickets() {
+    const list = document.getElementById('adminTicketList');
+    const total = document.getElementById('adminTicketTotal');
+    if (!list) return;
+
+    list.innerHTML = ticketsCache.length
+      ? ticketsCache.map(ticketAdminRow).join('')
+      : '<div class="store-empty">No hay tickets creados todavÃ­a.</div>';
+    if (total) total.textContent = `${ticketsCache.length} tickets`;
+  }
+
+  function ticketToForm(ticket) {
+    const form = document.getElementById('adminTicketForm');
+    if (!form || !ticket) return;
+
+    form.elements.currentTicket.value = ticket.ticket;
+    form.elements.ticket.value = ticket.ticket;
+    form.elements.cliente.value = ticket.cliente;
+    form.elements.telefono.value = ticket.telefono;
+    form.elements.servicio.value = ticket.servicio;
+    form.elements.estado.value = ticket.estado;
+    form.elements.fechaIngreso.value = ticket.fechaIngreso;
+    form.elements.fechaEstimada.value = ticket.fechaEstimada;
+    form.elements.tecnico.value = ticket.tecnico;
+    form.elements.observaciones.value = ticket.observaciones;
+    form.elements.historial.value = ticket.historial
+      .map((item) => `${item.fecha} | ${item.texto}`)
+      .join('\n');
+    document.getElementById('adminTicketFormTitle').textContent = 'Editar ticket';
+    form.querySelector('[data-ticket-submit]').textContent = 'Guardar cambios';
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetTicketForm() {
+    const form = document.getElementById('adminTicketForm');
+    if (!form) return;
+
+    form.reset();
+    form.elements.currentTicket.value = '';
+    form.elements.estado.value = 'Recibido';
+    form.elements.tecnico.value = 'Equipo Megabyte';
+    form.elements.fechaIngreso.value = today();
+    form.elements.fechaEstimada.value = today();
+    form.elements.historial.value = `${today()} | Ticket creado`;
+    document.getElementById('adminTicketFormTitle').textContent = 'Nuevo ticket';
+    form.querySelector('[data-ticket-submit]').textContent = 'Guardar ticket';
+  }
+
+  function parseTicketHistory(value) {
+    return String(value || '')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const parts = line.split('|');
+        if (parts.length > 1) {
+          return {
+            fecha: parts.shift().trim() || today(),
+            texto: parts.join('|').trim()
+          };
+        }
+        return {
+          fecha: today(),
+          texto: line
+        };
+      })
+      .filter((item) => item.texto);
+  }
+
+  function ticketFromForm(form) {
+    const data = new FormData(form);
+    const ticketId = String(data.get('ticket') || data.get('currentTicket') || '').trim().toUpperCase();
+
+    return normalizeTicket({
+      ticket: ticketId,
+      cliente: data.get('cliente'),
+      telefono: data.get('telefono'),
+      servicio: data.get('servicio'),
+      estado: data.get('estado'),
+      fechaIngreso: data.get('fechaIngreso'),
+      fechaEstimada: data.get('fechaEstimada'),
+      tecnico: data.get('tecnico'),
+      observaciones: data.get('observaciones'),
+      historial: parseTicketHistory(data.get('historial'))
+    });
+  }
+
+  async function saveTicketFromAdmin(form) {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesiÃ³n como administrador');
+      return;
+    }
+
+    try {
+      const previousTicket = String(form.elements.currentTicket.value || '').trim().toUpperCase();
+      const nextTicket = ticketFromForm(form);
+      await apiRequest(`${API_ADMIN_TRACKING}?action=tickets`, {
+        method: form.elements.currentTicket.value ? 'PUT' : 'POST',
+        headers: adminHeaders(),
+        body: JSON.stringify(nextTicket)
+      });
+      if (previousTicket && previousTicket !== nextTicket.ticket) {
+        await apiRequest(`${API_ADMIN_TRACKING}?action=ticket&id=${encodeURIComponent(previousTicket)}`, {
+          method: 'DELETE',
+          headers: adminHeaders()
+        });
+      }
+      resetTicketForm();
+      await loadAdminTickets();
+      showStoreNotice('Ticket guardado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo guardar el ticket');
+    }
+  }
+
+  async function deleteTicket(ticketId) {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesiÃ³n como administrador');
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN_TRACKING}?action=ticket&id=${encodeURIComponent(ticketId)}`, {
+        method: 'DELETE',
+        headers: adminHeaders()
+      });
+      await loadAdminTickets();
+      showStoreNotice('Ticket eliminado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo eliminar el ticket');
+    }
+  }
+
+  async function restoreTicketsToDefaults() {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesiÃ³n como administrador');
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN_TRACKING}?action=restore`, {
+        method: 'POST',
+        headers: adminHeaders()
+      });
+      resetTicketForm();
+      await loadAdminTickets();
+      showStoreNotice('Tickets de ejemplo restaurados');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudieron restaurar los tickets');
+    }
+  }
+
   function cartItemTemplate(item) {
     const { product, quantity } = item;
     return `
@@ -993,6 +1223,20 @@
       const restoreProductsButton = event.target.closest('[data-admin-restore]');
       if (restoreProductsButton) await resetProductsToDefaults();
 
+      const editTicketButton = event.target.closest('[data-edit-ticket]');
+      if (editTicketButton) {
+        ticketToForm(ticketsCache.find((ticket) => ticket.ticket === editTicketButton.dataset.editTicket));
+      }
+
+      const deleteTicketButton = event.target.closest('[data-delete-ticket]');
+      if (deleteTicketButton) await deleteTicket(deleteTicketButton.dataset.deleteTicket);
+
+      const resetTicketButton = event.target.closest('[data-ticket-reset]');
+      if (resetTicketButton) resetTicketForm();
+
+      const restoreTicketsButton = event.target.closest('[data-ticket-restore]');
+      if (restoreTicketsButton) await restoreTicketsToDefaults();
+
       const removeProductImageButton = event.target.closest('[data-remove-product-image]');
       if (removeProductImageButton) {
         const form = document.getElementById('adminProductForm');
@@ -1010,6 +1254,7 @@
         await apiRequest(`${API_ADMIN}?action=logout`, { method: 'POST' }).catch(() => {});
         renderAdminAccess();
         resetAdminForm();
+        resetTicketForm();
         showStoreNotice('Sesión cerrada');
       }
     });
@@ -1076,6 +1321,15 @@
       });
     }
 
+    const adminTicketForm = document.getElementById('adminTicketForm');
+    if (adminTicketForm) {
+      adminTicketForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await saveTicketFromAdmin(adminTicketForm);
+      });
+      resetTicketForm();
+    }
+
     const adminLoginForm = document.getElementById('adminLoginForm');
     if (adminLoginForm) {
       adminLoginForm.addEventListener('submit', async (event) => {
@@ -1103,6 +1357,8 @@
           adminLoginForm.reset();
           renderAdminAccess();
           renderAdminProducts();
+          await loadAdminTickets();
+          resetTicketForm();
           showStoreNotice('Administrador conectado');
         } catch (err) {
           if (loginError) {

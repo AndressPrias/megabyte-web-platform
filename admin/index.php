@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=admin-20260712-1">
+  <link rel="stylesheet" href="/css/styles.css?v=tracking-admin-20260712-1">
   <style>
     .store-admin:not(.is-authenticated) .container,
     .store-admin:not(.is-authenticated) .store-admin__shell {
@@ -245,12 +245,97 @@ mb_start_admin_session();
               <div class="store-admin__list" id="adminProductList"></div>
             </div>
           </div>
+
+          <section class="store-admin__tracking" id="adminTrackingWorkspace" hidden>
+            <div class="store-admin__head store-admin__head--sub">
+              <div>
+                <span class="section__tag">Seguimiento</span>
+                <h2>Gestion de tickets</h2>
+                <p>Actualiza estados, asigna tecnico y deja historial visible para el cliente.</p>
+              </div>
+              <div class="store-admin__status">
+                <strong id="adminTicketTotal">0 tickets</strong>
+                <button class="btn btn--outline btn--sm" type="button" data-ticket-restore>Restaurar ejemplo</button>
+              </div>
+            </div>
+
+            <div class="store-admin__grid store-admin__grid--tickets">
+              <form class="store-admin__form" id="adminTicketForm">
+                <input type="hidden" name="currentTicket">
+                <h2 id="adminTicketFormTitle">Nuevo ticket</h2>
+
+                <div class="store-admin__fields">
+                  <label>
+                    <span>Ticket</span>
+                    <input name="ticket" type="text" placeholder="Se genera automatico">
+                  </label>
+                  <label>
+                    <span>Estado</span>
+                    <select name="estado" required>
+                      <option value="Recibido">Recibido</option>
+                      <option value="En diagnostico">En diagnostico</option>
+                      <option value="Esperando repuesto">Esperando repuesto</option>
+                      <option value="En reparacion">En reparacion</option>
+                      <option value="En pruebas">En pruebas</option>
+                      <option value="Listo para entrega">Listo para entrega</option>
+                      <option value="Entregado">Entregado</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Cliente</span>
+                    <input name="cliente" type="text" required placeholder="Nombre del cliente">
+                  </label>
+                  <label>
+                    <span>Telefono</span>
+                    <input name="telefono" type="tel" required placeholder="320 000 0000">
+                  </label>
+                  <label>
+                    <span>Servicio</span>
+                    <input name="servicio" type="text" required placeholder="Reparacion de computadores">
+                  </label>
+                  <label>
+                    <span>Tecnico asignado</span>
+                    <input name="tecnico" type="text" required placeholder="Equipo Megabyte">
+                  </label>
+                  <label>
+                    <span>Fecha ingreso</span>
+                    <input name="fechaIngreso" type="date" required>
+                  </label>
+                  <label>
+                    <span>Fecha estimada</span>
+                    <input name="fechaEstimada" type="date" required>
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Observaciones</span>
+                    <textarea name="observaciones" rows="3" placeholder="Detalle visible para el cliente"></textarea>
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Historial</span>
+                    <textarea name="historial" rows="5" placeholder="2026-07-12 | Ticket creado&#10;2026-07-13 | En diagnostico"></textarea>
+                  </label>
+                </div>
+
+                <div class="store-admin__actions">
+                  <button class="btn btn--primary" type="submit" data-ticket-submit>Guardar ticket</button>
+                  <button class="btn btn--outline" type="button" data-ticket-reset>Limpiar</button>
+                </div>
+              </form>
+
+              <div class="store-admin__list-panel">
+                <div class="store-admin__list-head">
+                  <h2>Tickets de servicio</h2>
+                  <small>Edita el estado para que el cliente pueda consultarlo en seguimiento.</small>
+                </div>
+                <div class="store-admin__list" id="adminTicketList"></div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="/js/store.js?v=admin-20260712-1"></script>
+  <script src="/js/store.js?v=tracking-admin-20260712-1"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {

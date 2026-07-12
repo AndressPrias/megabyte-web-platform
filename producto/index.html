@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detalle de producto Megabyte MB Store.">
+  <title>Producto | Megabyte MB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=store-20260712-5">
+</head>
+<body class="store-body" data-store-page="product">
+  <header class="store-header">
+    <div class="container store-header__inner">
+      <a href="/" class="store-logo" aria-label="Salir de la tienda y volver a la landing">
+        <img src="/assets/logo-menu-mark.png" alt="Megabyte MB" width="92" height="62">
+      </a>
+      <nav class="store-nav store-nav--compact" aria-label="Navegación tienda">
+        <a href="/tienda">Productos</a>
+        <a href="/carrito">Carrito</a>
+        <a href="/checkout">Checkout</a>
+      </nav>
+      <div class="store-header__actions">
+        <a class="store-exit" href="/">Salir de la tienda</a>
+        <a class="btn btn--whatsapp btn--sm" href="https://wa.me/573133141701" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a class="store-cart" href="/carrito"><span>Carrito</span><strong data-cart-count hidden>0</strong></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="store-main">
+    <section class="store-section">
+      <div class="container">
+        <div class="product-detail" id="productDetail"></div>
+      </div>
+    </section>
+    <section class="store-section store-section--compact">
+      <div class="container">
+        <div class="store-section__head">
+          <div>
+            <span class="section__tag">También te puede servir</span>
+            <h2>Productos relacionados</h2>
+          </div>
+        </div>
+        <div class="product-grid product-grid--related" id="relatedProducts"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer footer--store">
+    <div class="container footer__inner">
+      <div class="footer__top">
+        <a href="/" class="footer__brand" aria-label="Salir de la tienda y volver al inicio">
+          <img src="/assets/logo-menu-megabyte.png" alt="Megabyte MB" width="190" height="64">
+        </a>
+        <nav class="footer__nav" aria-label="Navegacion inferior de tienda">
+          <a href="/">Landing</a>
+          <a href="/tienda">Catalogo</a>
+          <a href="/carrito">Carrito</a>
+          <a href="/checkout">Checkout</a>
+          <a href="/contacto">Contacto</a>
+        </nav>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 Megabyte MB Store. Todos los derechos reservados.</p>
+        <div class="footer__credit" aria-label="Desarrollador de la pagina">
+          <span>Pagina desarrollada por</span>
+          <img src="/assets/andev-logo.png" alt="Andev" width="92" height="42">
+          <strong>Andres Prias</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/store.js?v=store-20260712-5"></script>
+</body>
+</html>
+
+

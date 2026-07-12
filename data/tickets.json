@@ -1,0 +1,36 @@
+[
+  {
+    "ticket": "MB-2026-0001",
+    "cliente": "Carlos Mendez",
+    "telefono": "3204293863",
+    "servicio": "Reparacion de computadores",
+    "estado": "En reparacion",
+    "fechaIngreso": "2026-05-28",
+    "tecnico": "Andres Gomez",
+    "observaciones": "Cambio de pantalla LCD 15.6 y limpieza interna. Repuesto en camino.",
+    "fechaEstimada": "2026-06-10",
+    "historial": [
+      { "fecha": "2026-05-28", "texto": "Equipo recibido en taller" },
+      { "fecha": "2026-05-29", "texto": "Diagnostico completado - pantalla danada" },
+      { "fecha": "2026-06-02", "texto": "Repuesto solicitado al proveedor" },
+      { "fecha": "2026-06-07", "texto": "En reparacion - instalacion de pantalla" }
+    ]
+  },
+  {
+    "ticket": "MB-2026-0002",
+    "cliente": "Ana Rodriguez",
+    "telefono": "3105551234",
+    "servicio": "Camaras de seguridad",
+    "estado": "Listo para entrega",
+    "fechaIngreso": "2026-06-01",
+    "tecnico": "Laura Vargas",
+    "observaciones": "Instalacion de 4 camaras IP y configuracion de DVR. Sistema operativo.",
+    "fechaEstimada": "2026-06-08",
+    "historial": [
+      { "fecha": "2026-06-01", "texto": "Servicio programado - visita en sitio" },
+      { "fecha": "2026-06-03", "texto": "Instalacion de camaras completada" },
+      { "fecha": "2026-06-05", "texto": "Configuracion remota y pruebas OK" },
+      { "fecha": "2026-06-07", "texto": "Listo para entrega - pendiente retiro" }
+    ]
+  }
+]

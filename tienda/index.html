@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tienda tecnológica Megabyte MB. Computadores, accesorios, redes y seguridad con asesoría técnica.">
+  <title>Tienda | Megabyte MB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=store-20260712-5">
+</head>
+<body class="store-body" data-store-page="home">
+  <header class="store-header store-header--shop">
+    <div class="container store-header__inner">
+      <div class="store-header__top">
+        <a href="/" class="store-logo" aria-label="Salir de la tienda y volver a la landing">
+          <img src="/assets/logo-menu-mark.png" alt="Megabyte MB" width="92" height="62">
+        </a>
+        <div class="store-searchbar">
+          <label class="store-search">
+            <span>Buscar</span>
+            <input id="storeSearch" type="search" placeholder="¿Qué estás buscando hoy?">
+          </label>
+          <label class="store-category-select">
+            <span>Todas las categorías</span>
+            <select aria-label="Seleccionar categoría">
+              <option value="todos">Todas las categorías</option>
+              <option value="computadores">Computadores</option>
+              <option value="accesorios">Accesorios</option>
+              <option value="componentes">Componentes</option>
+              <option value="redes">Redes</option>
+              <option value="seguridad">Seguridad</option>
+            </select>
+          </label>
+        </div>
+        <div class="store-header__actions">
+          <a class="store-icon-action" href="#catalogo" aria-label="Favoritos">
+            <span class="store-action-icon">♡</span>
+            <span>Favoritos</span>
+          </a>
+          <a class="store-cart store-cart--featured" href="/carrito" aria-label="Ver carrito">
+            <span class="store-action-icon">🛒</span>
+            <span>Mi carrito</span>
+            <small data-cart-total>$0</small>
+            <strong data-cart-count hidden>0</strong>
+          </a>
+        </div>
+      </div>
+      <nav class="store-header__navline" aria-label="Categorías de tienda">
+        <button class="store-category is-active" type="button" data-category="computadores"><span>▭</span>Computadores</button>
+        <button class="store-category" type="button" data-category="accesorios"><span>♬</span>Accesorios</button>
+        <button class="store-category" type="button" data-category="componentes"><span>▣</span>Componentes</button>
+        <button class="store-category" type="button" data-category="redes"><span>⌁</span>Redes</button>
+        <button class="store-category" type="button" data-category="seguridad"><span>◇</span>Seguridad</button>
+        <button class="store-category" type="button" data-category="software"><span>⌘</span>Software</button>
+        <a class="store-shipping-chip" href="https://wa.me/573133141701" target="_blank" rel="noopener noreferrer"><span>▱</span>Envíos a todo el país</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="store-main">
+    <section class="store-hero">
+      <div class="container store-hero__inner">
+        <div class="store-hero__copy">
+          <span class="store-hero__eyebrow">Megabyte</span>
+          <h1>Tecnología para lo que <span>más importa</span></h1>
+          <p>Equipos, accesorios y soluciones tecnológicas con garantía, asesoría técnica y el mejor soporte.</p>
+          <div class="store-hero__benefits" aria-label="Beneficios de compra">
+            <div><span>◇</span><strong>Garantía</strong><small>en todos los productos</small></div>
+            <div><span>▱</span><strong>Envíos</strong><small>a todo el país</small></div>
+            <div><span>♬</span><strong>Asesoría</strong><small>técnica especializada</small></div>
+            <div><span>✓</span><strong>Compra</strong><small>segura y con respaldo</small></div>
+          </div>
+          <div class="store-hero__actions">
+            <a href="#catalogo" class="btn btn--primary btn--lg">Ver productos</a>
+            <a href="https://wa.me/573133141701?text=Hola,%20quiero%20asesor%C3%ADa%20para%20comprar%20en%20Megabyte%20Store" class="btn btn--outline btn--lg" target="_blank" rel="noopener noreferrer">Cotiza por WhatsApp</a>
+          </div>
+        </div>
+        <div class="store-hero__categories" aria-label="Categorías destacadas">
+          <a href="#catalogo" data-category-link="computadores"><span>▭</span><strong>Computadores</strong><small>Portátiles y de escritorio</small></a>
+          <a href="#catalogo" data-category-link="accesorios"><span>♬</span><strong>Accesorios</strong><small>Lo mejor para tu equipo</small></a>
+          <a href="#catalogo" data-category-link="seguridad"><span>◇</span><strong>Seguridad</strong><small>Cámaras y sistemas IP</small></a>
+          <a href="#catalogo" data-category-link="componentes"><span>▣</span><strong>Componentes</strong><small>Rendimiento sin límites</small></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="store-section" id="catalogo">
+      <div class="container">
+        <div class="store-section__head">
+          <div>
+            <span class="section__tag">Catálogo</span>
+            <h2>Productos destacados</h2>
+          </div>
+          <label class="store-sort">
+            <span>Ordenar por</span>
+            <select id="storeSort">
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Menor precio</option>
+              <option value="price-desc">Mayor precio</option>
+              <option value="discount">Mayor descuento</option>
+            </select>
+          </label>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer footer--store">
+    <div class="container footer__inner">
+      <div class="footer__top">
+        <a href="/" class="footer__brand" aria-label="Salir de la tienda y volver al inicio">
+          <img src="/assets/logo-menu-megabyte.png" alt="Megabyte MB" width="190" height="64">
+        </a>
+        <nav class="footer__nav" aria-label="Navegacion inferior de tienda">
+          <a href="/">Landing</a>
+          <a href="#catalogo">Catalogo</a>
+          <a href="/producto">Productos</a>
+          <a href="/carrito">Carrito</a>
+          <a href="/checkout">Checkout</a>
+          <a href="/contacto">Contacto</a>
+        </nav>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 Megabyte MB Store. Todos los derechos reservados.</p>
+        <div class="footer__credit" aria-label="Desarrollador de la pagina">
+          <span>Pagina desarrollada por</span>
+          <img src="/assets/andev-logo.png" alt="Andev" width="92" height="42">
+          <strong>Andres Prias</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/store.js?v=store-20260712-5"></script>
+</body>
+</html>
+
+

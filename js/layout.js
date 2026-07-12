@@ -6,14 +6,14 @@
   const favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/png';
-  favicon.href = 'assets/favicon-32x32.png';
+  favicon.href = '/assets/favicon-32x32.png';
   document.head.appendChild(favicon);
 
   const HEADER_HTML = `
 <header class="header" id="header">
   <div class="container header__inner">
     <a href="/" class="header__logo" aria-label="Ir al inicio">
-      <img src="assets/logo-menu-megabyte.png" alt="Megabyte MB" width="190" height="64">
+      <img src="/assets/logo-menu-megabyte.png" alt="Megabyte MB" width="190" height="64">
     </a>
 
     <label class="header__search">
@@ -78,8 +78,7 @@
     if (!footerEl) return;
 
     try {
-      const base = new URL('.', window.location.href).href;
-      const res = await fetch(base + 'partials/footer.html');
+      const res = await fetch('/partials/footer.html');
       footerEl.innerHTML = await res.text();
     } catch (err) {
       console.warn('Footer no cargado:', err);
