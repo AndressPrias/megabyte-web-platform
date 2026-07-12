@@ -66,7 +66,7 @@ function mb_normalize_ticket(array $ticket): array
         'estado' => $status,
         'fechaIngreso' => mb_normalize_date((string) ($ticket['fechaIngreso'] ?? date('Y-m-d'))),
         'tecnico' => trim((string) ($ticket['tecnico'] ?? 'Equipo Megabyte')),
-        'observaciones' => trim((string) ($ticket['observaciones'] ?? 'Servicio registrado en Megabyte MB.')),
+        'observaciones' => trim((string) ($ticket['observaciones'] ?? 'Servicio registrado en Megabyte.')),
         'fechaEstimada' => mb_normalize_date((string) ($ticket['fechaEstimada'] ?? date('Y-m-d'))),
         'historial' => $normalizedHistory,
     ];

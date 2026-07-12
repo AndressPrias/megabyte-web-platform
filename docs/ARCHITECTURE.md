@@ -1,4 +1,4 @@
-# Arquitectura del proyecto Megabyte MB
+# Arquitectura del proyecto Megabyte
 
 Este proyecto mantiene URLs publicas simples en la raiz (`index.html`, `tienda.html`, etc.) para no romper enlaces existentes ni despliegues actuales. La organizacion se documenta por dominios funcionales para que sea facil encontrar y modificar cada parte.
 

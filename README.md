@@ -1,6 +1,6 @@
-# Megabyte MB Web Platform
+# Megabyte Web Platform
 
-Landing, tienda tecnologica, carrito, checkout por WhatsApp y panel administrativo para Megabyte MB.
+Landing, tienda tecnologica, carrito, checkout por WhatsApp y panel administrativo para Megabyte.
 
 ## Arquitectura
 

@@ -11,11 +11,11 @@ mb_start_admin_session();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Admin tienda | Megabyte MB</title>
+  <title>Admin tienda | Megabyte</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260712-2">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260712-3">
   <style>
     .store-admin:not(.is-authenticated) .container,
     .store-admin:not(.is-authenticated) .store-admin__shell {
@@ -106,7 +106,7 @@ mb_start_admin_session();
     <div class="container store-header__inner">
       <div class="store-header__top">
         <a href="/" class="store-logo" aria-label="Volver a la landing">
-          <img src="/assets/logo-menu-mark.png" alt="Megabyte MB" width="92" height="62">
+          <img src="/assets/logo-menu-mark.png" alt="Megabyte" width="92" height="62">
         </a>
         <nav class="store-nav store-nav--compact" aria-label="Navegacion administracion">
           <a href="/tienda">Ver tienda</a>

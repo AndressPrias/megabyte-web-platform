@@ -26,7 +26,7 @@
       badge: 'Usado certificado',
       imageType: 'laptop',
       shortDescription: 'Equipo revisado, optimizado y listo para oficina, estudio o trabajo remoto.',
-      description: 'Laptop HP reacondicionada por Megabyte MB, con mantenimiento preventivo, limpieza interna, pruebas de rendimiento y sistema listo para usar.',
+      description: 'Laptop HP reacondicionada por Megabyte, con mantenimiento preventivo, limpieza interna, pruebas de rendimiento y sistema listo para usar.',
       specs: ['Intel Core i5', '8GB RAM', 'SSD 256GB', 'Windows 11', 'Pantalla 14-15.6 pulgadas'],
       warranty: 'Garantía de 90 días por funcionamiento.',
       availability: 'Listo para entrega'
