@@ -909,6 +909,11 @@ html.is-animating .transition-main {
   gap: 1rem;
 }
 
+.seguimiento__form .btn {
+  min-height: 52px;
+  padding-block: 0.85rem;
+}
+
 .seguimiento__divider {
   display: flex;
   align-items: center;
