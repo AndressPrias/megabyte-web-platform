@@ -2090,6 +2090,10 @@ a.contacto__item:hover {
 }
 
 @media (max-width: 768px) {
+  .whatsapp-float {
+    display: none;
+  }
+
   .header {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
