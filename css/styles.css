@@ -107,9 +107,11 @@ html.is-animating .transition-main {
   gap: 0.5rem;
   font-family: var(--font-body);
   font-weight: 600;
+  min-height: 48px;
   border: none;
   border-radius: 50px;
   cursor: pointer;
+  line-height: 1.1;
   transition: var(--transition);
   white-space: nowrap;
 }
@@ -129,8 +131,8 @@ html.is-animating .transition-main {
   transform: translateX(120%);
 }
 
-.btn--sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
-.btn--lg { padding: 0.85rem 1.75rem; font-size: 1rem; }
+.btn--sm { min-height: 48px; padding: 0.62rem 1rem; font-size: 0.85rem; }
+.btn--lg { min-height: 54px; padding: 0.85rem 1.75rem; font-size: 1rem; }
 .btn--full { width: 100%; }
 
 .btn--primary {
@@ -3334,8 +3336,8 @@ body {
 }
 
 .product-card__actions .btn {
-  min-height: 40px;
-  padding-inline: 0.85rem;
+  min-height: 48px;
+  padding-inline: 0.95rem;
 }
 
 /* ---- 14.8 Admin compartido: productos y tickets ---- */
@@ -4511,10 +4513,26 @@ body {
 }
 
 .cart-item__remove {
-  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.58rem 0.9rem;
+  border: 1px solid rgba(252, 165, 165, 0.28);
+  border-radius: 999px;
   color: #fca5a5;
-  background: transparent;
+  background: rgba(252, 165, 165, 0.06);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
   cursor: pointer;
+  transition: var(--transition);
+}
+
+.cart-item__remove:hover {
+  color: #ffffff;
+  border-color: rgba(252, 165, 165, 0.46);
+  background: rgba(252, 165, 165, 0.14);
 }
 
 .cart-summary,
