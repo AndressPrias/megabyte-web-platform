@@ -296,7 +296,6 @@ animatedElements.forEach((element) => {
           ticketBox.hidden = false;
         }
         showTicketCreatedModal(ticket, whatsappUrl);
-        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         contactForm.reset();
         if (serviceSelect && selectedService) serviceSelect.value = selectedService;
       } catch (err) {
