@@ -916,22 +916,12 @@ html.is-animating .transition-main {
   padding-block: 0.85rem;
 }
 
-.seguimiento__divider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.seguimiento__divider::before,
-.seguimiento__divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(129, 184, 191, 0.16);
+.seguimiento__form .form-group small {
+  display: block;
+  margin-top: 0.48rem;
+  color: rgba(203, 213, 225, 0.68);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .seguimiento__result {

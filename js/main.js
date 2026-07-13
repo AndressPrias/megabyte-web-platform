@@ -65,6 +65,19 @@ animatedElements.forEach((element) => {
     return payload.ticket;
   }
 
+  function parseTrackingLookup(value) {
+    const lookup = value.trim();
+    if (!lookup) return { ticketId: '', phone: '' };
+
+    const digits = lookup.replace(/\D+/g, '');
+    const hasLetters = /[a-z]/i.test(lookup);
+    const looksLikePhone = !hasLetters && digits.length >= 7;
+
+    return looksLikePhone
+      ? { ticketId: '', phone: lookup }
+      : { ticketId: lookup, phone: '' };
+  }
+
   async function createServiceTicket(payload) {
     const response = await fetch('/api/service-request.php', {
       method: 'POST',
@@ -184,7 +197,6 @@ animatedElements.forEach((element) => {
 
     ticketForm.dataset.ready = 'true';
     const ticketInput = document.getElementById('ticketInput');
-    const phoneInput = document.getElementById('phoneInput');
     const result = document.getElementById('ticketResult');
     const error = document.getElementById('ticketError');
 
@@ -194,14 +206,14 @@ animatedElements.forEach((element) => {
     };
 
     ticketInput?.addEventListener('input', clearPreviousLookup);
-    phoneInput?.addEventListener('input', clearPreviousLookup);
 
     ticketForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const ticketId = ticketInput?.value.trim() || '';
-      const phone = phoneInput?.value.trim() || '';
-      if (!ticketId && !phone) return;
+      const lookup = ticketInput?.value.trim() || '';
+      if (!lookup) return;
+
+      const { ticketId, phone } = parseTrackingLookup(lookup);
 
       const button = ticketForm.querySelector('button[type="submit"]');
       const originalText = button?.textContent || 'Consultar Estado';
@@ -409,12 +421,11 @@ animatedElements.forEach((element) => {
     const params = new URLSearchParams(window.location.search);
     const ticket = params.get('ticket');
     const phone = params.get('phone') || params.get('telefono');
-    const phoneInput = document.getElementById('phoneInput');
+    const lookup = ticket || phone || '';
 
-    if (ticket) ticketInput.value = ticket;
-    if (phone && phoneInput) phoneInput.value = phone;
+    if (lookup) ticketInput.value = lookup;
 
-    if (ticket || phone) {
+    if (lookup) {
       window.setTimeout(() => {
         document.getElementById('ticketForm')?.requestSubmit();
       }, 80);
