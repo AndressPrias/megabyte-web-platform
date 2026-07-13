@@ -180,17 +180,29 @@ animatedElements.forEach((element) => {
 
   function initTicketForm() {
     const ticketForm = document.getElementById('ticketForm');
-    if (!ticketForm) return;
+    if (!ticketForm || ticketForm.dataset.ready === 'true') return;
+
+    ticketForm.dataset.ready = 'true';
+    const ticketInput = document.getElementById('ticketInput');
+    const phoneInput = document.getElementById('phoneInput');
+    const result = document.getElementById('ticketResult');
+    const error = document.getElementById('ticketError');
+
+    const clearPreviousLookup = () => {
+      if (result && !result.hidden) result.hidden = true;
+      if (error && !error.hidden) error.hidden = true;
+    };
+
+    ticketInput?.addEventListener('input', clearPreviousLookup);
+    phoneInput?.addEventListener('input', clearPreviousLookup);
 
     ticketForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const ticketId = document.getElementById('ticketInput').value.trim();
-      const phone = document.getElementById('phoneInput').value.trim();
+      const ticketId = ticketInput?.value.trim() || '';
+      const phone = phoneInput?.value.trim() || '';
       if (!ticketId && !phone) return;
 
-      const result = document.getElementById('ticketResult');
-      const error = document.getElementById('ticketError');
       const button = ticketForm.querySelector('button[type="submit"]');
       const originalText = button?.textContent || 'Consultar Estado';
 
