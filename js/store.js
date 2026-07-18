@@ -319,7 +319,7 @@
           </span>
           <div>
             <span class="admin-login__eyebrow">Panel privado</span>
-            <h2>Panel administrador</h2>
+            <h2>Administracion <span>de productos</span></h2>
             <p>Accede al panel privado para gestionar tu catalogo, productos, precios, stock y disponibilidad.</p>
           </div>
         </div>
@@ -377,80 +377,14 @@
         </form>
       </div>
 
-    `;
+      <div class="admin-login__features">
+        <span><strong>Catalogo centralizado</strong><small>Gestiona tus productos desde un solo lugar.</small></span>
+        <span><strong>Datos en tiempo real</strong><small>Controla stock, precios y disponibilidad al instante.</small></span>
+        <span><strong>Seguridad avanzada</strong><small>Acceso privado para administradores autorizados.</small></span>
+        <span><strong>MEGABYTE STORE</strong><small>Panel privado 2026</small></span>
+      </div>
 
-    if (!document.getElementById('adminLoginCenterStyle')) {
-      const style = document.createElement('style');
-      style.id = 'adminLoginCenterStyle';
-      style.textContent = `
-        .store-admin:not(.is-authenticated) .container,
-        .store-admin:not(.is-authenticated) .store-admin__shell {
-          width: 100% !important;
-          max-width: none !important;
-        }
-        .store-admin__login[data-rendered='true'] {
-          position: relative !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 100vw !important;
-          min-height: calc(100vh - 96px) !important;
-          margin-left: calc(50% - 50vw) !important;
-          margin-right: calc(50% - 50vw) !important;
-          padding: clamp(1.25rem, 4vw, 4rem) 1rem !important;
-          box-sizing: border-box !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__panel {
-          position: relative !important;
-          left: auto !important;
-          grid-column: auto !important;
-          width: min(480px, calc(100vw - 2rem)) !important;
-          max-width: 480px !important;
-          margin: 0 auto !important;
-          transform: none !important;
-          box-sizing: border-box !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__hero {
-          grid-template-columns: 72px minmax(0, 1fr) !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
-          max-width: 100% !important;
-          font-size: clamp(2rem, 2.45vw, 2.45rem) !important;
-          line-height: 1.05 !important;
-          word-break: normal !important;
-          overflow-wrap: normal !important;
-          white-space: normal !important;
-          hyphens: none !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__features {
-          display: none !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__input input {
-          background: transparent !important;
-          color: #ffffff !important;
-          -webkit-text-fill-color: #ffffff !important;
-        }
-        .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill,
-        .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:hover,
-        .store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:focus {
-          box-shadow: 0 0 0 1000px rgba(3, 12, 30, 0.96) inset !important;
-          -webkit-text-fill-color: #ffffff !important;
-          caret-color: #ffffff !important;
-        }
-        @media (max-width: 680px) {
-          .store-admin__login[data-rendered='true'] .admin-login__panel {
-            width: calc(100vw - 2rem) !important;
-          }
-          .store-admin__login[data-rendered='true'] .admin-login__hero {
-            grid-template-columns: 1fr !important;
-          }
-          .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
-            font-size: clamp(1.85rem, 8vw, 2.4rem) !important;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    }
+    `;
   }
 
   function formatPrice(value) {

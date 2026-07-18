@@ -5388,74 +5388,221 @@ body {
   }
 }
 
-/* ---- 15.1 Ajuste final del login admin centrado ---- */
-.store-admin__login[data-rendered='true'] {
-  display: block !important;
-}
-
-.store-admin__login[data-rendered='true'] .admin-login__panel {
-  position: relative !important;
-  left: 50vw !important;
-  grid-column: auto !important;
-  width: min(560px, calc(100vw - 2rem)) !important;
-  margin: 0 !important;
-  transform: translateX(-50%) !important;
-}
-
-.store-admin__login[data-rendered='true'] .admin-login__features {
-  left: 50vw !important;
-  right: auto !important;
-  width: min(1320px, calc(100vw - 2.4rem)) !important;
-  transform: translateX(-50%) !important;
-}
-
-@media (max-width: 680px) {
-  .store-admin__login[data-rendered='true'] .admin-login__panel,
-  .store-admin__login[data-rendered='true'] .admin-login__features {
-    width: calc(100vw - 2rem) !important;
-  }
-}
-
-
-/* ---- 15.2 Ocultar banner de beneficios del login admin ---- */
-.store-admin__login[data-rendered='true'] .admin-login__features {
-  display: none !important;
-}
-
-/* ---- 15.3 Ocultar login cuando la sesion esta activa ---- */
+/* ---- 15.1 Login admin premium ---- */
 .store-admin__login[hidden],
 .store-admin__login[data-rendered='true'][hidden],
 .store-admin.is-authenticated .store-admin__login {
   display: none !important;
 }
 
-/* ---- 15.4 Login admin compacto centrado ---- */
 .store-admin__login[data-rendered='true'] {
-  display: flex !important;
+  display: grid !important;
+  grid-template-columns: minmax(390px, 0.86fr) minmax(440px, 1.14fr) !important;
+  grid-template-rows: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  justify-content: center !important;
-  width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding: clamp(1.25rem, 4vw, 4rem) 1rem !important;
+  width: min(1320px, calc(100vw - 2rem)) !important;
+  min-height: clamp(640px, calc(100vh - 136px), 760px) !important;
+  margin: clamp(1.5rem, 4vw, 3.2rem) auto !important;
+  transform: none !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(129, 184, 191, 0.22) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 76% 10%, rgba(157, 78, 221, 0.22), transparent 34%),
+    linear-gradient(135deg, rgba(1, 6, 18, 0.98), rgba(5, 13, 32, 0.96)) !important;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.42) !important;
   box-sizing: border-box !important;
 }
 
+.store-admin__login[data-rendered='true']::before {
+  z-index: 1 !important;
+  background:
+    linear-gradient(90deg, rgba(1, 6, 17, 0.08) 0%, rgba(1, 6, 17, 0.12) 42%, rgba(1, 6, 17, 0.56) 74%, rgba(1, 6, 17, 0.72) 100%),
+    linear-gradient(180deg, rgba(1, 6, 17, 0.08) 0%, rgba(1, 6, 17, 0.18) 58%, rgba(1, 6, 17, 0.74) 100%) !important;
+}
+
+.store-admin__login[data-rendered='true']::after {
+  display: none !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual {
+  position: relative !important;
+  inset: auto !important;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: clamp(2rem, 4vw, 4.2rem) !important;
+  border-right: 1px solid rgba(129, 184, 191, 0.16) !important;
+  background:
+    linear-gradient(180deg, rgba(2, 8, 20, 0.08), rgba(2, 8, 20, 0.56)),
+    url('../assets/store-hero-banner.png') center / cover no-repeat !important;
+  transform: none !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual::after {
+  background:
+    linear-gradient(90deg, rgba(2, 8, 20, 0.38), rgba(2, 8, 20, 0.1)),
+    radial-gradient(circle at 32% 36%, rgba(0, 180, 216, 0.22), transparent 38%) !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-logo,
+.store-admin__login[data-rendered='true'] .admin-login__device,
+.store-admin__login[data-rendered='true'] .admin-login__badge-card {
+  display: block !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__visual-logo {
+  width: min(310px, 78%) !important;
+  margin-top: 4.4rem !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__device {
+  left: 46% !important;
+  bottom: 3rem !important;
+  width: min(260px, 44%) !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__badge-card {
+  left: clamp(2rem, 4vw, 4rem) !important;
+  bottom: 3.6rem !important;
+}
+
 .store-admin__login[data-rendered='true'] .admin-login__panel {
+  position: relative !important;
   left: auto !important;
-  grid-column: auto !important;
-  width: min(480px, calc(100vw - 2rem)) !important;
-  max-width: 480px !important;
-  margin: 0 auto !important;
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  z-index: 3 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: clamp(2rem, 4vw, 3.6rem) clamp(2.2rem, 5vw, 5rem) !important;
   transform: none !important;
   box-sizing: border-box !important;
 }
 
+.store-admin__login[data-rendered='true'] .admin-login__hero {
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  gap: 1.35rem !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__shield {
+  width: 82px !important;
+  height: 82px !important;
+}
+
 .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
-  font-size: clamp(2rem, 2.45vw, 2.45rem) !important;
-  line-height: 1.05 !important;
+  max-width: 620px !important;
+  font-size: clamp(2.55rem, 4vw, 4rem) !important;
+  line-height: 0.98 !important;
   word-break: normal !important;
   overflow-wrap: normal !important;
   white-space: normal !important;
   hyphens: none !important;
+}
+
+.admin-login__input {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  min-height: 58px;
+  overflow: hidden;
+  border: 1px solid rgba(129, 184, 191, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(10, 24, 50, 0.82), rgba(5, 14, 33, 0.78));
+}
+
+.admin-login__input svg {
+  width: 22px;
+  height: 22px;
+  justify-self: center;
+  color: #c9d6ea;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.store-admin__login .admin-login__input input:not([type='checkbox']) {
+  min-height: 58px;
+  border: 0;
+  border-radius: 0;
+  padding: 0.95rem 1.05rem 0.95rem 0;
+  background: transparent !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.store-admin__login .admin-login__input:focus-within {
+  border-color: rgba(0, 180, 216, 0.62);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.12), 0 0 28px rgba(0, 180, 216, 0.1);
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill,
+.store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:hover,
+.store-admin__login[data-rendered='true'] .admin-login__input input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px rgba(3, 12, 30, 0.96) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+.store-admin__login[data-rendered='true'] .admin-login__features {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  z-index: 3 !important;
+  display: grid !important;
+  width: 100% !important;
+  transform: none !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  padding: 1.15rem clamp(1.25rem, 3vw, 2.5rem) !important;
+  border-top: 1px solid rgba(129, 184, 191, 0.14) !important;
+  background: linear-gradient(180deg, rgba(5, 14, 33, 0.74), rgba(5, 14, 33, 0.92)) !important;
+}
+
+@media (max-width: 980px) {
+  .store-admin__login[data-rendered='true'] {
+    grid-template-columns: 1fr !important;
+    width: min(680px, calc(100vw - 1.5rem)) !important;
+    min-height: auto !important;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__visual {
+    display: none !important;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__panel {
+    grid-column: 1 !important;
+    padding: 1.45rem !important;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__features {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .store-admin__login[data-rendered='true'] {
+    width: calc(100vw - 1rem) !important;
+    margin-block: 1rem !important;
+    border-radius: 18px !important;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .store-admin__login[data-rendered='true'] .admin-login__hero h2 {
+    font-size: clamp(2.1rem, 10vw, 2.75rem) !important;
+  }
 }
