@@ -744,9 +744,13 @@
         <div>
           <span>${product.category} · ${product.brand}</span>
           <strong>${product.name}</strong>
-          <em class="store-admin__publish-status ${product.isPublished ? 'is-live' : 'is-paused'}">${product.isPublished ? 'Publicado' : 'Pausado'}</em>
           <small>${formatPrice(product.price)} · Stock ${product.stock}</small>
         </div>
+        <label class="store-admin__publish-toggle">
+          <span>${product.isPublished ? 'Publicada' : 'Pausada'}</span>
+          <input type="checkbox" data-toggle-product-published="${product.id}" ${product.isPublished ? 'checked' : ''}>
+          <i aria-hidden="true"></i>
+        </label>
         <div class="store-admin__item-actions">
           <button type="button" class="btn btn--outline btn--sm" data-edit-product="${product.id}">Editar</button>
           <button type="button" class="btn btn--outline btn--sm" data-delete-product="${product.id}">Eliminar</button>
@@ -937,6 +941,32 @@
       showStoreNotice('Producto eliminado');
     } catch (err) {
       showStoreNotice(err.message || 'No se pudo eliminar');
+    }
+  }
+
+  async function toggleProductPublication(productId, isPublished) {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesiÃ³n como administrador');
+      return;
+    }
+
+    const product = getProduct(productId);
+    if (!product) {
+      showStoreNotice('Producto no encontrado');
+      return;
+    }
+
+    try {
+      await apiRequest(`${API_ADMIN}?action=product&id=${encodeURIComponent(productId)}`, {
+        method: 'PUT',
+        headers: adminHeaders(),
+        body: JSON.stringify({ ...product, isPublished })
+      });
+      await refreshProducts();
+      showStoreNotice(isPublished ? 'Producto publicado' : 'Producto pausado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo cambiar la publicacion');
+      await refreshProducts();
     }
   }
 
@@ -1415,6 +1445,11 @@
     });
 
     document.addEventListener('change', (event) => {
+      if (event.target.matches('[data-toggle-product-published]')) {
+        toggleProductPublication(event.target.dataset.toggleProductPublished, event.target.checked);
+        return;
+      }
+
       if (event.target.matches('input[name="productImage"]')) {
         const form = event.target.closest('form');
         const files = Array.from(event.target.files || []);
