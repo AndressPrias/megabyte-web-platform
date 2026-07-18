@@ -4131,6 +4131,51 @@ body {
   font-size: 0.8rem;
 }
 
+.store-admin__workspace {
+  padding: 1.35rem;
+}
+
+.store-admin__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+  padding: 0.45rem;
+  border: 1px solid rgba(129, 184, 191, 0.14);
+  border-radius: 18px;
+  background: rgba(5, 13, 27, 0.62);
+}
+
+.store-admin__tabs button {
+  min-height: 48px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: var(--text-secondary);
+  background: transparent;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.store-admin__tabs button:hover,
+.store-admin__tabs button.is-active {
+  color: #ffffff;
+  border-color: rgba(0, 180, 216, 0.32);
+  background:
+    linear-gradient(135deg, rgba(0, 180, 216, 0.18), rgba(157, 78, 221, 0.2)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: 0 12px 30px rgba(0, 180, 216, 0.08);
+}
+
+.store-admin__screen {
+  display: block;
+}
+
+.store-admin__screen[hidden] {
+  display: none !important;
+}
+
 .store-admin__grid {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
@@ -4139,6 +4184,7 @@ body {
 }
 
 .store-admin__tracking {
+  padding: 1.35rem;
   border-top: 1px solid rgba(129, 184, 191, 0.14);
 }
 

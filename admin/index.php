@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-2">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-3">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -62,115 +62,125 @@ mb_start_admin_session();
 
           <div class="store-admin__login" id="adminLoginPanel" data-admin-login-root></div>
 
-          <div class="store-admin__grid" id="adminWorkspace" hidden>
-            <form class="store-admin__form" id="adminProductForm">
-              <input type="hidden" name="productId">
-              <input type="hidden" name="imageUrl">
-              <input type="hidden" name="imageUrls">
-              <h2 id="adminFormTitle">Nuevo producto</h2>
+          <div class="store-admin__workspace" id="adminWorkspace" hidden>
+            <nav class="store-admin__tabs" aria-label="Secciones del administrador">
+              <button class="is-active" type="button" data-admin-screen-target="create">Crear producto</button>
+              <button type="button" data-admin-screen-target="edit">Editar productos</button>
+              <button type="button" data-admin-screen-target="tickets">Gestionar tickets</button>
+            </nav>
 
-              <div class="store-admin__fields">
-                <label>
-                  <span>Nombre</span>
-                  <input name="name" type="text" placeholder="Ej: Laptop Lenovo i5" required>
-                </label>
-                <label>
-                  <span>Marca</span>
-                  <input name="brand" type="text" placeholder="Ej: Lenovo" required>
-                </label>
-                <label>
-                  <span>Categoria</span>
-                  <select name="category" required>
-                    <option value="computadores">Computadores</option>
-                    <option value="accesorios">Accesorios</option>
-                    <option value="componentes">Componentes</option>
-                    <option value="redes">Redes</option>
-                    <option value="seguridad">Seguridad</option>
-                    <option value="software">Software</option>
-                  </select>
-                </label>
-                <label>
-                  <span>Imagen / icono</span>
-                  <select name="imageType" required>
-                    <option value="laptop">Laptop</option>
-                    <option value="desktop">PC escritorio</option>
-                    <option value="audio">Accesorios</option>
-                    <option value="camera">Camara</option>
-                    <option value="drive">Disco / SSD</option>
-                    <option value="router">Router</option>
-                  </select>
-                </label>
-                <label class="store-admin__wide store-admin__image-field">
-                  <span>Foto del producto</span>
-                  <div class="store-admin__image-upload">
-                    <div class="store-admin__image-preview" data-product-image-preview>
-                      <span>Sin imagen</span>
+            <section class="store-admin__screen is-active" id="adminCreateScreen" data-admin-screen="create">
+              <form class="store-admin__form" id="adminProductForm">
+                <input type="hidden" name="productId">
+                <input type="hidden" name="imageUrl">
+                <input type="hidden" name="imageUrls">
+                <h2 id="adminFormTitle">Nuevo producto</h2>
+
+                <div class="store-admin__fields">
+                  <label>
+                    <span>Nombre</span>
+                    <input name="name" type="text" placeholder="Ej: Laptop Lenovo i5" required>
+                  </label>
+                  <label>
+                    <span>Marca</span>
+                    <input name="brand" type="text" placeholder="Ej: Lenovo" required>
+                  </label>
+                  <label>
+                    <span>Categoria</span>
+                    <select name="category" required>
+                      <option value="computadores">Computadores</option>
+                      <option value="accesorios">Accesorios</option>
+                      <option value="componentes">Componentes</option>
+                      <option value="redes">Redes</option>
+                      <option value="seguridad">Seguridad</option>
+                      <option value="software">Software</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Imagen / icono</span>
+                    <select name="imageType" required>
+                      <option value="laptop">Laptop</option>
+                      <option value="desktop">PC escritorio</option>
+                      <option value="audio">Accesorios</option>
+                      <option value="camera">Camara</option>
+                      <option value="drive">Disco / SSD</option>
+                      <option value="router">Router</option>
+                    </select>
+                  </label>
+                  <label class="store-admin__wide store-admin__image-field">
+                    <span>Foto del producto</span>
+                    <div class="store-admin__image-upload">
+                      <div class="store-admin__image-preview" data-product-image-preview>
+                        <span>Sin imagen</span>
+                      </div>
+                      <div>
+                        <input name="productImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+                        <small>Selecciona una o varias fotos. JPG, PNG, WEBP o GIF. Maximo 4 MB por imagen.</small>
+                        <button class="btn btn--outline btn--sm" type="button" data-remove-product-image>Quitar fotos</button>
+                      </div>
                     </div>
-                    <div>
-                      <input name="productImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
-                      <small>Selecciona una o varias fotos. JPG, PNG, WEBP o GIF. Maximo 4 MB por imagen.</small>
-                      <button class="btn btn--outline btn--sm" type="button" data-remove-product-image>Quitar fotos</button>
-                    </div>
-                  </div>
-                </label>
-                <label>
-                  <span>Precio actual</span>
-                  <input name="price" type="number" min="0" step="1000" placeholder="1450000" required>
-                </label>
-                <label>
-                  <span>Precio anterior</span>
-                  <input name="oldPrice" type="number" min="0" step="1000" placeholder="1690000">
-                </label>
-                <label>
-                  <span>Stock</span>
-                  <input name="stock" type="number" min="0" value="1" required>
-                </label>
-                <label>
-                  <span>Rating</span>
-                  <input name="rating" type="number" min="0" max="5" step="0.1" value="4.8">
-                </label>
-                <label>
-                  <span>Etiqueta</span>
-                  <input name="badge" type="text" placeholder="Nuevo">
-                </label>
-                <label>
-                  <span>Disponibilidad</span>
-                  <input name="availability" type="text" placeholder="Disponible">
-                </label>
-                <label class="store-admin__wide">
-                  <span>Descripcion corta</span>
-                  <textarea name="shortDescription" rows="2" placeholder="Texto breve para la tarjeta del producto"></textarea>
-                </label>
-                <label class="store-admin__wide">
-                  <span>Descripcion completa</span>
-                  <textarea name="description" rows="3" placeholder="Informacion detallada del producto"></textarea>
-                </label>
-                <label class="store-admin__wide">
-                  <span>Especificaciones</span>
-                  <textarea name="specs" rows="4" placeholder="Una especificacion por linea"></textarea>
-                </label>
-                <label class="store-admin__wide">
-                  <span>Garantia</span>
-                  <input name="warranty" type="text" placeholder="Garantia de 90 dias">
-                </label>
-              </div>
+                  </label>
+                  <label>
+                    <span>Precio actual</span>
+                    <input name="price" type="number" min="0" step="1000" placeholder="1450000" required>
+                  </label>
+                  <label>
+                    <span>Precio anterior</span>
+                    <input name="oldPrice" type="number" min="0" step="1000" placeholder="1690000">
+                  </label>
+                  <label>
+                    <span>Stock</span>
+                    <input name="stock" type="number" min="0" value="1" required>
+                  </label>
+                  <label>
+                    <span>Rating</span>
+                    <input name="rating" type="number" min="0" max="5" step="0.1" value="4.8">
+                  </label>
+                  <label>
+                    <span>Etiqueta</span>
+                    <input name="badge" type="text" placeholder="Nuevo">
+                  </label>
+                  <label>
+                    <span>Disponibilidad</span>
+                    <input name="availability" type="text" placeholder="Disponible">
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Descripcion corta</span>
+                    <textarea name="shortDescription" rows="2" placeholder="Texto breve para la tarjeta del producto"></textarea>
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Descripcion completa</span>
+                    <textarea name="description" rows="3" placeholder="Informacion detallada del producto"></textarea>
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Especificaciones</span>
+                    <textarea name="specs" rows="4" placeholder="Una especificacion por linea"></textarea>
+                  </label>
+                  <label class="store-admin__wide">
+                    <span>Garantia</span>
+                    <input name="warranty" type="text" placeholder="Garantia de 90 dias">
+                  </label>
+                </div>
 
-              <div class="store-admin__actions">
-                <button class="btn btn--primary" type="submit" data-admin-submit>Agregar producto</button>
-                <button class="btn btn--outline" type="button" data-admin-reset>Limpiar</button>
-              </div>
-            </form>
+                <div class="store-admin__actions">
+                  <button class="btn btn--primary" type="submit" data-admin-submit>Agregar producto</button>
+                  <button class="btn btn--outline" type="button" data-admin-reset>Limpiar</button>
+                </div>
+              </form>
+            </section>
 
-            <div class="store-admin__list-panel">
-              <div class="store-admin__list-head">
-                <h2>Productos del catalogo</h2>
-                <small>Usa editar para cargar los datos en el formulario.</small>
+            <section class="store-admin__screen" id="adminEditScreen" data-admin-screen="edit" hidden>
+              <div class="store-admin__list-panel">
+                <div class="store-admin__list-head">
+                  <h2>Editar productos</h2>
+                  <small>Selecciona un producto para abrirlo en modo edicion.</small>
+                </div>
+                <div class="store-admin__list" id="adminProductList"></div>
               </div>
-              <div class="store-admin__list" id="adminProductList"></div>
-            </div>
+            </section>
           </div>
 
-          <section class="store-admin__tracking" id="adminTrackingWorkspace" hidden>
+          <section class="store-admin__tracking store-admin__screen" id="adminTrackingWorkspace" data-admin-screen="tickets" hidden>
             <div class="store-admin__head store-admin__head--sub">
               <div>
                 <span class="section__tag">Seguimiento</span>
@@ -259,7 +269,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-2"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-3"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {

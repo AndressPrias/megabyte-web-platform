@@ -260,7 +260,6 @@
     const adminSection = document.getElementById('admin-productos');
     const loginPanel = document.getElementById('adminLoginPanel');
     const workspace = document.getElementById('adminWorkspace');
-    const trackingWorkspace = document.getElementById('adminTrackingWorkspace');
     const state = document.getElementById('adminAccessState');
     const logoutButtons = document.querySelectorAll('[data-admin-logout]');
     if (!adminSection || !loginPanel || !workspace) return;
@@ -273,7 +272,15 @@
       loginPanel.style.removeProperty('display');
     }
     workspace.hidden = !adminAuthenticated;
-    if (trackingWorkspace) trackingWorkspace.hidden = !adminAuthenticated;
+    if (adminAuthenticated && !document.querySelector('.store-admin__screen.is-active')) {
+      showAdminScreen('create');
+    }
+    if (!adminAuthenticated) {
+      document.querySelectorAll('.store-admin__screen').forEach((screen) => {
+        screen.hidden = true;
+        screen.classList.remove('is-active');
+      });
+    }
     logoutButtons.forEach((button) => {
       button.hidden = !adminAuthenticated;
     });
@@ -282,6 +289,18 @@
         ? (adminAuthenticated ? 'Sesión de administrador activa' : 'Ingresa la contraseña de administrador')
         : 'Para administrar productos debes abrir la web desde el servidor backend';
     }
+  }
+
+  function showAdminScreen(screenName) {
+    const targetName = screenName || 'create';
+    document.querySelectorAll('[data-admin-screen]').forEach((screen) => {
+      const isActive = screen.dataset.adminScreen === targetName;
+      screen.hidden = !isActive;
+      screen.classList.toggle('is-active', isActive);
+    });
+    document.querySelectorAll('[data-admin-screen-target]').forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.adminScreenTarget === targetName);
+    });
   }
 
   function renderAdminLoginPanel() {
@@ -687,6 +706,7 @@
     const form = document.getElementById('adminProductForm');
     if (!form || !product) return;
 
+    showAdminScreen('create');
     form.elements.productId.value = product.id;
     form.elements.name.value = product.name;
     form.elements.brand.value = product.brand;
@@ -787,6 +807,7 @@
       });
       resetAdminForm();
       await refreshProducts();
+      if (isEditing) showAdminScreen('edit');
       showStoreNotice('Producto guardado');
     } catch (err) {
       showStoreNotice(err.message || 'No se pudo guardar');
@@ -1206,6 +1227,13 @@
       if (detailButton) {
         const qty = document.getElementById('productQty')?.value || 1;
         addToCart(detailButton.dataset.addDetail, qty);
+      }
+
+      const adminScreenButton = event.target.closest('[data-admin-screen-target]');
+      if (adminScreenButton) {
+        const target = adminScreenButton.dataset.adminScreenTarget;
+        if (target === 'create') resetAdminForm();
+        showAdminScreen(target);
       }
 
       const removeButton = event.target.closest('[data-remove-cart]');
