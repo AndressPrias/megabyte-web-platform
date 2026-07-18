@@ -26,6 +26,10 @@ if ($action === 'me') {
 
 mb_require_admin();
 
+if ($action === 'products' && $method === 'GET') {
+    mb_json(['products' => mb_get_products()]);
+}
+
 if ($action === 'products' && $method === 'POST') {
     $product = mb_normalize_product(mb_read_json_body());
     $products = mb_get_products();

@@ -131,6 +131,8 @@ function mb_normalize_product(array $product): array
         array_unshift($imageUrls, $imageUrl);
     }
     $imageUrl = $imageUrls[0] ?? '';
+    $isPublishedValue = $product['isPublished'] ?? $product['ispublished'] ?? true;
+    $isPublished = !($isPublishedValue === false || $isPublishedValue === 0 || $isPublishedValue === '0' || $isPublishedValue === 'false');
 
     return [
         'id' => (string) ($product['id'] ?? mb_slugify($name)),
@@ -151,6 +153,7 @@ function mb_normalize_product(array $product): array
         'specs' => array_values(array_map('strval', $specs)),
         'warranty' => trim((string) ($product['warranty'] ?? 'Garantia segun disponibilidad y condiciones del producto.')),
         'availability' => trim((string) ($product['availability'] ?? (((int) ($product['stock'] ?? 0)) > 0 ? 'Disponible' : 'Agotado'))),
+        'isPublished' => $isPublished,
     ];
 }
 
@@ -228,12 +231,14 @@ function mb_ensure_products_table(PDO $pdo): void
             specs TEXT,
             warranty TEXT,
             availability VARCHAR(160) NOT NULL DEFAULT 'Disponible',
+            isPublished TINYINT(1) NOT NULL DEFAULT 1,
             sortOrder INT NOT NULL DEFAULT 0,
             updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )"
     );
     mb_ensure_products_column($pdo, 'imageUrl', "VARCHAR(500) NOT NULL DEFAULT ''");
     mb_ensure_products_column($pdo, 'imageUrls', 'TEXT');
+    mb_ensure_products_column($pdo, 'isPublished', 'TINYINT(1) NOT NULL DEFAULT 1');
 }
 
 function mb_ensure_products_column(PDO $pdo, string $column, string $definition): void
@@ -260,6 +265,7 @@ function mb_products_from_db(PDO $pdo): array
         $row['imageUrl'] = $row['imageUrl'] ?? $row['imageurl'] ?? '';
         $row['imageUrls'] = $row['imageUrls'] ?? $row['imageurls'] ?? [];
         $row['shortDescription'] = $row['shortDescription'] ?? $row['shortdescription'] ?? '';
+        $row['isPublished'] = $row['isPublished'] ?? $row['ispublished'] ?? 1;
         $row['specs'] = json_decode((string) ($row['specs'] ?? '[]'), true) ?: [];
         return mb_normalize_product($row);
     }, $rows);
@@ -274,10 +280,10 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
         $statement = $pdo->prepare(
             'INSERT INTO products (
                 id, name, brand, category, price, oldPrice, discount, stock, rating, badge,
-                imageType, imageUrl, imageUrls, shortDescription, description, specs, warranty, availability, sortOrder
+                imageType, imageUrl, imageUrls, shortDescription, description, specs, warranty, availability, isPublished, sortOrder
             ) VALUES (
                 :id, :name, :brand, :category, :price, :oldPrice, :discount, :stock, :rating, :badge,
-                :imageType, :imageUrl, :imageUrls, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
+                :imageType, :imageUrl, :imageUrls, :shortDescription, :description, :specs, :warranty, :availability, :isPublished, :sortOrder
             )'
         );
 
@@ -301,6 +307,7 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
                 ':specs' => json_encode($product['specs'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 ':warranty' => $product['warranty'],
                 ':availability' => $product['availability'],
+                ':isPublished' => $product['isPublished'] ? 1 : 0,
                 ':sortOrder' => $index,
             ]);
         }

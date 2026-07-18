@@ -161,6 +161,7 @@
       imageType: PRODUCT_IMAGE_TYPES.includes(product.imageType) ? product.imageType : 'laptop',
       imageUrl: imageUrls[0] || '',
       imageUrls,
+      isPublished: !(product.isPublished === false || product.isPublished === 0 || product.isPublished === '0' || product.isPublished === 'false'),
       shortDescription: String(product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       description: String(product.description || product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       specs: Array.isArray(product.specs)
@@ -188,6 +189,14 @@
     return productsLoaded ? productsCache : defaultProducts();
   }
 
+  function isProductPublished(product) {
+    return product?.isPublished !== false;
+  }
+
+  function publicProducts() {
+    return getProducts().filter(isProductPublished);
+  }
+
   async function apiRequest(path, options = {}) {
     const headers = {
       'Content-Type': 'application/json',
@@ -210,7 +219,10 @@
 
   async function loadProducts() {
     try {
-      const payload = await apiRequest(API_PRODUCTS);
+      const endpoint = adminAuthenticated && document.getElementById('admin-productos')
+        ? `${API_ADMIN}?action=products`
+        : API_PRODUCTS;
+      const payload = await apiRequest(endpoint);
       productsCache = Array.isArray(payload.products) ? payload.products.map(normalizeProduct) : [];
       productsLoaded = true;
       backendAvailable = true;
@@ -251,6 +263,8 @@
 
     renderAdminAccess();
     if (adminAuthenticated) {
+      await loadProducts();
+      renderAdminProducts();
       await loadAdminTickets();
       resetTicketForm();
     }
@@ -433,7 +447,10 @@
 
   function addToCart(productId, quantity) {
     const product = getProduct(productId);
-    if (!product) return;
+    if (!product || !isProductPublished(product)) {
+      showStoreNotice('Este producto no esta disponible en la tienda');
+      return;
+    }
 
     const cart = getCart();
     const qty = Math.max(1, Number(quantity) || 1);
@@ -468,7 +485,7 @@
   function cartWithProducts() {
     return getCart()
       .map((item) => ({ ...item, product: getProduct(item.id) }))
-      .filter((item) => item.product);
+      .filter((item) => item.product && isProductPublished(item.product));
   }
 
   function cartTotal() {
@@ -582,7 +599,7 @@
     const query = (search?.value || '').toLowerCase().trim();
     const sortValue = sort?.value || 'featured';
 
-    let products = getProducts().filter((product) => {
+    let products = publicProducts().filter((product) => {
       const matchesCategory = activeCategory === 'todos' || product.category === activeCategory;
       const haystack = `${product.name} ${product.brand} ${product.category} ${product.shortDescription}`.toLowerCase();
       return matchesCategory && haystack.includes(query);
@@ -602,8 +619,9 @@
     if (!detail) return;
 
     const params = new URLSearchParams(window.location.search);
-    const products = getProducts();
-    const product = getProduct(params.get('id')) || products[0];
+    const products = publicProducts();
+    const requestedProduct = getProduct(params.get('id'));
+    const product = requestedProduct && isProductPublished(requestedProduct) ? requestedProduct : products[0];
 
     if (!product) {
       detail.innerHTML = '<div class="store-empty">No hay productos disponibles en el catálogo.</div>';
@@ -680,6 +698,7 @@
         <div>
           <span>${product.category} · ${product.brand}</span>
           <strong>${product.name}</strong>
+          <em class="store-admin__publish-status ${product.isPublished ? 'is-live' : 'is-paused'}">${product.isPublished ? 'Publicado' : 'Pausado'}</em>
           <small>${formatPrice(product.price)} · Stock ${product.stock}</small>
         </div>
         <div class="store-admin__item-actions">
@@ -721,6 +740,7 @@
     form.elements.imageUrls.value = JSON.stringify(productImages(product));
     if (form.elements.productImage) form.elements.productImage.value = '';
     form.elements.availability.value = product.availability;
+    if (form.elements.isPublished) form.elements.isPublished.value = product.isPublished ? '1' : '0';
     form.elements.warranty.value = product.warranty;
     form.elements.shortDescription.value = product.shortDescription;
     form.elements.description.value = product.description;
@@ -742,6 +762,7 @@
     form.elements.imageType.value = 'laptop';
     form.elements.imageUrl.value = '';
     form.elements.imageUrls.value = '[]';
+    if (form.elements.isPublished) form.elements.isPublished.value = '1';
     if (form.elements.productImage) form.elements.productImage.value = '';
     updateAdminImagePreview(form);
     form.querySelector('[data-admin-submit]').textContent = 'Agregar producto';
@@ -767,6 +788,7 @@
       imageUrl: data.get('imageUrl'),
       imageUrls: data.get('imageUrls'),
       availability: data.get('availability'),
+      isPublished: data.get('isPublished') !== '0',
       warranty: data.get('warranty'),
       shortDescription: data.get('shortDescription'),
       description: data.get('description'),
@@ -1404,6 +1426,7 @@
           });
           adminAuthenticated = true;
           adminLoginForm.reset();
+          await loadProducts();
           renderAdminAccess();
           renderAdminProducts();
           await loadAdminTickets();

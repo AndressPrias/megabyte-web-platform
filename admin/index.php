@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-3">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-4">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -144,6 +144,13 @@ mb_start_admin_session();
                     <span>Disponibilidad</span>
                     <input name="availability" type="text" placeholder="Disponible">
                   </label>
+                  <label>
+                    <span>Publicacion</span>
+                    <select name="isPublished" required>
+                      <option value="1">Publicado en tienda</option>
+                      <option value="0">Pausado / oculto</option>
+                    </select>
+                  </label>
                   <label class="store-admin__wide">
                     <span>Descripcion corta</span>
                     <textarea name="shortDescription" rows="2" placeholder="Texto breve para la tarjeta del producto"></textarea>
@@ -269,7 +276,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-3"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-4"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {
