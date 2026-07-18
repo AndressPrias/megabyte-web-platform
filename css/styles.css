@@ -4160,6 +4160,7 @@ body {
 }
 
 .store-admin__tabs button {
+  position: relative;
   min-height: 48px;
   border: 1px solid transparent;
   border-radius: 14px;
@@ -4179,6 +4180,25 @@ body {
     linear-gradient(135deg, rgba(0, 180, 216, 0.18), rgba(157, 78, 221, 0.2)),
     rgba(255, 255, 255, 0.035);
   box-shadow: 0 12px 30px rgba(0, 180, 216, 0.08);
+}
+
+.store-admin__tabs button.has-notification::after {
+  content: attr(data-notification-count);
+  position: absolute;
+  top: 0.45rem;
+  right: 0.65rem;
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  border: 2px solid rgba(5, 13, 27, 0.95);
+  border-radius: 999px;
+  color: #ffffff;
+  background: #ef4444;
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.42);
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .store-admin__screen {
@@ -4464,6 +4484,7 @@ body {
 }
 
 .store-admin__item {
+  position: relative;
   display: grid;
   grid-template-columns: 54px minmax(0, 1fr) auto auto;
   align-items: center;
@@ -4476,6 +4497,24 @@ body {
 
 .store-admin__item--ticket {
   grid-template-columns: 54px minmax(0, 1fr) minmax(140px, auto) auto;
+}
+
+.store-admin__item--ticket.has-notification {
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.store-admin__item--ticket.has-notification::before {
+  content: '';
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(5, 13, 27, 0.96);
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+  z-index: 1;
 }
 
 .store-admin__icon {

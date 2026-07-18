@@ -6,6 +6,7 @@
   const API_PRODUCTS = '/api/products.php';
   const API_ADMIN = '/admin/api.php';
   const API_ADMIN_TRACKING = '/admin/tracking-api.php';
+  const VIEWED_TICKETS_KEY = 'megabyte_admin_viewed_tickets';
   let productsCache = [];
   let ticketsCache = [];
   let productsLoaded = false;
@@ -315,6 +316,7 @@
     document.querySelectorAll('[data-admin-screen-target]').forEach((button) => {
       button.classList.toggle('is-active', button.dataset.adminScreenTarget === targetName);
     });
+    if (targetName === 'tickets') markAdminTicketsAsViewed();
   }
 
   function renderAdminLoginPanel() {
@@ -1104,9 +1106,57 @@
       .join('');
   }
 
+  function viewedTicketIds() {
+    try {
+      const ids = JSON.parse(localStorage.getItem(VIEWED_TICKETS_KEY) || '[]');
+      return Array.isArray(ids) ? ids : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function unseenTickets() {
+    const viewed = new Set(viewedTicketIds());
+    return ticketsCache.filter((ticket) => !viewed.has(ticket.ticket));
+  }
+
+  function updateTicketNotification() {
+    const unseen = unseenTickets();
+    const ticketButton = document.querySelector('[data-admin-screen-target="tickets"]');
+    if (ticketButton) {
+      ticketButton.classList.toggle('has-notification', unseen.length > 0);
+      ticketButton.dataset.notificationCount = String(unseen.length);
+      ticketButton.setAttribute(
+        'aria-label',
+        unseen.length ? `Gestionar tickets, ${unseen.length} sin ver` : 'Gestionar tickets'
+      );
+    }
+
+    document.querySelectorAll('[data-ticket-row]').forEach((row) => {
+      row.classList.toggle('has-notification', unseen.some((ticket) => ticket.ticket === row.dataset.ticketRow));
+    });
+  }
+
+  function markAdminTicketsAsViewed() {
+    if (!ticketsCache.length) {
+      updateTicketNotification();
+      return;
+    }
+
+    localStorage.setItem(
+      VIEWED_TICKETS_KEY,
+      JSON.stringify([...new Set([...viewedTicketIds(), ...ticketsCache.map((ticket) => ticket.ticket)])])
+    );
+    if (document.querySelector('[data-admin-screen="tickets"]')?.classList.contains('is-active')) {
+      markAdminTicketsAsViewed();
+    } else {
+      updateTicketNotification();
+    }
+  }
+
   function ticketAdminRow(ticket) {
     return `
-      <article class="store-admin__item store-admin__item--ticket">
+      <article class="store-admin__item store-admin__item--ticket" data-ticket-row="${ticket.ticket}">
         <div class="store-admin__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6V7Z"/><path d="M9 9h6M9 13h6"/></svg>
         </div>
@@ -1141,6 +1191,7 @@
       ? ticketsCache.map(ticketAdminRow).join('')
       : '<div class="store-empty">No hay tickets creados todavÃ­a.</div>';
     if (total) total.textContent = `${ticketsCache.length} tickets`;
+    updateTicketNotification();
   }
 
   function ticketToForm(ticket) {
