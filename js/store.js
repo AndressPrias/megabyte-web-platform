@@ -428,6 +428,16 @@
     }).format(value);
   }
 
+  function currencyInputToNumber(value) {
+    return Number(String(value || '').replace(/[^\d]/g, '')) || 0;
+  }
+
+  function formatCurrencyInput(input) {
+    if (!input) return;
+    const value = currencyInputToNumber(input.value);
+    input.value = value ? formatPrice(value) : '';
+  }
+
   function getCart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -788,8 +798,8 @@
     form.elements.name.value = product.name;
     form.elements.brand.value = product.brand;
     form.elements.category.value = product.category;
-    form.elements.price.value = product.price;
-    form.elements.oldPrice.value = product.oldPrice;
+    form.elements.price.value = formatPrice(product.price);
+    form.elements.oldPrice.value = product.oldPrice ? formatPrice(product.oldPrice) : '';
     form.elements.stock.value = product.stock;
     form.elements.rating.value = product.rating;
     form.elements.badge.value = product.badge;
@@ -816,6 +826,8 @@
     if (!form) return;
     form.reset();
     form.elements.productId.value = '';
+    form.elements.price.value = '';
+    form.elements.oldPrice.value = '';
     form.elements.rating.value = '4.8';
     form.elements.stock.value = '1';
     form.elements.category.value = 'computadores';
@@ -841,8 +853,8 @@
       name,
       brand: data.get('brand'),
       category: data.get('category'),
-      price: data.get('price'),
-      oldPrice: data.get('oldPrice'),
+      price: currencyInputToNumber(data.get('price')),
+      oldPrice: currencyInputToNumber(data.get('oldPrice')),
       stock: data.get('stock'),
       rating: data.get('rating'),
       badge: data.get('badge'),
@@ -1428,6 +1440,7 @@
     document.addEventListener('input', (event) => {
       if (event.target.matches('#storeSearch, #storeSort')) renderProducts();
       if (event.target.matches('[data-cart-qty]')) updateQuantity(event.target.dataset.cartQty, event.target.value);
+      if (event.target.matches('[data-currency-cop]')) formatCurrencyInput(event.target);
     });
 
     document.addEventListener('dragstart', (event) => {

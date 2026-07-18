@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-8">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-9">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -122,11 +122,11 @@ mb_start_admin_session();
                   </label>
                   <label>
                     <span>Precio actual</span>
-                    <input name="price" type="number" min="0" step="1000" placeholder="1450000" required>
+                    <input name="price" type="text" inputmode="numeric" placeholder="$ 1.450.000" data-currency-cop required>
                   </label>
                   <label>
                     <span>Precio anterior</span>
-                    <input name="oldPrice" type="number" min="0" step="1000" placeholder="1690000">
+                    <input name="oldPrice" type="text" inputmode="numeric" placeholder="$ 1.690.000" data-currency-cop>
                   </label>
                   <label>
                     <span>Stock</span>
@@ -276,7 +276,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-7"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-8"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {
