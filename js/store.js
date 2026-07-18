@@ -465,6 +465,23 @@
     return `Garantia de ${value} ${labels[unit] || 'dias'}.`;
   }
 
+  function conditionFromBadge(value) {
+    const text = String(value || '').toLowerCase();
+    if (text.includes('reacondicionado') || text.includes('certificado')) return 'Reacondicionado';
+    if (text.includes('usado')) return 'Usado';
+    return 'Nuevo';
+  }
+
+  function setCheckedValue(group, value) {
+    const fields = Array.isArray(group) || group instanceof NodeList || group instanceof RadioNodeList
+      ? Array.from(group)
+      : [group].filter(Boolean);
+    const normalizedValue = String(value || '');
+    fields.forEach((field) => {
+      field.checked = field.value === normalizedValue;
+    });
+  }
+
   function getCart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -829,7 +846,7 @@
     form.elements.oldPrice.value = product.oldPrice ? formatPrice(product.oldPrice) : '';
     form.elements.stock.value = product.stock;
     form.elements.rating.value = product.rating;
-    form.elements.badge.value = product.badge;
+    setCheckedValue(form.elements.badge, conditionFromBadge(product.badge));
     form.elements.imageType.value = product.imageType;
     form.elements.imageUrl.value = product.imageUrl || '';
     form.elements.imageUrls.value = JSON.stringify(productImages(product));
@@ -862,6 +879,7 @@
     form.elements.stock.value = '1';
     form.elements.category.value = 'computadores';
     form.elements.imageType.value = 'laptop';
+    setCheckedValue(form.elements.badge, 'Nuevo');
     form.elements.imageUrl.value = '';
     form.elements.imageUrls.value = '[]';
     form.__allPendingFileIndexes = [];

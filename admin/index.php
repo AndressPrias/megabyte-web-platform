@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-10">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-11">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -137,8 +137,12 @@ mb_start_admin_session();
                     <input name="rating" type="number" min="0" max="5" step="0.1" value="4.8">
                   </label>
                   <label>
-                    <span>Etiqueta</span>
-                    <input name="badge" type="text" placeholder="Nuevo">
+                    <span>Condicion</span>
+                    <div class="store-admin__condition-options">
+                      <label><input name="badge" type="radio" value="Nuevo" checked> Nuevo</label>
+                      <label><input name="badge" type="radio" value="Usado"> Usado</label>
+                      <label><input name="badge" type="radio" value="Reacondicionado"> Reacondicionado</label>
+                    </div>
                   </label>
                   <label>
                     <span>Disponibilidad</span>
@@ -284,7 +288,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-9"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-10"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {
