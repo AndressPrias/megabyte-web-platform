@@ -130,6 +130,22 @@
     const price = Math.max(0, Number(product.price) || 0);
     const oldPrice = Math.max(price, Number(product.oldPrice) || price);
     const discount = oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : Math.max(0, Number(product.discount) || 0);
+    let imageUrls = product.imageUrls || [];
+
+    if (typeof imageUrls === 'string') {
+      try {
+        const parsed = JSON.parse(imageUrls);
+        imageUrls = Array.isArray(parsed) ? parsed : imageUrls;
+      } catch (error) {
+        imageUrls = imageUrls.split(/[\n,]+/);
+      }
+    }
+
+    if (!Array.isArray(imageUrls)) imageUrls = [];
+    imageUrls = [...new Set(imageUrls.map((url) => String(url || '').trim()).filter(Boolean))];
+
+    const imageUrl = String(product.imageUrl || '').trim();
+    if (imageUrl && !imageUrls.includes(imageUrl)) imageUrls.unshift(imageUrl);
 
     return {
       id: String(product.id || slugify(product.name || `producto-${Date.now()}`)),
@@ -143,7 +159,8 @@
       rating: Math.min(5, Math.max(0, Number(product.rating) || 4.8)),
       badge: String(product.badge || 'Disponible').trim(),
       imageType: PRODUCT_IMAGE_TYPES.includes(product.imageType) ? product.imageType : 'laptop',
-      imageUrl: String(product.imageUrl || '').trim(),
+      imageUrl: imageUrls[0] || '',
+      imageUrls,
       shortDescription: String(product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       description: String(product.description || product.shortDescription || 'Producto disponible en Megabyte Store.').trim(),
       specs: Array.isArray(product.specs)
@@ -529,9 +546,15 @@
     return icons[type] || icons.laptop;
   }
 
-  function productVisual(product, className = 'product-image') {
-    if (product.imageUrl) {
-      return `<img class="${className}" src="${product.imageUrl}" alt="${product.name}" loading="lazy">`;
+  function productImages(product) {
+    const gallery = Array.isArray(product.imageUrls) ? product.imageUrls : [];
+    return [...new Set([...(gallery || []), product.imageUrl].map((url) => String(url || '').trim()).filter(Boolean))];
+  }
+
+  function productVisual(product, className = 'product-image', imageUrl = '') {
+    const visualUrl = imageUrl || productImages(product)[0] || '';
+    if (visualUrl) {
+      return `<img class="${className}" src="${visualUrl}" alt="${product.name}" loading="lazy">`;
     }
 
     return productIcon(product.imageType);
@@ -541,9 +564,21 @@
     const preview = form?.querySelector('[data-product-image-preview]');
     if (!preview) return;
 
+    let imageUrls = [];
+    try {
+      imageUrls = JSON.parse(form.elements.imageUrls?.value || '[]');
+    } catch (error) {
+      imageUrls = [];
+    }
+
     const imageUrl = form.elements.imageUrl?.value || '';
-    if (imageUrl) {
-      preview.innerHTML = `<img src="${imageUrl}" alt="Vista previa del producto">`;
+    if (imageUrl && !imageUrls.includes(imageUrl)) imageUrls.unshift(imageUrl);
+
+    if (imageUrls.length) {
+      preview.innerHTML = imageUrls
+        .slice(0, 6)
+        .map((url) => `<img src="${url}" alt="Vista previa del producto">`)
+        .join('');
       preview.classList.add('has-image');
       return;
     }
@@ -623,13 +658,29 @@
     }
 
     document.title = `${product.name} | Megabyte`;
+    const galleryImages = productImages(product);
+    const mainGalleryImage = galleryImages[0] || '';
+    const galleryThumbs = galleryImages.length
+      ? galleryImages
+          .map((imageUrl, index) => `
+            <button type="button" class="${index === 0 ? 'is-active' : ''}" data-gallery-image="${imageUrl}" aria-label="Ver foto ${index + 1} de ${product.name}">
+              ${productVisual(product, 'product-detail__thumb-photo', imageUrl)}
+            </button>
+          `)
+          .join('')
+      : `
+        <span>${productIcon(product.imageType)}</span>
+        <span>${productIcon(product.imageType)}</span>
+        <span>${productIcon(product.imageType)}</span>
+      `;
+
     detail.innerHTML = `
       <div class="product-detail__gallery">
-        <div class="product-detail__image">${productVisual(product, 'product-detail__photo')}</div>
+        <div class="product-detail__image" data-gallery-main>
+          ${productVisual(product, 'product-detail__photo', mainGalleryImage)}
+        </div>
         <div class="product-detail__thumbs">
-          <span>${productVisual(product, 'product-detail__thumb-photo')}</span>
-          <span>${productIcon(product.imageType)}</span>
-          <span>${productIcon(product.imageType)}</span>
+          ${galleryThumbs}
         </div>
       </div>
       <div class="product-detail__info">
@@ -713,6 +764,7 @@
     form.elements.badge.value = product.badge;
     form.elements.imageType.value = product.imageType;
     form.elements.imageUrl.value = product.imageUrl || '';
+    form.elements.imageUrls.value = JSON.stringify(productImages(product));
     if (form.elements.productImage) form.elements.productImage.value = '';
     form.elements.availability.value = product.availability;
     form.elements.warranty.value = product.warranty;
@@ -735,6 +787,7 @@
     form.elements.category.value = 'computadores';
     form.elements.imageType.value = 'laptop';
     form.elements.imageUrl.value = '';
+    form.elements.imageUrls.value = '[]';
     if (form.elements.productImage) form.elements.productImage.value = '';
     updateAdminImagePreview(form);
     form.querySelector('[data-admin-submit]').textContent = 'Agregar producto';
@@ -758,6 +811,7 @@
       badge: data.get('badge'),
       imageType: data.get('imageType'),
       imageUrl: data.get('imageUrl'),
+      imageUrls: data.get('imageUrls'),
       availability: data.get('availability'),
       warranty: data.get('warranty'),
       shortDescription: data.get('shortDescription'),
@@ -781,10 +835,12 @@
     }
 
     try {
-      const uploadedImageUrl = await uploadProductImage(form);
-      if (uploadedImageUrl) {
-        product.imageUrl = uploadedImageUrl;
-        form.elements.imageUrl.value = uploadedImageUrl;
+      const uploadedImageUrls = await uploadProductImages(form);
+      if (uploadedImageUrls.length) {
+        product.imageUrls = [...new Set([...productImages(product), ...uploadedImageUrls])];
+        product.imageUrl = product.imageUrls[0] || '';
+        form.elements.imageUrl.value = product.imageUrl;
+        form.elements.imageUrls.value = JSON.stringify(product.imageUrls);
       }
 
       const endpoint = isEditing
@@ -803,17 +859,19 @@
     }
   }
 
-  async function uploadProductImage(form) {
+  async function uploadProductImages(form) {
     const input = form.elements.productImage;
-    const file = input?.files?.[0];
-    if (!file) return '';
+    const files = Array.from(input?.files || []);
+    if (!files.length) return [];
 
-    if (file.size > 4 * 1024 * 1024) {
-      throw new Error('La imagen no debe superar 4 MB');
+    if (files.some((file) => file.size > 4 * 1024 * 1024)) {
+      throw new Error('Cada imagen debe pesar maximo 4 MB');
     }
 
     const data = new FormData();
-    data.append('image', file);
+    files.forEach((file) => {
+      data.append('images[]', file);
+    });
 
     const response = await fetch(`${API_ADMIN}?action=upload-image`, {
       method: 'POST',
@@ -826,7 +884,8 @@
       throw new Error(payload.error || 'No se pudo subir la imagen');
     }
 
-    return payload.imageUrl || '';
+    if (Array.isArray(payload.imageUrls)) return payload.imageUrls.filter(Boolean);
+    return payload.imageUrl ? [payload.imageUrl] : [];
   }
 
   async function deleteProduct(productId) {
@@ -1249,9 +1308,23 @@
         const form = document.getElementById('adminProductForm');
         if (form) {
           form.elements.imageUrl.value = '';
+          form.elements.imageUrls.value = '[]';
           if (form.elements.productImage) form.elements.productImage.value = '';
           updateAdminImagePreview(form);
-          showStoreNotice('Imagen retirada del producto');
+          showStoreNotice('Fotos retiradas del producto');
+        }
+      }
+
+      const galleryButton = event.target.closest('[data-gallery-image]');
+      if (galleryButton) {
+        const mainImage = document.querySelector('[data-gallery-main]');
+        const imageUrl = galleryButton.dataset.galleryImage;
+        const productName = document.querySelector('.product-detail__info h1')?.textContent || 'Producto';
+        if (mainImage && imageUrl) {
+          mainImage.innerHTML = `<img class="product-detail__photo" src="${imageUrl}" alt="${productName}" loading="eager">`;
+          document.querySelectorAll('[data-gallery-image]').forEach((button) => {
+            button.classList.toggle('is-active', button === galleryButton);
+          });
         }
       }
 
@@ -1274,27 +1347,31 @@
     document.addEventListener('change', (event) => {
       if (event.target.matches('input[name="productImage"]')) {
         const form = event.target.closest('form');
-        const file = event.target.files?.[0];
+        const files = Array.from(event.target.files || []);
         const preview = form?.querySelector('[data-product-image-preview]');
 
-        if (!file || !preview) {
+        if (!files.length || !preview) {
           updateAdminImagePreview(form);
           return;
         }
 
-        if (file.size > 4 * 1024 * 1024) {
+        if (files.some((file) => file.size > 4 * 1024 * 1024)) {
           event.target.value = '';
-          showStoreNotice('La imagen no debe superar 4 MB');
+          showStoreNotice('Cada imagen debe pesar maximo 4 MB');
           updateAdminImagePreview(form);
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          preview.innerHTML = `<img src="${reader.result}" alt="Vista previa del producto">`;
-          preview.classList.add('has-image');
-        };
-        reader.readAsDataURL(file);
+        preview.innerHTML = '';
+        preview.classList.add('has-image');
+
+        files.slice(0, 6).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            preview.insertAdjacentHTML('beforeend', `<img src="${reader.result}" alt="Vista previa del producto">`);
+          };
+          reader.readAsDataURL(file);
+        });
         return;
       }
 

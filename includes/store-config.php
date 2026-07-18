@@ -108,6 +108,29 @@ function mb_normalize_product(array $product): array
     $category = (string) ($product['category'] ?? 'computadores');
     $imageType = (string) ($product['imageType'] ?? 'laptop');
     $imageUrl = trim((string) ($product['imageUrl'] ?? ''));
+    $imageUrls = $product['imageUrls'] ?? [];
+
+    if (is_string($imageUrls)) {
+        $decodedImageUrls = json_decode($imageUrls, true);
+        $imageUrls = is_array($decodedImageUrls)
+            ? $decodedImageUrls
+            : array_filter(array_map('trim', preg_split('/[\r\n,]+/', $imageUrls) ?: []));
+    }
+
+    if (!is_array($imageUrls)) {
+        $imageUrls = [];
+    }
+
+    $imageUrls = array_values(array_unique(array_filter(array_map(
+        static fn ($url) => mb_sanitize_product_image_url(trim((string) $url)),
+        $imageUrls
+    ))));
+
+    $imageUrl = mb_sanitize_product_image_url($imageUrl);
+    if ($imageUrl !== '' && !in_array($imageUrl, $imageUrls, true)) {
+        array_unshift($imageUrls, $imageUrl);
+    }
+    $imageUrl = $imageUrls[0] ?? '';
 
     return [
         'id' => (string) ($product['id'] ?? mb_slugify($name)),
@@ -121,7 +144,8 @@ function mb_normalize_product(array $product): array
         'rating' => min(5, max(0, (float) ($product['rating'] ?? 4.8))),
         'badge' => trim((string) ($product['badge'] ?? 'Disponible')),
         'imageType' => in_array($imageType, $imageTypes, true) ? $imageType : 'laptop',
-        'imageUrl' => mb_sanitize_product_image_url($imageUrl),
+        'imageUrl' => $imageUrl,
+        'imageUrls' => $imageUrls,
         'shortDescription' => trim((string) ($product['shortDescription'] ?? 'Producto disponible en Megabyte Store.')),
         'description' => trim((string) ($product['description'] ?? ($product['shortDescription'] ?? 'Producto disponible en Megabyte Store.'))),
         'specs' => array_values(array_map('strval', $specs)),
@@ -198,6 +222,7 @@ function mb_ensure_products_table(PDO $pdo): void
             badge VARCHAR(120) NOT NULL DEFAULT 'Disponible',
             imageType VARCHAR(80) NOT NULL DEFAULT 'laptop',
             imageUrl VARCHAR(500) NOT NULL DEFAULT '',
+            imageUrls TEXT,
             shortDescription TEXT,
             description TEXT,
             specs TEXT,
@@ -208,6 +233,7 @@ function mb_ensure_products_table(PDO $pdo): void
         )"
     );
     mb_ensure_products_column($pdo, 'imageUrl', "VARCHAR(500) NOT NULL DEFAULT ''");
+    mb_ensure_products_column($pdo, 'imageUrls', 'TEXT');
 }
 
 function mb_ensure_products_column(PDO $pdo, string $column, string $definition): void
@@ -232,6 +258,7 @@ function mb_products_from_db(PDO $pdo): array
         $row['oldPrice'] = $row['oldPrice'] ?? $row['oldprice'] ?? $row['price'];
         $row['imageType'] = $row['imageType'] ?? $row['imagetype'] ?? 'laptop';
         $row['imageUrl'] = $row['imageUrl'] ?? $row['imageurl'] ?? '';
+        $row['imageUrls'] = $row['imageUrls'] ?? $row['imageurls'] ?? [];
         $row['shortDescription'] = $row['shortDescription'] ?? $row['shortdescription'] ?? '';
         $row['specs'] = json_decode((string) ($row['specs'] ?? '[]'), true) ?: [];
         return mb_normalize_product($row);
@@ -247,10 +274,10 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
         $statement = $pdo->prepare(
             'INSERT INTO products (
                 id, name, brand, category, price, oldPrice, discount, stock, rating, badge,
-                imageType, imageUrl, shortDescription, description, specs, warranty, availability, sortOrder
+                imageType, imageUrl, imageUrls, shortDescription, description, specs, warranty, availability, sortOrder
             ) VALUES (
                 :id, :name, :brand, :category, :price, :oldPrice, :discount, :stock, :rating, :badge,
-                :imageType, :imageUrl, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
+                :imageType, :imageUrl, :imageUrls, :shortDescription, :description, :specs, :warranty, :availability, :sortOrder
             )'
         );
 
@@ -268,6 +295,7 @@ function mb_save_products_to_db(PDO $pdo, array $products): void
                 ':badge' => $product['badge'],
                 ':imageType' => $product['imageType'],
                 ':imageUrl' => $product['imageUrl'],
+                ':imageUrls' => json_encode($product['imageUrls'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 ':shortDescription' => $product['shortDescription'],
                 ':description' => $product['description'],
                 ':specs' => json_encode($product['specs'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
