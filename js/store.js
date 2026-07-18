@@ -548,12 +548,12 @@
       preview.innerHTML = imageUrls
         .slice(0, 6)
         .map((url, index) => adminImagePreviewTile(`<img src="${url}" alt="Vista previa del producto">`, `data-preview-url="${url}"`, index === 0))
-        .join('');
+        .join('') + adminImageSelectTile();
       preview.classList.add('has-image');
       return;
     }
 
-    preview.innerHTML = '<span>Sin imagen</span>';
+    preview.innerHTML = adminImageSelectTile();
     preview.classList.remove('has-image');
   }
 
@@ -563,6 +563,14 @@
         ${content}
         <span>Portada</span>
       </div>
+    `;
+  }
+
+  function adminImageSelectTile() {
+    return `
+      <button class="store-admin__image-select" type="button" data-product-image-pick>
+        <span>Seleccionar</span>
+      </button>
     `;
   }
 
@@ -1387,6 +1395,12 @@
         }
       }
 
+      const pickProductImageButton = event.target.closest('[data-product-image-pick]');
+      if (pickProductImageButton) {
+        const form = pickProductImageButton.closest('form');
+        form?.elements.productImage?.click();
+      }
+
       const galleryButton = event.target.closest('[data-gallery-image]');
       if (galleryButton) {
         const mainImage = document.querySelector('[data-gallery-main]');
@@ -1484,6 +1498,7 @@
             )
           );
         });
+        preview.insertAdjacentHTML('beforeend', adminImageSelectTile());
         syncAdminImageOrder(preview);
         return;
       }
