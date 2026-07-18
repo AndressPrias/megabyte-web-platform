@@ -547,7 +547,7 @@
     if (imageUrls.length) {
       preview.innerHTML = imageUrls
         .slice(0, 6)
-        .map((url) => `<img src="${url}" alt="Vista previa del producto">`)
+        .map((url, index) => adminImagePreviewTile(`<img src="${url}" alt="Vista previa del producto">`, `data-preview-url="${url}"`, index === 0))
         .join('');
       preview.classList.add('has-image');
       return;
@@ -555,6 +555,51 @@
 
     preview.innerHTML = '<span>Sin imagen</span>';
     preview.classList.remove('has-image');
+  }
+
+  function adminImagePreviewTile(content, attrs = '', isCover = false) {
+    return `
+      <div class="store-admin__image-tile ${isCover ? 'is-cover' : ''}" draggable="true" ${attrs}>
+        ${content}
+        <span>Portada</span>
+      </div>
+    `;
+  }
+
+  function syncAdminImageOrder(preview) {
+    const form = preview?.closest('form');
+    if (!form) return;
+
+    const tiles = Array.from(preview.querySelectorAll('[data-preview-url], [data-preview-file-index]'));
+    tiles.forEach((tile, index) => {
+      tile.classList.toggle('is-cover', index === 0);
+    });
+
+    const savedUrls = tiles.map((tile) => tile.dataset.previewUrl).filter(Boolean);
+    if (savedUrls.length) {
+      form.elements.imageUrls.value = JSON.stringify(savedUrls);
+      form.elements.imageUrl.value = savedUrls[0] || '';
+    }
+
+    const visibleFileOrder = tiles
+      .map((tile) => Number(tile.dataset.previewFileIndex))
+      .filter((index) => Number.isInteger(index));
+    const allFileIndexes = Array.isArray(form.__allPendingFileIndexes) ? form.__allPendingFileIndexes : visibleFileOrder;
+    form.__pendingImageOrder = [
+      ...visibleFileOrder,
+      ...allFileIndexes.filter((index) => !visibleFileOrder.includes(index))
+    ];
+  }
+
+  function moveAdminImageTile(targetTile, pointerX, pointerY) {
+    const preview = targetTile?.parentElement;
+    const draggingTile = preview?.querySelector('.store-admin__image-tile.is-dragging');
+    if (!preview || !draggingTile || draggingTile === targetTile) return;
+
+    const bounds = targetTile.getBoundingClientRect();
+    const insertAfter = pointerY > bounds.top + bounds.height / 2 || pointerX > bounds.left + bounds.width / 2;
+    preview.insertBefore(draggingTile, insertAfter ? targetTile.nextSibling : targetTile);
+    syncAdminImageOrder(preview);
   }
 
   function productCard(product) {
@@ -738,6 +783,8 @@
     form.elements.imageType.value = product.imageType;
     form.elements.imageUrl.value = product.imageUrl || '';
     form.elements.imageUrls.value = JSON.stringify(productImages(product));
+    form.__allPendingFileIndexes = [];
+    form.__pendingImageOrder = [];
     if (form.elements.productImage) form.elements.productImage.value = '';
     form.elements.availability.value = product.availability;
     if (form.elements.isPublished) form.elements.isPublished.value = product.isPublished ? '1' : '0';
@@ -762,6 +809,8 @@
     form.elements.imageType.value = 'laptop';
     form.elements.imageUrl.value = '';
     form.elements.imageUrls.value = '[]';
+    form.__allPendingFileIndexes = [];
+    form.__pendingImageOrder = [];
     if (form.elements.isPublished) form.elements.isPublished.value = '1';
     if (form.elements.productImage) form.elements.productImage.value = '';
     updateAdminImagePreview(form);
@@ -838,11 +887,17 @@
 
   async function uploadProductImages(form) {
     const input = form.elements.productImage;
-    const files = Array.from(input?.files || []);
+    let files = Array.from(input?.files || []);
     if (!files.length) return [];
 
     if (files.some((file) => file.size > 4 * 1024 * 1024)) {
       throw new Error('Cada imagen debe pesar maximo 4 MB');
+    }
+
+    if (Array.isArray(form.__pendingImageOrder) && form.__pendingImageOrder.length) {
+      files = form.__pendingImageOrder
+        .map((index) => files[index])
+        .filter(Boolean);
     }
 
     const data = new FormData();
@@ -1293,6 +1348,8 @@
         if (form) {
           form.elements.imageUrl.value = '';
           form.elements.imageUrls.value = '[]';
+          form.__allPendingFileIndexes = [];
+          form.__pendingImageOrder = [];
           if (form.elements.productImage) form.elements.productImage.value = '';
           updateAdminImagePreview(form);
           showStoreNotice('Fotos retiradas del producto');
@@ -1328,6 +1385,34 @@
       if (event.target.matches('[data-cart-qty]')) updateQuantity(event.target.dataset.cartQty, event.target.value);
     });
 
+    document.addEventListener('dragstart', (event) => {
+      const tile = event.target.closest('.store-admin__image-tile');
+      if (!tile) return;
+      tile.classList.add('is-dragging');
+      event.dataTransfer.effectAllowed = 'move';
+    });
+
+    document.addEventListener('dragover', (event) => {
+      const tile = event.target.closest('.store-admin__image-tile');
+      if (!tile) return;
+      event.preventDefault();
+      moveAdminImageTile(tile, event.clientX, event.clientY);
+    });
+
+    document.addEventListener('drop', (event) => {
+      const preview = event.target.closest('[data-product-image-preview]');
+      if (!preview) return;
+      event.preventDefault();
+      syncAdminImageOrder(preview);
+    });
+
+    document.addEventListener('dragend', (event) => {
+      const tile = event.target.closest('.store-admin__image-tile');
+      if (!tile) return;
+      tile.classList.remove('is-dragging');
+      syncAdminImageOrder(tile.parentElement);
+    });
+
     document.addEventListener('change', (event) => {
       if (event.target.matches('input[name="productImage"]')) {
         const form = event.target.closest('form');
@@ -1348,14 +1433,22 @@
 
         preview.innerHTML = '';
         preview.classList.add('has-image');
+        form.__allPendingFileIndexes = files.map((_, index) => index);
+        form.__pendingImageOrder = [...form.__allPendingFileIndexes];
 
         files.slice(0, 6).forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            preview.insertAdjacentHTML('beforeend', `<img src="${reader.result}" alt="Vista previa del producto">`);
-          };
-          reader.readAsDataURL(file);
+          const fileIndex = files.indexOf(file);
+          const previewUrl = URL.createObjectURL(file);
+          preview.insertAdjacentHTML(
+            'beforeend',
+            adminImagePreviewTile(
+              `<img src="${previewUrl}" alt="Vista previa del producto">`,
+              `data-preview-file-index="${fileIndex}"`,
+              fileIndex === 0
+            )
+          );
         });
+        syncAdminImageOrder(preview);
         return;
       }
 

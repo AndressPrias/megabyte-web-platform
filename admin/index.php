@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-4">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-5">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -115,7 +115,7 @@ mb_start_admin_session();
                       </div>
                       <div>
                         <input name="productImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
-                        <small>Selecciona una o varias fotos. JPG, PNG, WEBP o GIF. Maximo 4 MB por imagen.</small>
+                        <small>Selecciona una o varias fotos. Arrastra una miniatura al primer lugar para usarla como portada.</small>
                         <button class="btn btn--outline btn--sm" type="button" data-remove-product-image>Quitar fotos</button>
                       </div>
                     </div>
@@ -276,7 +276,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-4"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-5"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {
