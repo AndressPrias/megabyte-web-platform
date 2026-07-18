@@ -4480,6 +4480,10 @@ body {
   user-select: none;
 }
 
+.store-admin__publish-toggle:has(input:checked) {
+  color: #2df07a;
+}
+
 .store-admin__publish-toggle input {
   position: absolute;
   opacity: 0;
@@ -4511,8 +4515,8 @@ body {
 }
 
 .store-admin__publish-toggle input:checked + i {
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  box-shadow: 0 8px 22px rgba(0, 180, 216, 0.22);
+  background: linear-gradient(135deg, #16a34a, #2df07a);
+  box-shadow: 0 8px 22px rgba(45, 240, 122, 0.28);
 }
 
 .store-admin__publish-toggle input:checked + i::before {
