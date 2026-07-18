@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-11">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-12">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -131,10 +131,6 @@ mb_start_admin_session();
                   <label>
                     <span>Stock</span>
                     <input name="stock" type="number" min="0" value="1" required>
-                  </label>
-                  <label>
-                    <span>Rating</span>
-                    <input name="rating" type="number" min="0" max="5" step="0.1" value="4.8">
                   </label>
                   <label>
                     <span>Condicion</span>
@@ -255,7 +251,7 @@ mb_start_admin_session();
                     <input name="fechaIngreso" type="date" required>
                   </label>
                   <label>
-                    <span>Fecha estimada</span>
+                    <span>Fecha estimada de entrega</span>
                     <input name="fechaEstimada" type="date" required>
                   </label>
                   <label class="store-admin__wide">
@@ -288,7 +284,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-10"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-11"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {

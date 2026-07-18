@@ -3423,7 +3423,20 @@ body {
 }
 
 .product-card__rating {
-  color: #fbbf24;
+  display: none;
+}
+
+.product-card__condition {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0.24rem 0.58rem;
+  border: 1px solid rgba(0, 180, 216, 0.18);
+  border-radius: 999px;
+  color: var(--cyan);
+  background: rgba(0, 180, 216, 0.1);
+  font-size: 0.72rem;
+  font-weight: 900;
   letter-spacing: 0;
 }
 
@@ -4720,6 +4733,10 @@ body {
 }
 
 .product-detail__rating {
+  display: none;
+}
+
+.product-detail__availability {
   color: var(--text-secondary);
   margin-bottom: 1rem;
 }

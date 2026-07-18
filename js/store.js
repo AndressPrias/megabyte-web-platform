@@ -675,6 +675,7 @@
         <div class="product-card__body">
           <div class="product-card__eyebrow">
             <span>${product.brand}</span>
+            <span class="product-card__condition">${conditionFromBadge(product.badge)}</span>
             <span class="product-card__rating">★ ${product.rating}</span>
           </div>
           <h3>${product.name}</h3>
@@ -765,6 +766,7 @@
       <div class="product-detail__info">
         <span class="product-detail__badge">${product.badge}</span>
         <h1>${product.name}</h1>
+        <div class="product-detail__availability">${product.availability}</div>
         <div class="product-detail__rating">★ ${product.rating} · ${product.availability}</div>
         <div class="product-detail__prices">
           <strong>${formatPrice(product.price)}</strong>
@@ -845,7 +847,6 @@
     form.elements.price.value = formatPrice(product.price);
     form.elements.oldPrice.value = product.oldPrice ? formatPrice(product.oldPrice) : '';
     form.elements.stock.value = product.stock;
-    form.elements.rating.value = product.rating;
     setCheckedValue(form.elements.badge, conditionFromBadge(product.badge));
     form.elements.imageType.value = product.imageType;
     form.elements.imageUrl.value = product.imageUrl || '';
@@ -875,7 +876,6 @@
     form.elements.productId.value = '';
     form.elements.price.value = '';
     form.elements.oldPrice.value = '';
-    form.elements.rating.value = '4.8';
     form.elements.stock.value = '1';
     form.elements.category.value = 'computadores';
     form.elements.imageType.value = 'laptop';
@@ -907,7 +907,7 @@
       price: currencyInputToNumber(data.get('price')),
       oldPrice: currencyInputToNumber(data.get('oldPrice')),
       stock: data.get('stock'),
-      rating: data.get('rating'),
+      rating: 0,
       badge: data.get('badge'),
       imageType: data.get('imageType'),
       imageUrl: data.get('imageUrl'),
