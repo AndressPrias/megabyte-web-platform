@@ -700,6 +700,7 @@
         </div>
       </div>
       <div class="product-detail__info">
+        <a class="product-detail__back" href="/tienda">Volver al listado</a>
         <span class="product-detail__badge">${product.badge}</span>
         <h1>${product.name}</h1>
         <div class="product-detail__rating">★ ${product.rating} · ${product.availability}</div>

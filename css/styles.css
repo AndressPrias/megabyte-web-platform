@@ -4588,6 +4588,29 @@ body {
   padding: 1.7rem;
 }
 
+.product-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+  color: var(--cyan);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.product-detail__back::before {
+  content: '<';
+  transition: transform 0.2s ease;
+}
+
+.product-detail__back:hover {
+  color: #ffffff;
+}
+
+.product-detail__back:hover::before {
+  transform: translateX(-3px);
+}
+
 .product-detail__badge {
   display: inline-flex;
   margin-bottom: 1rem;
