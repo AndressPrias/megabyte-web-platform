@@ -637,9 +637,9 @@
     const search = document.getElementById('storeSearch');
     const sort = document.getElementById('storeSort');
     const selectedCategory = document.querySelector('.store-category-select select')?.value;
-    const activeCategory = document.querySelector('[data-category-link].is-active')?.dataset.categoryLink
+    const activeCategory = selectedCategory
+      || document.querySelector('[data-category-link].is-active')?.dataset.categoryLink
       || document.querySelector('.store-category.is-active')?.dataset.category
-      || selectedCategory
       || 'todos';
     const query = (search?.value || '').toLowerCase().trim();
     const sortValue = sort?.value || 'featured';
