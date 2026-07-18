@@ -438,6 +438,33 @@
     input.value = value ? formatPrice(value) : '';
   }
 
+  function parseWarranty(value) {
+    const text = String(value || '').toLowerCase();
+    const match = text.match(/(\d+)\s*(dia|dias|mes|meses|año|años|ano|anos)/i);
+    if (!match) {
+      return { value: '', unit: 'dias' };
+    }
+
+    const rawUnit = match[2]
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const unit = rawUnit.startsWith('mes') ? 'meses' : rawUnit.startsWith('ano') ? 'anos' : 'dias';
+    return { value: match[1], unit };
+  }
+
+  function warrantyFromForm(form) {
+    const value = Math.max(0, Number(form.elements.warrantyValue?.value) || 0);
+    const unit = form.elements.warrantyUnit?.value || 'dias';
+    if (!value) return 'Garantia segun condiciones del producto.';
+
+    const labels = {
+      dias: value === 1 ? 'dia' : 'dias',
+      meses: value === 1 ? 'mes' : 'meses',
+      anos: value === 1 ? 'año' : 'años'
+    };
+    return `Garantia de ${value} ${labels[unit] || 'dias'}.`;
+  }
+
   function getCart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -811,7 +838,10 @@
     if (form.elements.productImage) form.elements.productImage.value = '';
     form.elements.availability.value = product.availability;
     if (form.elements.isPublished) form.elements.isPublished.value = product.isPublished ? '1' : '0';
+    const warranty = parseWarranty(product.warranty);
     form.elements.warranty.value = product.warranty;
+    if (form.elements.warrantyValue) form.elements.warrantyValue.value = warranty.value;
+    if (form.elements.warrantyUnit) form.elements.warrantyUnit.value = warranty.unit;
     form.elements.shortDescription.value = product.shortDescription;
     form.elements.description.value = product.description;
     form.elements.specs.value = product.specs.join('\n');
@@ -837,6 +867,9 @@
     form.__allPendingFileIndexes = [];
     form.__pendingImageOrder = [];
     if (form.elements.isPublished) form.elements.isPublished.value = '1';
+    if (form.elements.warranty) form.elements.warranty.value = '';
+    if (form.elements.warrantyValue) form.elements.warrantyValue.value = '';
+    if (form.elements.warrantyUnit) form.elements.warrantyUnit.value = 'dias';
     if (form.elements.productImage) form.elements.productImage.value = '';
     updateAdminImagePreview(form);
     form.querySelector('[data-admin-submit]').textContent = 'Agregar producto';
@@ -863,7 +896,7 @@
       imageUrls: data.get('imageUrls'),
       availability: data.get('availability'),
       isPublished: data.get('isPublished') !== '0',
-      warranty: data.get('warranty'),
+      warranty: warrantyFromForm(form),
       shortDescription: data.get('shortDescription'),
       description: data.get('description'),
       specs: data.get('specs')

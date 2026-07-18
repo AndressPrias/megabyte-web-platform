@@ -15,7 +15,7 @@ mb_start_admin_session();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-9">
+  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-10">
   <style>
     .store-admin__login[hidden],
     .store-admin__login[data-rendered='true'][hidden],
@@ -165,7 +165,15 @@ mb_start_admin_session();
                   </label>
                   <label class="store-admin__wide">
                     <span>Garantia</span>
-                    <input name="warranty" type="text" placeholder="Garantia de 90 dias">
+                    <input name="warranty" type="hidden">
+                    <div class="store-admin__warranty-control">
+                      <input name="warrantyValue" type="number" min="0" step="1" placeholder="90">
+                      <select name="warrantyUnit" aria-label="Unidad de garantia">
+                        <option value="dias">Dias</option>
+                        <option value="meses">Meses</option>
+                        <option value="anos">Años</option>
+                      </select>
+                    </div>
                   </label>
                 </div>
 
@@ -276,7 +284,7 @@ mb_start_admin_session();
     </section>
   </main>
 
-  <script src="/js/store.js?v=tracking-admin-20260718-8"></script>
+  <script src="/js/store.js?v=tracking-admin-20260718-9"></script>
   <script>
     (() => {
       const polishAdminLogin = () => {
