@@ -1108,6 +1108,21 @@
       .replace(/(^-|-$)/g, '') || 'recibido';
   }
 
+  function ticketStatusOptions(selectedStatus) {
+    const statuses = [
+      'Recibido',
+      'En diagnostico',
+      'Esperando repuesto',
+      'En reparacion',
+      'En pruebas',
+      'Listo para entrega',
+      'Entregado'
+    ];
+    return statuses
+      .map((status) => `<option value="${status}" ${status === selectedStatus ? 'selected' : ''}>${status}</option>`)
+      .join('');
+  }
+
   function ticketAdminRow(ticket) {
     return `
       <article class="store-admin__item store-admin__item--ticket">
@@ -1120,7 +1135,12 @@
           <small>${ticket.telefono} · ${ticket.fechaIngreso}</small>
         </div>
         <div class="store-admin__ticket-meta">
-          <span class="store-admin__ticket-status store-admin__ticket-status--${ticketStatusClass(ticket.estado)}">${ticket.estado}</span>
+          <label class="store-admin__ticket-status-control store-admin__ticket-status-control--${ticketStatusClass(ticket.estado)}">
+            <span>Estado</span>
+            <select data-ticket-status="${ticket.ticket}" aria-label="Cambiar estado de ${ticket.ticket}">
+              ${ticketStatusOptions(ticket.estado)}
+            </select>
+          </label>
           <small>${ticket.tecnico}</small>
         </div>
         <div class="store-admin__item-actions">
@@ -1243,6 +1263,40 @@
       showStoreNotice('Ticket guardado');
     } catch (err) {
       showStoreNotice(err.message || 'No se pudo guardar el ticket');
+    }
+  }
+
+  async function updateTicketStatus(ticketId, nextStatus) {
+    if (!adminAuthenticated) {
+      showStoreNotice('Inicia sesion como administrador');
+      return;
+    }
+
+    const ticket = ticketsCache.find((item) => item.ticket === ticketId);
+    if (!ticket) {
+      showStoreNotice('Ticket no encontrado');
+      return;
+    }
+
+    try {
+      const updatedTicket = normalizeTicket({
+        ...ticket,
+        estado: nextStatus,
+        historial: [
+          ...ticket.historial,
+          { fecha: today(), texto: `Estado actualizado a ${nextStatus}` }
+        ]
+      });
+      await apiRequest(`${API_ADMIN_TRACKING}?action=tickets`, {
+        method: 'PUT',
+        headers: adminHeaders(),
+        body: JSON.stringify(updatedTicket)
+      });
+      await loadAdminTickets();
+      showStoreNotice('Estado del ticket actualizado');
+    } catch (err) {
+      showStoreNotice(err.message || 'No se pudo actualizar el estado');
+      await loadAdminTickets();
     }
   }
 
@@ -1525,6 +1579,11 @@
     document.addEventListener('change', (event) => {
       if (event.target.matches('[data-toggle-product-published]')) {
         toggleProductPublication(event.target.dataset.toggleProductPublished, event.target.checked);
+        return;
+      }
+
+      if (event.target.matches('[data-ticket-status]')) {
+        updateTicketStatus(event.target.dataset.ticketStatus, event.target.value);
         return;
       }
 

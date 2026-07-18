@@ -4600,6 +4600,52 @@ body {
   background: rgba(251, 191, 36, 0.14);
 }
 
+.store-admin__ticket-status-control {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 172px;
+}
+
+.store-admin__ticket-status-control span {
+  color: rgba(203, 213, 225, 0.62);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.store-admin__ticket-status-control select {
+  min-height: 36px;
+  border: 1px solid rgba(0, 180, 216, 0.22);
+  border-radius: 999px;
+  padding: 0 2rem 0 0.85rem;
+  color: var(--cyan);
+  background: rgba(0, 180, 216, 0.12);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.store-admin__ticket-status-control select:focus {
+  border-color: rgba(0, 180, 216, 0.56);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.12);
+}
+
+.store-admin__ticket-status-control--entregado select,
+.store-admin__ticket-status-control--listo-para-entrega select {
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.24);
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.store-admin__ticket-status-control--esperando-repuesto select {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.24);
+  background: rgba(251, 191, 36, 0.14);
+}
+
 /* ---- 14.9 Detalle de producto ---- */
 .product-detail {
   display: grid;
