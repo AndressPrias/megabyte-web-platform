@@ -1041,25 +1041,6 @@
     }
   }
 
-  async function resetProductsToDefaults() {
-    if (!adminAuthenticated) {
-      showStoreNotice('Inicia sesión como administrador');
-      return;
-    }
-
-    try {
-      await apiRequest(`${API_ADMIN}?action=restore`, {
-        method: 'POST',
-        headers: adminHeaders()
-      });
-      resetAdminForm();
-      await refreshProducts();
-      showStoreNotice('Catálogo restaurado');
-    } catch (err) {
-      showStoreNotice(err.message || 'No se pudo restaurar');
-    }
-    showStoreNotice('Catálogo restaurado');
-  }
 
   function normalizeTicket(ticket) {
     return {
@@ -1318,24 +1299,6 @@
     }
   }
 
-  async function restoreTicketsToDefaults() {
-    if (!adminAuthenticated) {
-      showStoreNotice('Inicia sesiÃ³n como administrador');
-      return;
-    }
-
-    try {
-      await apiRequest(`${API_ADMIN_TRACKING}?action=restore`, {
-        method: 'POST',
-        headers: adminHeaders()
-      });
-      resetTicketForm();
-      await loadAdminTickets();
-      showStoreNotice('Tickets de ejemplo restaurados');
-    } catch (err) {
-      showStoreNotice(err.message || 'No se pudieron restaurar los tickets');
-    }
-  }
 
   function cartItemTemplate(item) {
     const { product, quantity } = item;
@@ -1481,8 +1444,6 @@
       const resetAdminButton = event.target.closest('[data-admin-reset]');
       if (resetAdminButton) resetAdminForm();
 
-      const restoreProductsButton = event.target.closest('[data-admin-restore]');
-      if (restoreProductsButton) await resetProductsToDefaults();
 
       const editTicketButton = event.target.closest('[data-edit-ticket]');
       if (editTicketButton) {
@@ -1495,8 +1456,6 @@
       const resetTicketButton = event.target.closest('[data-ticket-reset]');
       if (resetTicketButton) resetTicketForm();
 
-      const restoreTicketsButton = event.target.closest('[data-ticket-restore]');
-      if (restoreTicketsButton) await restoreTicketsToDefaults();
 
       const removeProductImageButton = event.target.closest('[data-remove-product-image]');
       if (removeProductImageButton) {
@@ -1731,7 +1690,7 @@
     getProducts,
     removeFromCart,
     updateQuantity,
-    resetProductsToDefaults
+    refreshProducts
   };
 
   function bootStore() {

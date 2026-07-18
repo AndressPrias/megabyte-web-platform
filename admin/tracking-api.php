@@ -36,10 +36,4 @@ if ($action === 'ticket' && $method === 'DELETE') {
     mb_json(['tickets' => mb_delete_ticket($ticketId)]);
 }
 
-if ($action === 'restore' && $method === 'POST') {
-    $defaults = json_decode(file_get_contents(MB_DEFAULT_TICKETS_FILE) ?: '[]', true);
-    mb_save_tickets(is_array($defaults) ? $defaults : []);
-    mb_json(['tickets' => mb_get_tickets()]);
-}
-
 mb_json(['error' => 'Ruta no encontrada'], 404);

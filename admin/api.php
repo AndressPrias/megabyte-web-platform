@@ -65,12 +65,6 @@ if ($action === 'product' && $method === 'DELETE') {
     mb_json(['products' => $products]);
 }
 
-if ($action === 'restore' && $method === 'POST') {
-    $defaults = json_decode(file_get_contents(MB_DEFAULT_PRODUCTS_FILE) ?: '[]', true);
-    mb_save_products(is_array($defaults) ? $defaults : []);
-    mb_json(['products' => mb_get_products()]);
-}
-
 if ($action === 'upload-image' && $method === 'POST') {
     $files = [];
     $inputFiles = $_FILES['images'] ?? $_FILES['image'] ?? null;
