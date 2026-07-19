@@ -12,6 +12,7 @@
   let productsLoaded = false;
   let backendAvailable = true;
   let adminAuthenticated = document.body?.dataset.adminAuthenticated === 'true';
+  let imageFallbackBound = false;
 
   const DEFAULT_PRODUCTS = [
     {
@@ -577,13 +578,46 @@
     return [...new Set([...(gallery || []), product.imageUrl].map((url) => String(url || '').trim()).filter(Boolean))];
   }
 
+  function escapeAttr(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
   function productVisual(product, className = 'product-image', imageUrl = '') {
     const visualUrl = imageUrl || productImages(product)[0] || '';
     if (visualUrl) {
-      return `<img class="${className}" src="${visualUrl}" alt="${product.name}" loading="lazy">`;
+      const shouldLoadFast = /product-card__image|product-detail__photo|store-admin__thumb/.test(className);
+      return `<img class="${escapeAttr(className)}" src="${escapeAttr(visualUrl)}" alt="${escapeAttr(product.name)}" data-product-image data-image-type="${escapeAttr(product.imageType)}" loading="${shouldLoadFast ? 'eager' : 'lazy'}" decoding="async">`;
     }
 
     return productIcon(product.imageType);
+  }
+
+  function replaceBrokenProductImage(image) {
+    if (!image || image.dataset.imageFallback === 'true') return;
+    image.dataset.imageFallback = 'true';
+
+    const fallback = document.createElement('span');
+    fallback.className = 'product-image-fallback';
+    fallback.innerHTML = productIcon(image.dataset.imageType || 'laptop');
+    image.replaceWith(fallback);
+  }
+
+  function bindProductImageFallbacks() {
+    if (imageFallbackBound) return;
+    imageFallbackBound = true;
+
+    document.addEventListener('error', (event) => {
+      const image = event.target;
+      if (image instanceof HTMLImageElement && image.matches('[data-product-image]')) {
+        replaceBrokenProductImage(image);
+      }
+    }, true);
   }
 
   function updateAdminImagePreview(form) {
@@ -1721,6 +1755,7 @@
   }
 
   async function initStore() {
+    bindProductImageFallbacks();
     renderAdminLoginPanel();
     await loadProducts();
     updateCartCount();
