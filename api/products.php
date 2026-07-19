@@ -9,17 +9,13 @@ function mb_public_image_exists(string $url): bool
         return $url !== '';
     }
 
-    $path = parse_url($url, PHP_URL_PATH);
-    if (!is_string($path) || !str_starts_with($path, MB_PRODUCT_UPLOAD_URL . '/')) {
+    $filename = mb_product_image_filename_from_url($url);
+    if ($filename === '') {
         return false;
     }
 
-    $relative = rawurldecode(substr($path, strlen(MB_PRODUCT_UPLOAD_URL . '/')));
-    if ($relative === '' || str_contains($relative, '..') || str_contains($relative, '/') || str_contains($relative, '\\')) {
-        return false;
-    }
-
-    return is_file(MB_PRODUCT_UPLOAD_DIR . '/' . $relative);
+    return is_file(MB_PRODUCT_UPLOAD_DIR . '/' . $filename)
+        || is_file(__DIR__ . '/../assets/productos/' . $filename);
 }
 
 function mb_prepare_public_product(array $product): array

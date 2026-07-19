@@ -7,8 +7,9 @@ const MB_ADMIN_USER = 'admin';
 const MB_ADMIN_PASSWORD = 'MegabyteAdmin2026!';
 const MB_PRODUCTS_FILE = __DIR__ . '/../data/products.json';
 const MB_DEFAULT_PRODUCTS_FILE = __DIR__ . '/../data/default-products.json';
-const MB_PRODUCT_UPLOAD_DIR = __DIR__ . '/../assets/productos';
+const MB_PRODUCT_UPLOAD_DIR = __DIR__ . '/../../megabyte-storage/productos';
 const MB_PRODUCT_UPLOAD_URL = '/assets/productos';
+const MB_PRODUCT_IMAGE_API_URL = '/api/product-image.php';
 
 function mb_start_admin_session(): void
 {
@@ -163,11 +164,47 @@ function mb_sanitize_product_image_url(string $url): string
         return '';
     }
 
-    if (preg_match('#^https?://#i', $url) === 1 || str_starts_with($url, MB_PRODUCT_UPLOAD_URL . '/')) {
+    if (
+        preg_match('#^https?://#i', $url) === 1
+        || str_starts_with($url, MB_PRODUCT_UPLOAD_URL . '/')
+        || str_starts_with($url, MB_PRODUCT_IMAGE_API_URL . '?file=')
+    ) {
         return $url;
     }
 
     return '';
+}
+
+function mb_product_image_filename_from_url(string $url): string
+{
+    if ($url === '') {
+        return '';
+    }
+
+    $path = parse_url($url, PHP_URL_PATH);
+    if (!is_string($path)) {
+        return '';
+    }
+
+    if ($path === MB_PRODUCT_IMAGE_API_URL) {
+        parse_str((string) (parse_url($url, PHP_URL_QUERY) ?? ''), $query);
+        $filename = (string) ($query['file'] ?? '');
+    } elseif (str_starts_with($path, MB_PRODUCT_UPLOAD_URL . '/')) {
+        $filename = rawurldecode(substr($path, strlen(MB_PRODUCT_UPLOAD_URL . '/')));
+    } else {
+        return '';
+    }
+
+    if ($filename === '' || str_contains($filename, '..') || str_contains($filename, '/') || str_contains($filename, '\\')) {
+        return '';
+    }
+
+    return $filename;
+}
+
+function mb_product_image_url(string $filename): string
+{
+    return MB_PRODUCT_IMAGE_API_URL . '?file=' . rawurlencode($filename);
 }
 
 function mb_ensure_products_file(): void

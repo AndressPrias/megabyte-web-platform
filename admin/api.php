@@ -139,7 +139,7 @@ if ($action === 'upload-image' && $method === 'POST') {
             mb_json(['error' => 'No se pudo guardar una de las imagenes'], 500);
         }
 
-        $imageUrls[] = MB_PRODUCT_UPLOAD_URL . '/' . $filename;
+        $imageUrls[] = mb_product_image_url($filename);
     }
 
     mb_json([
