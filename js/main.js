@@ -2,6 +2,7 @@
   'use strict';
 
   const WHATSAPP_NUMBER = '573133141701';
+  let contactSubmitBound = false;
 
   const STATUS_MAP = {
     'Recibido': 'recibido',
@@ -238,78 +239,92 @@ animatedElements.forEach((element) => {
     });
   }
 
+  async function handleContactSubmit(e) {
+    const contactForm = e.target;
+    if (!(contactForm instanceof HTMLFormElement) || contactForm.id !== 'contactForm') return;
+
+    e.preventDefault();
+
+    const honeypot = contactForm.querySelector('.honeypot');
+    if (honeypot && honeypot.value) return;
+
+    const nombre = contactForm.elements.nombre?.value.trim() || '';
+    const email = contactForm.elements.email?.value.trim() || '';
+    const telefono = contactForm.elements.telefono?.value.trim() || '';
+    const servicio = contactForm.elements.servicio;
+    const servicioText = servicio?.options?.[servicio.selectedIndex]?.text || 'Servicio tecnico';
+    const mensaje = contactForm.elements.mensaje?.value.trim() || '';
+    const success = contactForm.querySelector('#formSuccess');
+    const ticketBox = contactForm.querySelector('#serviceTicketSuccess');
+    const ticketId = contactForm.querySelector('#createdTicketId');
+    const ticketLink = contactForm.querySelector('#createdTicketLink');
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalText = submitButton?.textContent || 'Enviar Solicitud';
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Creando ticket...';
+    }
+
+    try {
+      const request = {
+        nombre,
+        email,
+        telefono,
+        servicio: servicioText,
+        mensaje,
+        website: honeypot?.value || ''
+      };
+      const ticket = await createServiceTicket({ ...request });
+      const whatsappUrl = buildServiceWhatsAppUrl(ticket, request);
+
+      if (success) {
+        success.textContent = `Ticket ${ticket.ticket} creado exitosamente. Te contactaremos pronto.`;
+        success.hidden = false;
+      }
+      if (ticketBox && ticketId && ticketLink) {
+        ticketId.textContent = ticket.ticket;
+        ticketLink.href = `/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
+        ticketBox.hidden = false;
+      }
+      showTicketCreatedModal(ticket, whatsappUrl);
+      contactForm.reset();
+
+      const selectedService = new URLSearchParams(window.location.search).get('servicio');
+      if (servicio && selectedService && [...servicio.options].some((option) => option.value === selectedService)) {
+        servicio.value = selectedService;
+      }
+    } catch (err) {
+      if (success) {
+        success.textContent = err.message || 'No se pudo crear el ticket. Intenta nuevamente.';
+        success.hidden = false;
+      }
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    }
+  }
+
   function initContactForm() {
     const contactForm = document.getElementById('contactForm');
     if (!contactForm) return;
 
-    const serviceSelect = document.getElementById('servicio');
+    const serviceSelect = contactForm.elements.servicio;
     const selectedService = new URLSearchParams(window.location.search).get('servicio');
     if (serviceSelect && selectedService && [...serviceSelect.options].some((option) => option.value === selectedService)) {
       serviceSelect.value = selectedService;
     }
 
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const honeypot = contactForm.querySelector('.honeypot');
-      if (honeypot && honeypot.value) return;
-
-      const nombre = document.getElementById('nombre').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const telefono = document.getElementById('telefono').value.trim();
-      const servicio = document.getElementById('servicio');
-      const servicioText = servicio.options[servicio.selectedIndex].text;
-      const mensaje = document.getElementById('mensaje').value.trim();
-      const success = document.getElementById('formSuccess');
-      const ticketBox = document.getElementById('serviceTicketSuccess');
-      const ticketId = document.getElementById('createdTicketId');
-      const ticketLink = document.getElementById('createdTicketLink');
-      const submitButton = contactForm.querySelector('button[type="submit"]');
-      const originalText = submitButton?.textContent || 'Enviar Solicitud';
-
-      if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = 'Creando ticket...';
-      }
-
-      try {
-        const request = {
-          nombre,
-          email,
-          telefono,
-          servicio: servicioText,
-          mensaje,
-          website: honeypot?.value || ''
-        };
-        const ticket = await createServiceTicket({
-          ...request
-        });
-        const whatsappUrl = buildServiceWhatsAppUrl(ticket, request);
-
-        if (success) {
-          success.textContent = `Ticket ${ticket.ticket} creado exitosamente. Te contactaremos pronto.`;
-          success.hidden = false;
-        }
-        if (ticketBox && ticketId && ticketLink) {
-          ticketId.textContent = ticket.ticket;
-          ticketLink.href = `/seguimiento?ticket=${encodeURIComponent(ticket.ticket)}`;
-          ticketBox.hidden = false;
-        }
-        showTicketCreatedModal(ticket, whatsappUrl);
-        contactForm.reset();
-        if (serviceSelect && selectedService) serviceSelect.value = selectedService;
-      } catch (err) {
-        if (success) {
-          success.textContent = err.message || 'No se pudo crear el ticket. Intenta nuevamente.';
-          success.hidden = false;
-        }
-      } finally {
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalText;
-        }
-      }
-    });
+    if (!contactSubmitBound) {
+      contactSubmitBound = true;
+      document.addEventListener('submit', handleContactSubmit);
+    }
   }
 
   function getInitials(name) {
