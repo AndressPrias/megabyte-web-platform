@@ -1424,19 +1424,53 @@
   function renderCheckoutSummary() {
     const summary = document.getElementById('checkoutSummary');
     const total = document.getElementById('checkoutTotal');
+    const subtotal = document.getElementById('checkoutSubtotal');
     if (!summary) return;
 
     const items = cartWithProducts();
     summary.innerHTML = items.length
       ? items.map((item) => `
           <div class="checkout-summary__item">
-            <span>${item.quantity}x ${item.product.name}</span>
-            <strong>${formatPrice(item.product.price * item.quantity)}</strong>
+            <div class="checkout-summary__media">
+              ${productVisual(item.product, 'checkout-summary__photo')}
+              <b aria-label="Cantidad: ${item.quantity}">${item.quantity}</b>
+            </div>
+            <span class="checkout-summary__product">
+              <strong>${item.product.name}</strong>
+              <small>${item.product.brand || 'Megabyte Store'}</small>
+            </span>
+            <strong class="checkout-summary__price">${formatPrice(item.product.price * item.quantity)}</strong>
           </div>
         `).join('')
       : '<p class="store-empty">No hay productos en el carrito.</p>';
 
-    if (total) total.textContent = formatPrice(cartTotal());
+    const totalValue = cartTotal();
+    if (subtotal) subtotal.textContent = formatPrice(totalValue);
+    if (total) total.textContent = formatPrice(totalValue);
+    document.querySelectorAll('[data-checkout-button-total]').forEach((node) => {
+      node.textContent = formatPrice(totalValue);
+    });
+  }
+
+  function updateCheckoutOptions() {
+    const delivery = document.querySelector('input[name="entrega"]:checked')?.value || 'Envío a domicilio';
+    const payment = document.querySelector('input[name="pago"]:checked')?.value || 'Pago contra entrega';
+    const address = document.querySelector('[data-delivery-address]');
+    const shipping = document.getElementById('checkoutShipping');
+    const paymentNote = document.querySelector('[data-payment-note]');
+    const pickup = delivery === 'Recoger en tienda';
+
+    if (address) address.classList.toggle('is-pickup', pickup);
+    ['direccion', 'ciudad', 'departamento'].forEach((fieldName) => {
+      const field = document.querySelector(`[name="${fieldName}"]`);
+      if (field) field.required = !pickup;
+    });
+    if (shipping) shipping.textContent = pickup ? 'Gratis' : 'A convenir';
+    if (paymentNote) {
+      paymentNote.innerHTML = payment === 'Pago contra entrega'
+        ? '<strong>Sin pago anticipado</strong><span>Ten listo el valor acordado al momento de recibir. Aplican zonas de cobertura.</span>'
+        : '<strong>Pago después de confirmar</strong><span>Te enviaremos los datos bancarios y validaremos el pago antes del despacho.</span>';
+    }
   }
 
   function generateWhatsAppMessage(form) {
@@ -1453,9 +1487,12 @@
       `Nombre: ${data.get('nombre')}`,
       `Celular: ${data.get('celular')}`,
       `Correo: ${data.get('correo')}`,
-      `Dirección: ${data.get('direccion')}`,
+      `Dirección: ${data.get('direccion') || 'Recoge en tienda'}`,
       `Ciudad: ${data.get('ciudad')}`,
+      `Departamento: ${data.get('departamento') || 'No aplica'}`,
       `Entrega: ${data.get('entrega')}`,
+      `Forma de pago: ${data.get('pago')}`,
+      `Indicaciones: ${data.get('referencia') || 'Sin indicaciones'}`,
       `Observaciones: ${data.get('observaciones') || 'Sin observaciones'}`
     ].join('\n');
   }
@@ -1621,6 +1658,11 @@
     });
 
     document.addEventListener('change', (event) => {
+      if (event.target.matches('input[name="entrega"], input[name="pago"]')) {
+        updateCheckoutOptions();
+        return;
+      }
+
       if (event.target.matches('[data-toggle-product-published]')) {
         toggleProductPublication(event.target.dataset.toggleProductPublished, event.target.checked);
         return;
@@ -1684,6 +1726,7 @@
 
     const checkoutForm = document.getElementById('checkoutForm');
     if (checkoutForm) {
+      updateCheckoutOptions();
       checkoutForm.addEventListener('submit', (event) => {
         event.preventDefault();
         if (!cartWithProducts().length) {

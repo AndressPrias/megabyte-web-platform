@@ -3,115 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Checkout Megabyte Store por WhatsApp.">
-  <title>Checkout | Megabyte</title>
+  <meta name="description" content="Finaliza tu compra en Megabyte de forma rápida, segura y con pago contra entrega.">
+  <title>Finalizar compra | Megabyte</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css?v=site-20260718-18">
+  <link rel="stylesheet" href="/css/styles.css?v=checkout-20260720-1">
 </head>
-<body class="store-body" data-store-page="checkout">
-  <header class="store-header store-header--shop">
-    <div class="container store-header__inner">
-      <div class="store-header__top">
-        <a href="/" class="store-logo" aria-label="Salir de la tienda y volver a la landing">
-          <img src="/assets/logo-menu-megabyte.png" alt="Megabyte" width="190" height="64">
-        </a>
-        <div class="store-searchbar">
-          <label class="store-search">
-            <span>Buscar</span>
-            <input id="storeSearch" type="search" placeholder="¿Qué estás buscando hoy?">
-          </label>
-          <label class="store-category-select">
-            <span>Todas las categorías</span>
-            <select aria-label="Seleccionar categoría">
-              <option value="todos">Todas las categorías</option>
-              <option value="computadores">Computadores</option>
-              <option value="accesorios">Accesorios</option>
-              <option value="componentes">Componentes</option>
-              <option value="redes">Redes</option>
-              <option value="seguridad">Seguridad</option>
-            </select>
-          </label>
-        </div>
-        <div class="store-header__actions">
-          <a class="store-icon-action" href="/tienda#catalogo" aria-label="Favoritos">
-            <span class="store-action-icon">♡</span>
-            <span>Favoritos</span>
-          </a>
-          <a class="store-cart store-cart--featured" href="/carrito" aria-label="Ver carrito">
-            <span class="store-action-icon">🛒</span>
-            <span>Mi carrito</span>
-            <small data-cart-total>$0</small>
-            <strong data-cart-count hidden>0</strong>
-          </a>
-        </div>
-      </div>
+<body class="store-body checkout-body" data-store-page="checkout">
+  <header class="checkout-header"><div class="container checkout-header__inner"><a href="/tienda" class="checkout-brand" aria-label="Volver a la tienda"><img src="/assets/logo-menu-megabyte.png" alt="Megabyte" width="190" height="64"></a><div class="checkout-secure"><span aria-hidden="true">&#128274;</span> Compra segura</div></div></header>
+  <main class="checkout-page"><div class="container">
+    <nav class="checkout-steps" aria-label="Progreso de compra"><a href="/carrito">Carrito</a><span aria-hidden="true">›</span><strong>Información</strong><span aria-hidden="true">›</span><span>Confirmación</span></nav>
+    <div class="checkout-page__grid">
+      <form class="checkout-form" id="checkoutForm">
+        <div class="checkout-intro"><span class="section__tag">Checkout seguro</span><h1>Finalizar compra</h1><p>Completa tus datos para confirmar el pedido. No necesitas crear una cuenta.</p></div>
+        <section class="checkout-block" aria-labelledby="contactTitle"><div class="checkout-block__heading"><span>1</span><div><h2 id="contactTitle">Información de contacto</h2><p>Te enviaremos la confirmación y las novedades del pedido.</p></div></div><div class="form-group"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" placeholder="tu@correo.com" required></div><label class="checkout-check"><input type="checkbox" name="novedades" value="Sí"><span>Quiero recibir novedades y ofertas de Megabyte</span></label></section>
+        <section class="checkout-block" aria-labelledby="deliveryTitle">
+          <div class="checkout-block__heading"><span>2</span><div><h2 id="deliveryTitle">Entrega</h2><p>Elige cómo quieres recibir tu compra.</p></div></div>
+          <div class="checkout-options checkout-options--delivery"><label class="checkout-option"><input type="radio" name="entrega" value="Envío a domicilio" checked><span class="checkout-option__icon" aria-hidden="true">&#128666;</span><span class="checkout-option__copy"><strong>Envío a domicilio</strong><small>Coordinamos la fecha y cobertura contigo</small></span><b>A convenir</b></label><label class="checkout-option"><input type="radio" name="entrega" value="Recoger en tienda"><span class="checkout-option__icon" aria-hidden="true">&#127978;</span><span class="checkout-option__copy"><strong>Recoger en tienda</strong><small>Te avisaremos cuando esté listo</small></span><b>Gratis</b></label></div>
+          <div class="checkout-address" data-delivery-address><div class="form-row"><div class="form-group"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido" required></div><div class="form-group"><label for="celular">Celular</label><input id="celular" name="celular" type="tel" inputmode="tel" autocomplete="tel" placeholder="300 000 0000" required></div></div><div class="form-group"><label for="direccion">Dirección</label><input id="direccion" name="direccion" autocomplete="street-address" placeholder="Calle, carrera, número y barrio" required></div><div class="form-row"><div class="form-group"><label for="ciudad">Ciudad / municipio</label><input id="ciudad" name="ciudad" autocomplete="address-level2" placeholder="Ej. Bogotá" required></div><div class="form-group"><label for="departamento">Departamento</label><input id="departamento" name="departamento" autocomplete="address-level1" placeholder="Ej. Cundinamarca" required></div></div><div class="form-group"><label for="referencia">Indicaciones de entrega <span>(opcional)</span></label><input id="referencia" name="referencia" placeholder="Apto, torre o punto de referencia"></div></div>
+        </section>
+        <section class="checkout-block" aria-labelledby="paymentTitle"><div class="checkout-block__heading"><span>3</span><div><h2 id="paymentTitle">Pago</h2><p>Tus datos están protegidos y solo se usan para gestionar el pedido.</p></div></div><div class="checkout-options checkout-options--payment"><label class="checkout-option checkout-option--featured"><input type="radio" name="pago" value="Pago contra entrega" checked><span class="checkout-option__icon" aria-hidden="true">&#128181;</span><span class="checkout-option__copy"><strong>Pago contra entrega <em>Recomendado</em></strong><small>Paga cuando recibas tu pedido. Confirmaremos disponibilidad y cobertura.</small></span></label><label class="checkout-option"><input type="radio" name="pago" value="Transferencia bancaria"><span class="checkout-option__icon" aria-hidden="true">&#127974;</span><span class="checkout-option__copy"><strong>Transferencia bancaria</strong><small>Recibirás los datos de pago al confirmar por WhatsApp.</small></span></label></div><div class="checkout-payment-note" data-payment-note><strong>Sin pago anticipado</strong><span>Ten listo el valor acordado al momento de recibir. Aplican zonas de cobertura.</span></div></section>
+        <section class="checkout-block checkout-block--notes"><div class="form-group"><label for="observaciones">Notas del pedido <span>(opcional)</span></label><textarea id="observaciones" name="observaciones" rows="3" placeholder="¿Hay algo más que debamos saber?"></textarea></div></section>
+        <button class="btn btn--primary btn--full checkout-submit" type="submit"><span>Confirmar pedido</span><strong data-checkout-button-total>$0</strong></button><p class="checkout-submit-note"><span aria-hidden="true">&#128274;</span> Al continuar, se abrirá WhatsApp con tu pedido listo para confirmar. No se realizará ningún cobro automático.</p>
+      </form>
+      <aside class="checkout-summary" aria-labelledby="summaryTitle"><div class="checkout-summary__heading"><div><span>Tu compra</span><h2 id="summaryTitle">Resumen del pedido</h2></div><a href="/carrito">Editar</a></div><div id="checkoutSummary" class="checkout-summary__items"></div><div class="checkout-summary__costs"><div><span>Subtotal</span><strong id="checkoutSubtotal">$0</strong></div><div><span>Envío</span><strong id="checkoutShipping">A convenir</strong></div></div><div class="checkout-summary__total"><span>Total estimado <small>COP</small></span><strong id="checkoutTotal">$0</strong></div><div class="checkout-trust"><div><span aria-hidden="true">&#128737;</span><p><strong>Compra protegida</strong><small>Atención directa antes y después de tu compra.</small></p></div><div><span aria-hidden="true">&#128230;</span><p><strong>Entrega coordinada</strong><small>Confirmamos cobertura, costo y fecha contigo.</small></p></div><div><span aria-hidden="true">&#128172;</span><p><strong>Soporte por WhatsApp</strong><small>Resolvemos tus dudas antes de despachar.</small></p></div></div></aside>
     </div>
-  </header>
-
-  <main class="store-main checkout-page">
-    <section class="store-section">
-      <div class="container checkout-page__grid">
-        <form class="checkout-form" id="checkoutForm">
-          <span class="section__tag">Datos del cliente</span>
-          <h1>Finalizar por WhatsApp</h1>
-          <div class="form-row">
-            <div class="form-group"><label for="nombre">Nombre</label><input id="nombre" name="nombre" required></div>
-            <div class="form-group"><label for="celular">Celular</label><input id="celular" name="celular" required></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label for="correo">Correo</label><input id="correo" name="correo" type="email" required></div>
-            <div class="form-group"><label for="ciudad">Ciudad</label><input id="ciudad" name="ciudad" required></div>
-          </div>
-          <div class="form-group"><label for="direccion">Dirección</label><input id="direccion" name="direccion" required></div>
-          <div class="form-group">
-            <label for="entrega">Método de entrega</label>
-            <select id="entrega" name="entrega" required>
-              <option value="Recoger en tienda">Recoger en tienda</option>
-              <option value="Domicilio coordinado">Domicilio coordinado</option>
-              <option value="Instalación en sitio">Instalación en sitio</option>
-            </select>
-          </div>
-          <div class="form-group"><label for="observaciones">Observaciones</label><textarea id="observaciones" name="observaciones" rows="4"></textarea></div>
-          <button class="btn btn--primary btn--full" type="submit">Enviar pedido por WhatsApp</button>
-        </form>
-        <aside class="checkout-summary">
-          <h2>Resumen del pedido</h2>
-          <div id="checkoutSummary"></div>
-          <div class="checkout-summary__total"><span>Total</span><strong id="checkoutTotal">$0</strong></div>
-        </aside>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer footer--store">
-    <div class="container footer__inner">
-      <div class="footer__top">
-        <a href="/" class="footer__brand" aria-label="Salir de la tienda y volver al inicio">
-          <img src="/assets/logo-menu-megabyte.png" alt="Megabyte" width="190" height="64">
-        </a>
-        <nav class="footer__nav" aria-label="Navegacion inferior de tienda">
-          <a href="/">Landing</a>
-          <a href="/tienda">Catalogo</a>
-          <a href="/carrito">Carrito</a>
-          <a href="/checkout">Checkout</a>
-          <a href="/contacto">Contacto</a>
-        </nav>
-      </div>
-      <div class="footer__bottom">
-        <p class="footer__copy">&copy; 2026 Megabyte Store. Todos los derechos reservados.</p>
-        <div class="footer__credit" aria-label="Desarrollador de la pagina">
-          <span>Pagina desarrollada por</span>
-          <img src="/assets/andev-logo.png" alt="Andev" width="92" height="42">
-          <strong>Andres Prias</strong>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script src="/js/store.js?v=store-20260718-7"></script>
-</body>
-</html>
-
-
+  </div></main>
+  <footer class="checkout-footer"><div class="container"><p>&copy; 2026 Megabyte Store</p><nav aria-label="Enlaces legales"><a href="/contacto">Contacto</a><a href="/seguimiento">Seguimiento</a></nav></div></footer>
+  <script src="/js/store.js?v=checkout-20260720-1"></script>
+</body></html>
